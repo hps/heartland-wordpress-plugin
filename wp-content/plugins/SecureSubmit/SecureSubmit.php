@@ -9,7 +9,6 @@ Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 
 $secureSubmit = new SecureSubmit();
-define('WP_SECURESUBMIT_PATH', WP_PLUGIN_URL . '/' . end(explode(DIRECTORY_SEPARATOR, dirname(__FILE__))));
 
 class SecureSubmit {
     public $dir;
@@ -132,20 +131,24 @@ class SecureSubmit {
             $requireBilling = true;
             
         if (isset($atts['requireshipping']) && $atts['requireshipping'] === 'true')
-            $requireShipping = true;
+            $requireShipping = 'true';
         else
-            $requireShipping = false;
-            
-        if (isset($atts['modal']) && $atts['modal'] === 'true')
-            $modal = false;
-        else
-            $requireShipping = false;
-        
+            $requireShipping = 'false';
+
         if (isset($atts['modal']) && $atts['modal'] === 'true')
             $modal = true;
         else
             $modal = false;
-        
+
+        //Check for additional_info fields
+        $pattern = '/(^additional_info[1-9]$|additional_info$)/';
+        $attsKeys = array_keys($atts);
+        $additionalFields = preg_grep($pattern,$attsKeys);
+
+        //Check for additional Field types
+        $typePattern = '/_type$/';
+        $additionalFieldTypes = preg_grep($typePattern,$attsKeys);
+
         $productid = isset($atts['productid']) ? $atts['productid'] : '';
         $productname = isset($atts['productname']) ? $atts['productname'] : '';
         
@@ -155,55 +158,320 @@ class SecureSubmit {
             $prefix = $productid;
         }
 
-        $_SESSION['_' . $productid] = $atts;
+        update_option('secure_submit_'.$productid,$atts);
     ?>
     
     <?php if ($modal) { ?>
-    <style>
-    #a<?php echo $prefix; ?>-modal-background {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #000;
-        opacity: .50;
-        -webkit-opacity: .5;
-        -moz-opacity: .5;
-        filter: alpha(opacity=50);
-        z-index: 1000;
-    }
-    
-    #a<?php echo $prefix; ?>-modal-content {
-        background-color: white;
-        border-radius: 10px;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        box-shadow: 0 0 20px 0 #222;
-        -webkit-box-shadow: 0 0 20px 0 #222;
-        -moz-box-shadow: 0 0 20px 0 #222;
-        display: none;
-        padding: 10px;
-        position: fixed;
-        overflow-y: scroll;
-        left: 50%;
-        top: 50px;
-        width: 400px;
-        height: 600px;
-        margin-left: -200px;
-        transform: translate(-50%, -50%);
-        z-index: 1000;
-    }
+        <form id="<?php echo $prefix; ?>_form">
+        </form>
+        <script src="<?php echo plugins_url( 'js/secure.submit-1.0.2.js', __FILE__ ); ?>"></script>
+        <script language="javascript" type="text/javascript">
+            var requireShipping = <?php echo $requireShipping; ?>;
+            var requireAdditionalInfo = <?php echo (count($additionalFields)>0 ? true : false); ?>
+            
+            jQuery.ajaxSetup({ cache: true });
+            if (jQuery('#sss').length == 0)
+                jQuery('head').append(jQuery('<link rel="stylesheet" type="text/css" />').attr('href', '<?php echo plugins_url( 'assets/checkout.css', __FILE__ ); ?>').attr('id', 'sss' ));
+        
+            var trigger_button = jQuery("<div class='pay-button button-main'><a href='#Purchase' id='pay_now'><?php echo $buttonText; ?></a><div class='pay-button-border'>&nbsp;</div></div>");
+            jQuery('#<?php echo $prefix; ?>_form').append(trigger_button);
+            
+            jQuery('#pay_now').bind('click', function() {
+                trigger_payment();
+            });
+            
+        // BUILD CONTROLS
+            var modal_html = "<div id='modal-background'></div><div id='modal-content'>";
+            modal_html += "<a class='boxclose modal-close' id='boxclose'>&times;</a>";
+            
+            // HEADER
+            modal_html += "<div id='modal-header'>";
+            
+            modal_html += "<div style='float: left;'>";
+            <?php if (!isset($atts["productimage"])) { ?>
+            modal_html += "<img src='<?php echo plugins_url( 'assets/donation.png', __FILE__ ); ?>' class='checkout-product-image'>";
+            <?php } else { ?>
+            modal_html += "<img src='<?php echo $atts["productimage"]; ?>' class='checkout-product-image'>";    
+            <?php } ?>
+            modal_html += "</div>";
+            modal_html += "<input type='hidden' name='action' id='action' value='ssd_submit_payment'/>";
+            modal_html += "<input type='hidden' name='product_sku' id='product_sku' value='<?php echo $atts['productid']; ?>'/>";
+            //modal_html += "<div class='checkout-merchant-name'>" + merchant + "</div>";
+            modal_html += "<div class='checkout-product-name'><?php echo $atts['productname']; ?></div>";
+            
+            if ('<?php echo $atts['amount']; ?>' != '') {
+                modal_html += "<div class='checkout-price'>$<?php echo $atts['amount']; ?></div>";
+            } else {
+                modal_html += "<div class='donation-price'>Donation Amount<br />$&nbsp;<input type='text' name='donation_amount' id='donation_amount' class='checkout-input donation-field' placeholder='100.00'></div>";
+            }
+            
+            modal_html += "</div>";
+            
+            modal_html += "<div id='modal-body'>";
+            
+            // BILLING BODY
+            var billing_html = "<div id='billing_panel'>";
+            billing_html += "<div class='checkout-card-information'>Billing Information</div>";
+            billing_html += "<div class='card-number'><input type='text' name='cardholder_name' id='cardholder_name' class='checkout-input checkout-card' placeholder='Cardholder Name'></div>";
+            billing_html += "<div class='card-number'><input type='text' name='cardholder_address' id='cardholder_address' class='checkout-input checkout-card' placeholder='Address'></div>";
+            billing_html += "<div class='card-number'>";
+            billing_html += "<input type='text' name='cardholder_city' id='cardholder_city' class='checkout-input city-field' placeholder='City'>";
+            billing_html += "<select name='cardholder_state' id='cardholder_state' class='checkout-input state-field'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DE'>DE</option><option value='DC'>DC</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
+            billing_html += "<input type='text' name='cardholder_zip' id='cardholder_zip' class='checkout-input zip-field' placeholder='Zip'>";
+            billing_html += "</div>";
 
-    #a<?php echo $prefix; ?>-modal-background.active, #a<?php echo $prefix; ?>-modal-content.active {
-        display: block;
-    }
-    </style>
-    <button id="a<?php echo $prefix; ?>-modal-launcher"><?php echo $buttonText; ?></button>
-    <div id="a<?php echo $prefix; ?>-modal-background"></div>
-    <div id="a<?php echo $prefix; ?>-modal-content">
-    <?php } ?>
+            // Additional Info BODY
+            var additional_html = "<div id='additional_panel'>";
+            additional_html += "<div class='back-button'><a href='#billing' id='additional_back'>back</a></div>";
+            additional_html += "<div class='checkout-card-information'>Additional Information</div>";
+            <?php
+                if(count($additionalFields)>0){
+                    foreach($additionalFields as $key=>$value){
+                    print "value = ".array_key_exists($value.'_type',$additionalFieldTypes);
+                        if(array_key_exists($value.'_type',$additionalFieldTypes)){
+                            echo 'additional_html += "<div class=\'card-number\' ><input name=\''.$atts[$value].'\' type=\''.$atts[$value.'_type'].'\' id=\''.$atts[$value].'\' class=\'checkout-input checkout-card\' placeholder=\''.$atts[$value].'\'></div>";';
+                        }
+                        echo 'additional_html += "<div class=\'card-number\' ><input name=\''.$atts[$value].'\' type=\'text\' id=\''.$atts[$value].'\' class=\'checkout-input checkout-card\' placeholder=\''.$atts[$value].'\'></div>";';
+                    }
+                }
+            ?>
+            additional_html += "<div class='pay-button button-next'><a href='#Purchase' id='additional_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
+            additional_html += "<div class='powered_by'><img src='<?php echo plugins_url( 'assets/heart.png', __FILE__ ); ?>' /></div>";
+            additional_html += "</div>";
+
+
+            // TODO: Check if this is checked to skip the shipping screen...
+            if (requireShipping) {
+                billing_html += "<div class='same_shipping'><input name='shipping_same' type='checkbox' id='shipping_same'>&nbsp;<label for='shipping_same'>Shipping Same As Billing</label></div>";
+            }
+
+            billing_html += "<div class='pay-button button-next'><a href='#Purchase' id='billing_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
+            billing_html += "<div class='powered_by'><img src='<?php echo plugins_url( 'assets/heart.png', __FILE__ ); ?>' /></div>";
+            billing_html += "</div>";
+            
+            // SHIPPING BODY
+            var shipping_html = "<div id='shipping_panel'>";
+            shipping_html += "<div class='back-button'><a href='#billing' id='shipping_back'>back</a></div>";
+            shipping_html += "<div class='checkout-card-information'>Shipping Information</div>";
+            shipping_html += "<div class='card-number'><input name='shipping_name' type='text' id='shipping_name' class='checkout-input checkout-card' placeholder='Shipping Name'></div>";
+            shipping_html += "<div class='card-number'><input name='shipping_address' type='text' id='shipping_address' class='checkout-input checkout-card' placeholder='Address'></div>";
+            shipping_html += "<div class='card-number'>";
+            shipping_html += "<input type='text' name='shipping_city' id='shipping_city' class='checkout-input city-field' placeholder='City'>";
+            shipping_html += "<select id='shipping_state' name='shipping_state' class='checkout-input state-field'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DE'>DE</option><option value='DC'>DC</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
+            shipping_html += "<input type='text' name='shipping_zip' id='shipping_zip' class='checkout-input zip-field' placeholder='Zip'>";
+            shipping_html += "</div>";
+            shipping_html += "<div class='pay-button button-next'><a href='#Purchase' id='shipping_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
+            shipping_html += "<div class='powered_by'><img src='<?php echo plugins_url( 'assets/heart.png', __FILE__ ); ?>' /></div>";
+            shipping_html += "</div>";
+            
+            // CARD BODY
+            var card_html = "<div id='card_panel'>";
+            card_html += "<div class='back-button'><a href='#shipping' id='card_back'>back</a></div>";
+            card_html += "<div class='checkout-card-information'>Card Information</div>";
+            card_html += "<div class='card-number'><input type='text' id='card_number' class='checkout-input checkout-card' placeholder='4111 - 1111 - 1111 - 1111'></div>";
+            card_html += "<div class='card-exp'><input type='text' id='card_exp' class='checkout-exp' placeholder='MM/YY'></div>";
+            card_html += "<div class='card-cvc'><input type='text' id='card_cvc' class='checkout-exp' placeholder='CVC'></div>";
+            card_html += "<div class='clearfixcheckout'>&nbsp;</div>";
+            card_html += "<div class='email-reciept'><input name='email_reciept' type='checkbox' id='email_reciept'>&nbsp;<label for='email_reciept'>Email Receipt</label></div>";
+            card_html += "<div class='email-address'><input name='email_address' type='text' id='email_address' class='checkout-email' placeholder='myemail@email.com'></div>";
+            card_html += "<div class='pay-button button-next'><a href='#Purchase' id='pay_button'><?php echo $buttonText; ?></a><div class='pay-button-border'>&nbsp;</div></div>";
+            card_html += "<div class='powered_by'><img src='<?php echo plugins_url( 'assets/heart.png', __FILE__ ); ?>' /></div>";
+            card_html += "</div>";
+
+            // PROCESSING BODY
+            var processing_html = "<div id='processing_panel'>";
+            processing_html += "<div class='transaction-processing'>processing</div>";
+            processing_html += "</div>";
+            
+            // FAILURE BODY
+            var failure_html = "<div id='failure_panel'>";
+            failure_html += "<div class='checkout-card-information'>Transaction Information</div>";
+            failure_html += "<div class='transaction-error'>There was a problem while processing your card.</div>";
+            failure_html += "<div class='pay-button button-next'><a href='#Purchase' id='retry_button'>Retry</a><div class='pay-button-border'>&nbsp;</div></div>";
+            failure_html += "</div>";
+            
+            // SUCCESS BODY
+            var success_html = "<div id='success_panel'>";
+            success_html += "<div class='card-number'>Your Payment Was Successful!</div>";
+            success_html += "</div>";
+            
+            modal_html += billing_html;
+            modal_html += additional_html;
+            modal_html += shipping_html;
+            modal_html += card_html;
+            modal_html += processing_html;
+            modal_html += success_html;
+            modal_html += failure_html;
+            
+            modal_html += "</div>"; // BODY
+            modal_html += "</div>"; // content
+            
+        // ACTIONS
+            function trigger_payment() {
+                jQuery('#modal-content').remove();           // a little clean-up
+                jQuery('#modal-background').remove();        // a little clean-up
+               
+                jQuery('#<?php echo $prefix; ?>_form').append(modal_html);  // there could be multiple forms, multiple buttons.
+                jQuery("#modal-background").toggleClass("active");
+                // show the first panel (billing)
+                jQuery("#billing_panel").show();
+                
+                jQuery("#card_panel").hide();
+                jQuery("#additional_panel").hide();
+                jQuery("#shipping_panel").hide();
+                jQuery("#processing_panel").hide();
+                jQuery("#success_panel").hide();
+                jQuery("#failure_panel").hide();
+                
+                jQuery("#modal-content").fadeIn(400);
+                
+                jQuery("#billing_next_button").on("click", function(event) {
+                    jQuery("#billing_panel").hide();
+
+                    if (requireAdditionalInfo){
+                        jQuery("#additional_panel").fadeIn();
+                    }else if (requireShipping) {
+                        jQuery("#card_panel").hide();
+                        jQuery("#shipping_panel").fadeIn();
+                    } else {
+                        jQuery("#shipping_panel").hide();
+                        jQuery("#card_panel").fadeIn();
+                    }
+                });
+
+                jQuery("#additional_next_button").on("click", function(event) {
+                    jQuery("#billing_panel").hide();
+                    jQuery("#additional_panel").hide();
+                    if(requireShipping){
+                        jQuery("#shipping_panel").fadeIn();
+                    }else{
+                        jQuery("#card_panel").fadeIn();
+                    }
+                });
+
+                jQuery("#shipping_next_button").on("click", function(event) {
+                    jQuery("#billing_panel").hide();
+                    jQuery("#shipping_panel").hide();
+                    jQuery("#card_panel").fadeIn();
+                });
+                
+                jQuery("#retry_button").on("click", function(event) {
+                    jQuery("#failure_panel").hide();
+                    jQuery("#card_panel").fadeIn();
+                });
+                
+                if (requireShipping) {
+                    jQuery("#shipping_back").on("click", function(event) {
+                        jQuery("#billing_panel").fadeIn();
+                        jQuery("#shipping_panel").hide();
+                        jQuery("#card_panel").hide();
+                    });
+                }
+                
+                jQuery("#card_back").on("click", function(event) {
+                    jQuery("#billing_panel").hide();
+                    
+                    if (requireShipping) {
+                        jQuery("#shipping_panel").show();
+                        jQuery("#card_panel").hide();
+                    } else {
+                        jQuery("#billing_panel").show();
+                        jQuery("#card_panel").hide();
+                    }
+                });
+                
+                jQuery("#pay_button").on("click", function(event) {
+                    jQuery("#card_panel").hide();
+                    jQuery("#processing_panel").show();
+                    jQuery("#modal-launcher, #modal-background, .modal-close").unbind('click');
+                    tokenize();
+                });
+                
+                jQuery("#modal-launcher, #modal-background, .modal-close").click(function () {
+                    jQuery('#modal-content').remove();           // a little clean-up
+                    jQuery('#modal-background').remove();        // a little clean-up
+                });
+            }
+            
+            function tokenize() {
+                var expirationparts = jQuery('#card_exp').val().split("/");
+                var month = expirationparts[0];
+                var year = expirationparts[1];
+                var cardnumber = jQuery('#card_number').val().replace(/\D/g,''); // strip out non-numeric
+                
+                // we need the year as four-digits
+                if (year && year.length === 2) {
+                    year = '20' + year;
+                }
+                
+                hps.tokenize({
+                    data: {
+                        public_key: '<?php echo esc_attr($this->options['public_key']); ?>',
+                        number: cardnumber,
+                        cvc: jQuery('#card_cvc').val(),
+                        exp_month: month,
+                        exp_year: year
+                    },
+                    success: function(response) {
+                        secureSubmitResponseHandler(response);
+                    },
+                    error: function(response) {
+                        secureSubmitResponseHandler(response);
+                    }
+                });
+            }
+            
+            function secureSubmitResponseHandler(response) {
+                if ( response.message ) {
+                    jQuery("#processing_panel").hide();
+                    jQuery("#failure_panel").show();
+                    jQuery(".transaction-error").text(response.message);
+                    
+                    // allow the window to go away again
+                    jQuery("#modal-launcher, #modal-background, .modal-close").bind('click', function () {
+                        jQuery('#modal-content').remove();           // a little clean-up
+                        jQuery('#modal-background').remove();        // a little clean-up
+                    });
+                } else {
+                    jQuery('#securesubmit_token').remove();
+                    var token_html = "<input type='hidden' id='securesubmit_token' name='securesubmit_token' value='" + response.token_value + "' />";
+                    jQuery('#<?php echo $prefix; ?>_form').append(token_html);
+
+                    do_post();
+                }
+            }
+            
+            function do_post() {
+                var datastring = jQuery('#<?php echo $prefix; ?>_form').serialize();
+                var url = "<?php echo admin_url('admin-ajax.php'); ?>";
+
+                jQuery.post(url, datastring, function(response) {
+                    if (response.indexOf("successful") >= 0)
+                    {
+                        jQuery("#processing_panel").hide();
+                        jQuery("#success_panel").show();
+                        
+                        jQuery("#modal-launcher, #modal-background, .modal-close").bind('click', function () {
+                            jQuery('#modal-content').remove();           // a little clean-up
+                            jQuery('#modal-background').remove();        // a little clean-up
+                        });
+                    }
+                    else
+                    {
+                        jQuery("#processing_panel").hide();
+                        jQuery("#failure_panel").show();
+                        jQuery(".transaction-error").text(response);
+                        
+                        // allow the window to go away again.
+                        jQuery("#modal-launcher, #modal-background, .modal-close").bind('click', function () {
+                            jQuery('#modal-content').remove();           // a little clean-up
+                            jQuery('#modal-background').remove();        // a little clean-up
+                        });
+                    }
+                });
+            }
+        </script>
+    <?php }  else { ?>
     <input type="hidden" id="<?php echo $prefix; ?>_securesubmit_token" />
     <input type="hidden" id="<?php echo $prefix; ?>_product_id" value="<?php echo $productid; ?>" />
 
@@ -447,9 +715,7 @@ class SecureSubmit {
         </tr>
     </table>
     
-    <?php if ($modal) { ?>
-    </div>
-    <?php } ?>
+<?php } ?>
     
     <script type="text/javascript">
         (function($) {
@@ -532,7 +798,7 @@ class SecureSubmit {
     </script>
     
     
-    <script src="<?php echo WP_SECURESUBMIT_PATH; ?>/js/secure.submit-1.0.2.js"></script>
+    <script src="<?php echo plugins_url( 'js/secure.submit-1.0.2.js', __FILE__ ); ?>"></script>
     <?php
         return ob_get_clean();
     }
@@ -553,12 +819,12 @@ class SecureSubmit {
         $secureToken = isset($_POST['securesubmit_token']) ? $_POST['securesubmit_token'] : '';
         $amount = isset($_POST['donation_amount']) ? $_POST['donation_amount'] : 0;
         
-        if (empty($amount))
+        if ($amount === 0)
         {
             if( !session_id())
                 session_start();
                 
-            $atts = $_SESSION['_' . $_POST['product_id']];
+            $atts = get_option('secure_submit_'. $_POST['product_id']); 
             
             $amount = isset($atts['amount']) ? $atts['amount'] : 0;
             $memo = isset($atts['memo']) ? $atts['memo'] : 0;
@@ -566,22 +832,61 @@ class SecureSubmit {
             $productname = isset($atts['productname']) ? $atts['productname'] : 0;
         }
         
-        $body .= 'A Payment of $' . $amount . ' was just received!';
-        
+        $body .= 'Thank you for your payment of $' . $amount . '!';
         if (!empty($productname)) {
             $body .= '<h3>Product Information</h3>';
             $body .= 'Product Id: ' . $productid . '<br/>';
             $body .= 'Product Name: ' . $productname . '<br/>';
         }
         
-        //billing info
-        $billing_firstname = isset($_POST['billing_firstname']) ? $_POST['billing_firstname'] : '';
-        $billing_lastname = isset($_POST['billing_lastname']) ? $_POST['billing_lastname'] : '';
-        $billing_address = isset($_POST['billing_address']) ? $_POST['billing_address'] : '';
-        $billing_city= isset($_POST['billing_city']) ? $_POST['billing_city'] : '';
-        $billing_state = isset($_POST['billing_state']) ? $_POST['billing_state'] : '';
-        $billing_zip = isset($_POST['billing_zip']) ? $_POST['billing_zip'] : '';
-        $billing_email = isset($_POST['billing_email']) ? $_POST['billing_email'] : '';
+        // modal
+        if (isset($_POST['cardholder_name'])) {
+            list($first, $middle, $last) = split(' ', $_POST['cardholder_name']);
+            
+            if (isset($last)) {
+                $billing_firstname = $first;
+                $billing_lastname = $last;
+            } else {
+                $billing_firstname = $first;
+                $billing_lastname = $middle;                
+            }
+            
+            list($shipfirst, $shipmiddle, $shiplast) = split(' ', $_POST['shipping_name']);
+            
+            if (isset($last)) {
+                $shipping_firstname = $shipfirst;
+                $shipping_lastname = $shiplast;
+            } else {
+                $shipping_firstname = $shipfirst;
+                $shipping_lastname = $shipmiddle;                
+            }
+            
+            $billing_address = isset($_POST['cardholder_address']) ? $_POST['cardholder_address'] : '';
+            $billing_city= isset($_POST['cardholder_city']) ? $_POST['cardholder_city'] : '';
+            $billing_state = isset($_POST['cardholder_state']) ? $_POST['cardholder_state'] : '';
+            $billing_zip = isset($_POST['cardholder_zip']) ? $_POST['cardholder_zip'] : '';
+            $billing_email = isset($_POST['email_address']) ? $_POST['email_address'] : '';
+            
+            $shipping_address = isset($_POST['shipping_address']) ? $_POST['shipping_address'] : '';
+            $shipping_city= isset($_POST['shipping_city']) ? $_POST['shipping_city'] : '';
+            $shipping_state = isset($_POST['shipping_state']) ? $_POST['shipping_state'] : '';
+            $shipping_zip = isset($_POST['shipping_zip']) ? $_POST['shipping_zip'] : '';
+        } else {           
+            $billing_firstname = isset($_POST['billing_firstname']) ? $_POST['billing_firstname'] : '';
+            $billing_lastname = isset($_POST['billing_lastname']) ? $_POST['billing_lastname'] : '';
+            $billing_address = isset($_POST['billing_address']) ? $_POST['billing_address'] : '';
+            $billing_city= isset($_POST['billing_city']) ? $_POST['billing_city'] : '';
+            $billing_state = isset($_POST['billing_state']) ? $_POST['billing_state'] : '';
+            $billing_zip = isset($_POST['billing_zip']) ? $_POST['billing_zip'] : '';
+            $billing_email = isset($_POST['billing_email']) ? $_POST['billing_email'] : '';
+            
+            $shipping_firstname = isset($_POST['shipping_firstname']) ? $_POST['shipping_firstname'] : '';
+            $shipping_lastname = isset($_POST['shipping_lastname']) ? $_POST['shipping_lastname'] : '';
+            $shipping_address = isset($_POST['shipping_address']) ? $_POST['shipping_address'] : '';
+            $shipping_city= isset($_POST['shipping_city']) ? $_POST['shipping_city'] : '';
+            $shipping_state = isset($_POST['shipping_state']) ? $_POST['shipping_state'] : '';
+            $shipping_zip = isset($_POST['shipping_zip']) ? $_POST['shipping_zip'] : '';
+        }
         
         $body .= '<h3>Billing Information</h3>';
         $body .= 'Name: ' . $billing_firstname . ' ' . $billing_lastname . '<br/>';
@@ -590,14 +895,6 @@ class SecureSubmit {
         $body .= 'State: ' . $billing_state . '<br/>';
         $body .= 'Zip: ' . $billing_zip . '<br/>';
         $body .= 'Email: ' . $billing_email . '<br/>';
-        
-        //shipping info
-        $shipping_firstname = isset($_POST['shipping_firstname']) ? $_POST['shipping_firstname'] : '';
-        $shipping_lastname = isset($_POST['shipping_lastname']) ? $_POST['shipping_lastname'] : '';
-        $shipping_address = isset($_POST['shipping_address']) ? $_POST['shipping_address'] : '';
-        $shipping_city= isset($_POST['shipping_city']) ? $_POST['shipping_city'] : '';
-        $shipping_state = isset($_POST['shipping_state']) ? $_POST['shipping_state'] : '';
-        $shipping_zip = isset($_POST['shipping_zip']) ? $_POST['shipping_zip'] : '';
         
         if (isset($_POST['same_as_billing']) || $shipping_address === '') {
             $shipping_firstname = $billing_firstname;
@@ -621,12 +918,12 @@ class SecureSubmit {
             $config = new HpsConfiguration();
 
             $config->secretApiKey = esc_attr($this->options['secret_key']);
-            $config->versionNumber = '0000';
-            $config->developerId = '000000';
+            $config->versionNumber = '1648';
+            $config->developerId = '002914';
 
-			$chargeService = new HpsChargeService($config);
+            $chargeService = new HpsChargeService($config);
 
-			$address = new HpsAddress();
+            $address = new HpsAddress();
             $address->address = $billing_address;
             $address->city = $billing_city;
             $address->state = $billing_state;
@@ -638,7 +935,7 @@ class SecureSubmit {
             $cardHolder->emailAddress = $billing_email;
             $cardHolder->address = $address;
 
-			$cardOrToken = new HpsTokenData();
+            $cardOrToken = new HpsTokenData();
             $cardOrToken->tokenValue = $secureToken;
             
             if (!empty($memo)) {
@@ -653,12 +950,17 @@ class SecureSubmit {
                 $cardHolder,
                 false,
                 $details);
+                
+            add_filter('wp_mail_content_type', create_function('', 'return "text/html"; '));
+            wp_mail(esc_attr($this->options['payment_email']), 'SecureSubmit $' . $amount . ' Payment Received', $body );
+            
+            if (isset($_POST["email_reciept"]) && isset($_POST["email_address"])) {
+                wp_mail(esc_attr($_POST["email_address"]), 'Payment for $' . $amount . ' Received', $body );
+            }
+            
         } catch (HpsException $e) {
             die($e->getMessage());
         }
-        
-        add_filter('wp_mail_content_type', create_function('', 'return "text/html"; '));
-        wp_mail(esc_attr($this->options['payment_email']), 'SecureSubmit $' . $amount . ' Payment Received', $body );
         
         die('Your Payment was successful! Thank you.');
     }
