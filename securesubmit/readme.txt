@@ -54,7 +54,7 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 = 1.3.0 =
 * Added Button Builder to WordPress WYSIWYG Editor
 * Cleaned up long-form
-
+::q
 = 1.2.2 =
 * Updated payment email to use configurable settings.
 
