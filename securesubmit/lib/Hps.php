@@ -12,6 +12,7 @@ require_once(dirname(__FILE__).DS.'infrastructure/HpsExceptionMapper.php');
 require_once(dirname(__FILE__).DS.'infrastructure/HpsSdkCodes.php');
 require_once(dirname(__FILE__).DS.'infrastructure/InvalidRequestException.php');
 require_once(dirname(__FILE__).DS.'infrastructure/Validation.php');
+require_once(dirname(__FILE__).DS.'infrastructure/HpsCheckException.php');
 
 // Entities
 require_once(dirname(__FILE__).DS.'entities/HpsTransaction.php');
@@ -34,9 +35,10 @@ require_once(dirname(__FILE__).DS.'entities/HpsTokenData.php');
 require_once(dirname(__FILE__).DS.'entities/HpsTransactionDetails.php');
 require_once(dirname(__FILE__).DS.'entities/HpsTransactionHeader.php');
 require_once(dirname(__FILE__).DS.'entities/HpsVoid.php');
-require_once(dirname(__FILE__).DS.'entities/HpsCheck.php');
-require_once(dirname(__FILE__).DS.'entities/HpsCheckHolder.php');
-require_once(dirname(__FILE__).DS.'entities/HpsCheckSale.php');
+require_once(dirname(__FILE__).DS.'entities/Check/HpsCheck.php');
+require_once(dirname(__FILE__).DS.'entities/Check/HpsCheckHolder.php');
+require_once(dirname(__FILE__).DS.'entities/Check/HpsCheckResponse.php');
+require_once(dirname(__FILE__).DS.'entities/Check/HpsCheckResponseDetails.php');
 
 
 // Services

@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    
+</head>
+<body class="bs-docs-docs" data-spy="scroll" data-target=".bs-docs-sidebar">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+<style>
+    ul {
+        list-style: none;
+    }
+</style>
+<div class="container">
+<div ng-app='buttonBuilder'>
+    <form ng-controller="button" novalidate>
+        <div class="row">
+            <div class="col-xs-6">
+                <h3>1. Select Button Type</h3>
+                <label ng-repeat="name in controlTypes" style="padding-right: 10px;">
+                    <input type="radio" ng-model="controlType.name" ng-value="name" id="{{name}}">
+                    {{name}}
+                </label>
+                <br />
+                <br />
+                <h3>2. Configure Button Properties</h3>
+                <div class="form-group" ng-hide="controlType.name != 'Buy Now'">
+                    <label for="buttonText">Product Id:</label>
+                    <input type="text" class="form-control" placeholder="Product Id / SKU" ng-model="productid" />
+                </div>
+                <div class="form-group" ng-hide="controlType.name != 'Buy Now'">
+                    <label for="buttonText">Product Name:</label>
+                    <input type="text" class="form-control" placeholder="Product Name" ng-model="productname" />
+                </div>
+                <div class="form-group" ng-hide="controlType.name != 'Buy Now'">
+                    <label for="buttonText">Product Price:</label>
+                    <input type="text" class="form-control" placeholder="19.99" ng-model="amount" />
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="modal" ng-true-value="true" ng-false-value="false">
+                        Render as Long Form
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="overrideText" ng-true-value="true" ng-false-value="false">
+                        Override Button Text
+                    </label>
+                </div>
+                <div class="form-group" ng-hide="overrideText != 'true'">
+                    <label for="buttonText">Button Text:</label>
+                    <input type="text" class="form-control" placeholder="Button Text" ng-model="buttonText" />
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="dontRequireState" ng-true-value="true" ng-false-value="false">
+                        Don't Require State Field
+                    </label>
+                </div>
+                <div class="checkbox" ng-hide="controlType.name == 'Buy Now'">
+                    <label>
+                        <input type="checkbox" ng-model="overrideAmount" ng-true-value="true" ng-false-value="false">
+                        Override Default Amount
+                    </label>
+                </div>
+                <span ng-hide="overrideAmount != 'true'">
+                    <div class="form-group" ng-hide="controlType.name == 'Buy Now'">
+                        <label for="defaultAmount">Default Amount:</label>
+                        <input type="text" class="form-control" placeholder="100.00" ng-model="defaultAmount" />
+                    </div>
+                </span>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="customLogo" ng-true-value="true" ng-false-value="false">
+                        Override Logo
+                    </label>
+                </div>
+                <div class="form-group" ng-hide="customLogo != 'true'">
+                    <label for="buttonText">Logo File Name:</label>
+                    <input type="text" class="form-control" placeholder="logo.png" ng-model="logoFileName" />
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="allowAnonymous" ng-true-value="true" ng-false-value="false">
+                        Allow Anonymous Payments
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="collectShipping" ng-true-value="true" ng-false-value="false">
+                        Collect Shipping Information
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="collectAdditional" ng-true-value="true" ng-false-value="false">
+                        Collection Additional Data
+                    </label>
+                </div>
+                <div ng-hide="collectAdditional != 'true'">
+                    <table class="table table-striped">
+                        <thead>
+                            <th>Field Type</th>
+                            <th>Value(s)</th>
+                            <th>Required</th>
+                            <th>&nbsp;</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="add in additionalFields">
+                                <td>
+                                    <select ng-model="add.type" ng-options="t.name for t in types"></select>
+                                </td>
+                                <td>
+                                    <span ng-hide="add.type.name != 'text'">
+                                        <div class="form-group">
+                                            <input type="text" ng-model="add.name" placeholder="Field Name" />
+                                        </div>
+                                    </span>
+
+                                    <span ng-hide="add.type.name != 'dropdown'">
+                                        <div class="form-group">
+                                            <textarea ng-model="add.name" rows="5" cols="30" placeholder="One Option Per Line"></textarea>
+                                        </div>
+                                    </span>
+
+                                    <span ng-hide="add.type.name != 'radio'">
+                                        <div class="form-group">
+                                            <textarea ng-model="add.name" rows="5" cols="30" placeholder="One Option Per Line"></textarea>
+                                        </div>
+                                    </span>
+
+                                    <span ng-hide="add.type.name != 'textarea'">
+                                        <div class="form-group">
+                                            <input ng-model="add.name" placeholder="TextArea Field Name" />
+                                        </div>
+                                    </span>
+
+                                    <span ng-hide="add.type.name != 'label'">
+                                        <div class="form-group">
+                                            <input ng-model="add.name" placeholder="HTML Text (no quotes)" />
+                                        </div>
+                                    </span>
+
+                                    <span ng-hide="add.type.name != 'checkbox'">
+                                        <div class="form-group">
+                                            <input type="text" ng-model="add.name" placeholder="Checkbox Value" />
+                                        </div>
+                                    </span>
+                                </td>
+                                <td>
+                                    <input type="checkbox" ng-model="add.required" ng-true-value="true" ng-false-value="false">
+                                </td>
+                                <td>
+                                    <span ng-hide="additionalFields.length == 1">
+                                        <a href ng-click="additionalFields.splice($index, 1)" class="btn btn-small btn-danger">&times;</a>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">&nbsp;</td>
+                                <td><a href ng-click="newAdditionalField()" class="btn btn-small btn-success">+</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-6 text-center">
+                <h3>3. Copy Embed Code</h3>
+                <span class="copy-stuff">[securesubmit modal="true"<span ng-switch="controlType.name == 'Buy Now'"><span ng-switch-when="true">
+                    amount="{{amount}}"</span></span><span ng-switch="!!productname && controlType.name == 'Buy Now'"><span ng-switch-when="true">
+                    productname="{{productname}}"</span></span><span ng-switch="!!productid && controlType.name == 'Buy Now'"><span ng-switch-when="true">
+                    productid="{{productid}}"</span></span><span ng-switch="overrideText == 'true'"><span ng-switch-when="true">
+                    buttontext="{{buttonText}}"</span></span><span ng-switch="dontRequireState"><span ng-switch-when="true">
+                    requirestate="false"</span></span><span ng-switch="collectShipping"><span ng-switch-when="true">
+                    requireshipping="true"</span></span><span ng-switch="allowAnonymous"><span ng-switch-when="true">
+                    allowanonymous="true"</span></span><span ng-switch="customLogo"><span ng-switch-when="true">
+                    productimage="{{logoFileName}}"</span></span><span ng-switch="overrideAmount == 'true' && controlType.name != 'Buy Now'"><span ng-switch-when="true">
+                    amountdefault="{{defaultAmount}}"</span></span><span ng-switch="collectAdditional"><span ng-switch-when="true"><span ng-repeat="add in additionalFields">
+                    additional_info{{$index+1}}_type="<span ng-switch="add.required"><span ng-switch-when="true">*</span></span>{{add.type.name}}"
+                    additional_info{{$index+1}}="{{add.name | newlines}}"</span></span></span>]
+                </span>
+                <br />
+                <br />
+                <div id="copy_initiator"><span class="btn btn-success"><i class="icon icon-copy"></i>&nbsp;Insert Embed Code</span></div>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    angular.module('buttonBuilder', ['filters']);
+
+    angular.module('filters', []).
+        filter('newlines', function () {
+            return function (text) {
+                return text.replace(/\n/g, '|');
+            };
+        });
+
+    function button($scope, $http, $templateCache) {
+        $scope.modal = false;
+        $scope.overrideText = false;        // should i override the button text?
+        $scope.buttonText = '';             // if so, set the text to this
+        $scope.customLogo = false;          // should i override the picture in the top left corner?
+        $scope.logoFileName = '';           // if so, set the picture url to this
+        $scope.overrideAmount = false;      // DONATE ONLY: should i override the default dollar amount (placeholder text)
+        $scope.defaultAmount = '';          // DONATE ONLY: if so, set it to this
+        $scope.amount = '';                 // BUY NOW ONLY: product price
+        $scope.productid = '';              // BUY NOW ONLY: product SKU/ID
+        $scope.productname = '';            // BUY NOW ONLY: product name
+        $scope.dontRequireState = false;         // should I require the state field (confuses international)
+        $scope.collectAdditional = false;   // are there additional, user-defined fields to collect?
+                                            // if so, they will store as additionalfield1 (name), additionalfield1_type (type (TextBox, DropDown List, CheckBox, Radio Buttons)) additionalfield1_required (required)
+        $scope.collectShipping = false;     // do i need to collect shipping information?
+        $scope.allowAnonymous = false;      // DONATE ONLY: should i allow annonymous donations?
+        $scope.additionalFields = [{ name: '', type: '', required: false }];
+        $scope.types = [{ name: 'text' }, { name: 'dropdown' }, { name: 'textarea' }, { name: 'label'}, { name: 'radio' }, { name: 'checkbox' }];
+        $scope.controlType = { name: 'Donate Now' };
+        $scope.controlTypes = ['Donate Now', 'Pay Now', 'Buy Now'];
+
+        $scope.newAdditionalField = function () {
+            this.additionalFields.push({
+                name: '',
+                type: 'TextBox'
+            });	
+        }
+    }
+
+    jQuery('#copy_initiator').on('click', sendToParent);
+
+    function sendToParent() {
+        var str = jQuery('.copy-stuff').text().replace(/(\r\n|\n|\r)/gm, "").trim(); // remove line breaks
+        str = str.replace(/\s{2,}/g, ' '); // remove spaces
+        str = str.replace(/\t/g, ' '); // remove tabs
+
+        parent.injectValue(str);
+    }
+</script>
+</body>
+</html>

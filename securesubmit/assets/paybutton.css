@@ -1,0 +1,125 @@
+#button-main, #button-main *, #pay-button, #pay-button *,#modal-content,#modal-content *,#modal-content a:hover,#modal-content a:visited,#modal-content a:active{
+    background:none;
+    border: none;
+    bottom:auto;
+    clear:none;
+    cursor:default;
+    float:none;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size:medium;
+    font-style:normal;
+    font-weight:normal;
+    height:auto;
+    left:auto;
+    letter-spacing:normal;
+    line-height:normal;
+    max-height:none;
+    max-width:none;
+    min-height:0;
+    min-width:0;
+    overflow:visible;
+    position:static;
+    right:auto;
+    text-align:left;
+    text-decoration:none;
+    text-indent:0;
+    text-transform:none;
+    top:auto;
+    visibility:visible;
+    white-space:normal;
+    width:auto;
+    z-index:auto;
+}
+
+#modal-background {
+    display: none !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: #000 !important;
+    opacity: .70 !important;
+    -webkit-opacity: .7 !important;
+    -moz-opacity: .7 !important;
+    filter: alpha(opacity=70) !important;
+    z-index: 1000 !important;
+}
+
+#modal-content {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50px;
+    width: 360px;
+    height: 557px;
+    margin-left: -180px;
+    z-index: 1000;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-weight: 400;
+}
+
+#modal-content iframe {
+    top: -1px;
+    left: -1px;
+    padding:0;
+    margin:0;
+    border:0;
+    width:100%;
+    height:100%;
+}
+
+#modal-background.active, #modal-content.active {
+    display: block !important;
+}
+
+.button-main {
+    font-family: Verdana, Helvetica, sans-serif !important;
+    font-weight: 400 !important;
+    margin-left: 0 !important;
+}
+
+.pay-button a {
+    width: 150px !important;
+    height: 44px !important;
+    text-align: center !important;
+    border-radius: 5px !important;
+    -webkit-border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    color: #ffffff !important;
+    display: block !important;
+    background-color: #5F8A9C !important;
+    text-decoration: none !important;
+
+    -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
+    box-sizing: border-box !important;         /* Opera/IE 8+ */
+}
+
+.button-main a{
+    padding-top: 8px !important;
+}
+
+.pay-button a:hover {
+    background-color: #6693A5 !important;
+}
+
+.pay-button-border {
+    margin-top: -5px !important;
+    background-color: #4B6E7D !important;
+    width: 150px !important;
+    height: 5px !important;
+
+    position: absolute !important;
+
+    border-bottom-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+    -webkit-border-bottom-left-radius: 5px !important;
+    -webkit-border-bottom-right-radius: 5px !important;
+    -moz-border-bottom-left-radius: 5px !important;
+    -moz-border-bottom-right-radius: 5px !important;
+
+    -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
+    box-sizing: border-box !important;         /* Opera/IE 8+ */
+}
