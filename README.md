@@ -2,7 +2,7 @@ SecureSubmit WordPress Plugin
 ============
 SecureSubmit allows merchants using Heartland Payment Systems to take PCI-Friendly donations on their WordPress site.
 
-Upgrade from 2.x to 3.x
+Upgrade from 1.2.x to 1.3.x
 ------------
 If you are upgrading from our 2.x plugin to this 3.x plugin, we highly recommend that you do so on a development server 
 as we have introduced some changes that may change the overall plugin experience for your customers (such as email
