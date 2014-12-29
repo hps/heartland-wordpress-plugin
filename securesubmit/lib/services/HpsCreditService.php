@@ -321,8 +321,10 @@ class HpsCreditService extends HpsService{
                 'amount' => $this->_amount,
                 'currency' => $this->_currency,
             );
+            Validation::checkGatewayResponse($response,$txnType,$args);
             Validation::checkTransactionResponse($response,$txnType,$args);
         }else{
+            Validation::checkGatewayResponse($response,$txnType);
             Validation::checkTransactionResponse($response,$txnType);
         }
 

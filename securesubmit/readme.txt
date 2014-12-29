@@ -45,6 +45,16 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
+= 1.3.1 =
+* Made State an option for multi-national
+* Added e-mail reciept for long-form
+* Allowing non-numeric characters in card number
+* Amount field is automatically populated based on what value is selected from radio buttons
+
+= 1.3.0 =
+* Added Button Builder to WordPress WYSIWYG Editor
+* Cleaned up long-form
+::q
 = 1.2.2 =
 * Updated payment email to use configurable settings.
 
