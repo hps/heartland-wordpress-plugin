@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+####1.3.2
+* Ensure SDK isn't already loaded
+
 ####1.3.1
 * Made State an option for multi-national
 * Added e-mail reciept for long-form

@@ -3,8 +3,8 @@
 Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
-Author: Mark Hagan
-Version: 1.3.1
+Author: SecureSubmit
+Version: 1.3.2
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
