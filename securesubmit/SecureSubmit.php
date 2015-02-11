@@ -1554,7 +1554,7 @@ class SecureSubmit {
 
         // shipping info
         $email_shippinginfo = '<h3>Shipping Information</h3>';
-        $email_shippinginfo = 'Name: ' . $shipping_firstname . ' ' . $shipping_lastname . '<br/>';
+        $email_shippinginfo .= 'Name: ' . $shipping_firstname . ' ' . $shipping_lastname . '<br/>';
         $email_shippinginfo .= 'Address: ' . $shipping_address . '<br/>';
         $email_shippinginfo .= 'City: ' . $shipping_city . '<br/>';
         if ($requireState)
