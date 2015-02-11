@@ -1457,9 +1457,9 @@ class SecureSubmit {
         else {
             $body = '%firstname%,<br /><br />Thank you for your payment!<br /><br />';
             $body .= '<h2>%productinfo%</h2>';
-            $body .= '<h3>Billing Information</h3>%billingaddress%';
-            $body .= '<h3>Shipping Information</h3>%shippingaddress%';
-            $body .= '<h3>Additional Information</h3>%additionalinformation%';
+            $body .= '<br/>%billingaddress%';
+            $body .= '<br/>%shippingaddress%';
+            $body .= '<br/>%additionalinformation%';
         }
 
         if ($amount === 0)
@@ -1554,7 +1554,7 @@ class SecureSubmit {
 
         // shipping info
         $email_shippinginfo = '<h3>Shipping Information</h3>';
-        $email_shippinginfo .= 'Name: ' . $shipping_firstname . ' ' . $shipping_lastname . '<br/>';
+        $email_shippinginfo = 'Name: ' . $shipping_firstname . ' ' . $shipping_lastname . '<br/>';
         $email_shippinginfo .= 'Address: ' . $shipping_address . '<br/>';
         $email_shippinginfo .= 'City: ' . $shipping_city . '<br/>';
         if ($requireState)
