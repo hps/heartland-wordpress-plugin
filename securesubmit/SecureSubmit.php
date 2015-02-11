@@ -1623,7 +1623,7 @@ class SecureSubmit {
 
             $email_subject = str_replace('%firstname%', $billing_firstname, $email_subject);
             $email_subject = str_replace('%lastname%', $billing_lastname, $email_subject);
-            $email_subject = str_replace('%amount%', '', $email_subject);
+            $email_subject = str_replace('%amount%', $amount, $email_subject);
             $email_subject = str_replace('%productinfo%', $email_productinfo, $email_subject);
             $email_subject = str_replace('%billingaddress%', $email_billinginfo, $email_subject);
             $email_subject = str_replace('%shippingaddress%', $email_shippinginfo, $email_subject);
