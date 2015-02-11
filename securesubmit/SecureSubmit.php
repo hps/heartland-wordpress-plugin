@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.3.2
+Version: 1.3.3
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -1457,9 +1457,9 @@ class SecureSubmit {
         else {
             $body = '%firstname%,<br /><br />Thank you for your payment!<br /><br />';
             $body .= '<h2>%productinfo%</h2>';
-            $body .= '<h3>Billing Information</h3>%billingaddress%';
-            $body .= '<h3>Shipping Information</h3>%shippingaddress%';
-            $body .= '<h3>Additional Information</h3>%additionalinformation%';
+            $body .= '<br/>%billingaddress%';
+            $body .= '<br/>%shippingaddress%';
+            $body .= '<br/>%additionalinformation%';
         }
 
         if ($amount === 0)
@@ -1623,7 +1623,7 @@ class SecureSubmit {
 
             $email_subject = str_replace('%firstname%', $billing_firstname, $email_subject);
             $email_subject = str_replace('%lastname%', $billing_lastname, $email_subject);
-            $email_subject = str_replace('%amount%', '', $email_subject);
+            $email_subject = str_replace('%amount%', $amount, $email_subject);
             $email_subject = str_replace('%productinfo%', $email_productinfo, $email_subject);
             $email_subject = str_replace('%billingaddress%', $email_billinginfo, $email_subject);
             $email_subject = str_replace('%shippingaddress%', $email_shippinginfo, $email_subject);

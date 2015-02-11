@@ -44,6 +44,10 @@ Screenshots
 
 Changelog
 ------------
+####1.3.3
+* Fixed Subject Line variable swapping
+* Fixed render long form in button builder
+
 ####1.3.2
 * Ensure SDK isn't already loaded
 
