@@ -11,7 +11,7 @@ SecureSubmit allows merchants using Heartland Payment Systems to take PCI-Friend
 
 == Description ==
 
-SecureSubmit makes it simple to start taking tokenized, PCI-Friendly payments (no card data ever touches your web server 
+SecureSubmit makes it simple to start taking tokenized, PCI-Friendly payments (no card data ever touches your web server
 in any way) without making your visitors leave your site and without using iFrames.
 
 Features of SecureSubmit:
@@ -44,6 +44,13 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+
+= 1.3.4 =
+* Matching Wordpress.org and GitHub version numbers
+
+= 1.3.3 =
+* Fixed Subject Line variable swapping
+* Fixed render long form in button builder
 
 = 1.3.2 =
 * Ensure SDK isn't already loaded
@@ -91,7 +98,7 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 = 1.1.2 =
 * Added RAW tags to ignore line breaks.
 
-= 1.1.1 = 
+= 1.1.1 =
 * Fixed multiple buttons on the same page.
 * Added dropdown as an additional option type.
 

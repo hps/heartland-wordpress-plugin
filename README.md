@@ -4,14 +4,14 @@ SecureSubmit allows merchants using Heartland Payment Systems to take PCI-Friend
 
 Upgrade from 1.2.x to 1.3.x
 ------------
-If you are upgrading from our 2.x plugin to this 3.x plugin, we highly recommend that you do so on a development server 
+If you are upgrading from our 2.x plugin to this 3.x plugin, we highly recommend that you do so on a development server
 as we have introduced some changes that may change the overall plugin experience for your customers (such as email
 templates, required fields, and more).
 
 
 Description
 ------------
-SecureSubmit makes it simple to start taking tokenized, PCI-Friendly payments (no card data ever touches your web server 
+SecureSubmit makes it simple to start taking tokenized, PCI-Friendly payments (no card data ever touches your web server
 in any way) without making your visitors leave your site and without using iFrames.
 
 Features of SecureSubmit:
@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+####1.3.4
+* Matching Wordpress.org and GitHub version numbers
+
 ####1.3.3
 * Fixed Subject Line variable swapping
 * Fixed render long form in button builder
