@@ -169,7 +169,9 @@
             </div>
             <div class="col-xs-6 text-center">
                 <h3>3. Copy Embed Code</h3>
-                <span class="copy-stuff">[securesubmit modal="true"<span ng-switch="controlType.name == 'Buy Now'"><span ng-switch-when="true">
+                <span class="copy-stuff">[securesubmit <span ng-switch="modal"><span ng-switch-when="true">
+                    modal="false"</span><span ng-switch-when="false">
+                    modal="true"</span></span><span ng-switch="controlType.name == 'Buy Now'"><span ng-switch-when="true">
                     amount="{{amount}}"</span></span><span ng-switch="!!productname && controlType.name == 'Buy Now'"><span ng-switch-when="true">
                     productname="{{productname}}"</span></span><span ng-switch="!!productid && controlType.name == 'Buy Now'"><span ng-switch-when="true">
                     productid="{{productid}}"</span></span><span ng-switch="overrideText == 'true'"><span ng-switch-when="true">
@@ -229,7 +231,7 @@
             this.additionalFields.push({
                 name: '',
                 type: 'TextBox'
-            });	
+            }); 
         }
     }
 
