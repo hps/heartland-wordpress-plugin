@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.3.4
+Version: 1.3.5
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -497,14 +497,19 @@ class SecureSubmit {
         else
             $amountdefault = '100.00';
 
-        //Check for additional_info fields
-        $pattern = '/(^additional_info[1-9]$|additional_info$)/';
-        $attsKeys = array_keys($atts);
-        $additionalFields = preg_grep($pattern,$attsKeys);
+        $additionalFields = array();
+        $additionalFieldTypes = array();
 
-        //Check for additional Field types
-        $typePattern = '/_type$/';
-        $additionalFieldTypes = preg_grep($typePattern,$attsKeys);
+        if ($atts !== '') {
+            //Check for additional_info fields
+            $pattern = '/(^additional_info[1-9]$|additional_info$)/';
+            $attsKeys = array_keys($atts);
+            $additionalFields = preg_grep($pattern,$attsKeys);
+
+            //Check for additional Field types
+            $typePattern = '/_type$/';
+            $additionalFieldTypes = preg_grep($typePattern,$attsKeys);
+        }
 
         $productid = isset($atts['productid']) ? $atts['productid'] : '';
         $productname = isset($atts['productname']) ? $atts['productname'] : '';
@@ -563,16 +568,16 @@ class SecureSubmit {
             <?php } else if($atts["productimage"] == 'none') { ?>
             <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url( 'assets/transparent.png', __FILE__ ); ?>' class='checkout-product-image' />";
             <?php } else{ ?>
-            <?php echo $prefix; ?>_modal_html += "<img src='<?php echo $atts["productimage"]; ?>' class='checkout-product-image' />";
+            <?php echo $prefix; ?>_modal_html += "<img src='<?php echo isset($atts['productimage']) ? $atts["productimage"] : ''; ?>' class='checkout-product-image' />";
             <?php } ?>
             <?php echo $prefix; ?>_modal_html += "</div>";
             <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='action' id='action' value='ssd_submit_payment'/>";
-            <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_sku' id='product_sku' value='<?php echo $atts['productid']; ?>'/>";
-            <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_id' id='product_id' value='<?php echo $atts['productid']; ?>'/>";
-            <?php echo $prefix; ?>_modal_html += "<div class='checkout-product-name'><?php echo $atts['productname']; ?></div>";
+            <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_sku' id='product_sku' value='<?php echo isset($atts['productid']) ? $atts['productid'] : ''; ?>'/>";
+            <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_id' id='product_id' value='<?php echo isset($atts['productid']) ? $atts['productid'] : ''; ?>'/>";
+            <?php echo $prefix; ?>_modal_html += "<div class='checkout-product-name'><?php echo isset($atts['productname']) ? $atts['productname'] : ''; ?></div>";
 
-            if ('<?php echo $atts['amount']; ?>' != '') {
-                <?php echo $prefix; ?>_modal_html += "<div class='checkout-price'>$<?php echo $atts['amount']; ?></div>";
+            if ('<?php echo isset($atts['amount']) ? $atts['amount'] : ''; ?>' != '') {
+                <?php echo $prefix; ?>_modal_html += "<div class='checkout-price'>$<?php echo isset($atts['amount']) ? $atts['amount'] : ''; ?></div>";
             } else {
                 <?php echo $prefix; ?>_modal_html += "<div class='donation-price'>Dollar Amount<br />$&nbsp;<input type='text' name='donation_amount' id='donation_amount' class='checkout-input donation-field' placeholder='<?php echo $amountdefault; ?>'></div>";
             }
