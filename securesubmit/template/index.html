@@ -4,7 +4,7 @@
 
 <html lang="en">
 <head>
-    
+
 </head>
 <body class="bs-docs-docs" data-spy="scroll" data-target=".bs-docs-sidebar">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
@@ -169,20 +169,48 @@
             </div>
             <div class="col-xs-6 text-center">
                 <h3>3. Copy Embed Code</h3>
-                <span class="copy-stuff">[securesubmit <span ng-switch="modal"><span ng-switch-when="true">
-                    modal="false"</span><span ng-switch-when="false">
-                    modal="true"</span></span><span ng-switch="controlType.name == 'Buy Now'"><span ng-switch-when="true">
-                    amount="{{amount}}"</span></span><span ng-switch="!!productname && controlType.name == 'Buy Now'"><span ng-switch-when="true">
-                    productname="{{productname}}"</span></span><span ng-switch="!!productid && controlType.name == 'Buy Now'"><span ng-switch-when="true">
-                    productid="{{productid}}"</span></span><span ng-switch="overrideText == 'true'"><span ng-switch-when="true">
-                    buttontext="{{buttonText}}"</span></span><span ng-switch="dontRequireState"><span ng-switch-when="true">
-                    requirestate="false"</span></span><span ng-switch="collectShipping"><span ng-switch-when="true">
-                    requireshipping="true"</span></span><span ng-switch="allowAnonymous"><span ng-switch-when="true">
-                    allowanonymous="true"</span></span><span ng-switch="customLogo"><span ng-switch-when="true">
-                    productimage="{{logoFileName}}"</span></span><span ng-switch="overrideAmount == 'true' && controlType.name != 'Buy Now'"><span ng-switch-when="true">
-                    amountdefault="{{defaultAmount}}"</span></span><span ng-switch="collectAdditional"><span ng-switch-when="true"><span ng-repeat="add in additionalFields">
-                    additional_info{{$index+1}}_type="<span ng-switch="add.required"><span ng-switch-when="true">*</span></span>{{add.type.name}}"
-                    additional_info{{$index+1}}="{{add.name | newlines}}"</span></span></span>]
+                <span class="copy-stuff">
+                  [securesubmit
+                  <span ng-switch="modal">
+                    <span ng-switch-when="true"> modal="false"</span>
+                    <span ng-switch-when="false"> modal="true"</span>
+                  </span>
+                  <span ng-switch="controlType.name == 'Buy Now'">
+                    <span ng-switch-when="true"> amount="{{amount}}"</span>
+                  </span>
+                  <span ng-switch="!!productname && controlType.name == 'Buy Now'">
+                    <span ng-switch-when="true"> productname="{{productname}}"</span>
+                  </span>
+                  <span ng-switch="!!productid && controlType.name == 'Buy Now'">
+                    <span ng-switch-when="true"> productid="{{productid}}"</span>
+                  </span>
+                  <span ng-switch="overrideText == 'true'">
+                    <span ng-switch-when="true"> buttontext="{{buttonText}}"</span>
+                  </span>
+                  <span ng-switch="dontRequireState">
+                    <span ng-switch-when="true"> requirestate="false"</span>
+                  </span>
+                  <span ng-switch="collectShipping">
+                    <span ng-switch-when="true"> requireshipping="true"</span>
+                  </span>
+                  <span ng-switch="allowAnonymous">
+                    <span ng-switch-when="true"> allowanonymous="true"</span>
+                  </span>
+                  <span ng-switch="customLogo">
+                    <span ng-switch-when="true"> productimage="{{logoFileName}}"</span>
+                  </span>
+                  <span ng-switch="overrideAmount == 'true' && controlType.name != 'Buy Now'">
+                    <span ng-switch-when="true"> amountdefault="{{defaultAmount}}"</span>
+                  </span>
+                  <span ng-switch="collectAdditional">
+                    <span ng-switch-when="true">
+                      <span ng-repeat="add in additionalFields"> additional_info{{$index+1}}_type="
+                        <span ng-switch="add.required"><span ng-switch-when="true">*</span></span>
+                        {{add.type.name}}" additional_info{{$index+1}}="{{add.name | newlines}}"
+                      </span>
+                    </span>
+                  </span>
+                  ]
                 </span>
                 <br />
                 <br />
@@ -231,7 +259,7 @@
             this.additionalFields.push({
                 name: '',
                 type: 'TextBox'
-            }); 
+            });
         }
     }
 
