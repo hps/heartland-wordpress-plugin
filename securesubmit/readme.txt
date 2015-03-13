@@ -45,6 +45,9 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
+= 1.3.6 =
+* Fixed spacing bug with button builder
+
 = 1.3.5 =
 * Fixed PHP warnings for shortcode attribute edge cases
 
