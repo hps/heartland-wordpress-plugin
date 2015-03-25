@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.3.7
+Version: 1.3.8
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -1228,11 +1228,6 @@ class SecureSubmit {
                             $field_type = str_replace('*', '', $field_type);
                         }
                         $field_type = trim($field_type);
-                        echo "<br />\n";
-                        echo 'Field Type: ' . var_dump($field_type);
-                        echo "<br />\n";
-                        echo 'Name: ' . $atts[$value];
-                        echo "<br />\n";
 
                         if ($field_type == "textarea") {
                             $additionalHTML .= '<tr><td width="200">' . $atts[$value] . $requiredIndicator . '</td><td><textarea name="'.$value.'" id="'.$value.'"" class="donation-textarea"'.$required.'"></textarea></td></tr>';

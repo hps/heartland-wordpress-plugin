@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+####1.3.8
+* Removed debug text :/
+
 ####1.3.7
 * Fixed bug with button field types in non-modal forms
 * Removed more index warnings
