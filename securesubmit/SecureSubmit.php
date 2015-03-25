@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.3.6
+Version: 1.3.7
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -157,11 +157,11 @@ class SecureSubmit {
                 <tbody>
                 <tr>
                     <th scope="row">Public Key</th>
-                    <td><input type="text" id="ssd_public_key" class="regular-text" value="<?php echo esc_attr($this->options['public_key']); ?>" />
+                    <td><input type="text" id="ssd_public_key" class="regular-text" value="<?php if (isset($this->options['public_key'])) echo esc_attr($this->options['public_key']); ?>" />
                 </tr>
                 <tr>
                     <th scope="row">Secret Key</th>
-                    <td><input type="text" id="ssd_secret_key" class="regular-text" value="<?php echo esc_attr($this->options['secret_key']); ?>" />
+                    <td><input type="text" id="ssd_secret_key" class="regular-text" value="<?php if (isset($this->options['secret_key'])) echo esc_attr($this->options['secret_key']); ?>" />
                 </tr>
                 </tbody>
             </table>
@@ -170,7 +170,8 @@ class SecureSubmit {
                 <tbody>
                     <td>
                     <?php
-                        if ($this->options['enable_button_builder'] == 'true')
+                        $ischecked = '';
+                        if (isset($this->options['enable_button_builder']) && $this->options['enable_button_builder'] == 'true')
                             $ischecked = "checked='checked'";
                     ?>
                         <input type="checkbox" id="enable_button_builder" <?php echo $ischecked; ?> />
@@ -280,8 +281,8 @@ class SecureSubmit {
         $shipping = false;
         $additional = false;
 
-        if($_POST['ship'] == 'on'){ $shipping = true;}
-        if($_POST['additional'] == 'on'){ $additional = true;}
+        if(isset($_POST['ship']) && $_POST['ship'] == 'on'){ $shipping = true;}
+        if(isset($_POST['additional']) && $_POST['additional'] == 'on'){ $additional = true;}
         ?>
         <style>
             .even{
@@ -1226,6 +1227,12 @@ class SecureSubmit {
                             $requiredIndicator = '*';
                             $field_type = str_replace('*', '', $field_type);
                         }
+                        $field_type = trim($field_type);
+                        echo "<br />\n";
+                        echo 'Field Type: ' . var_dump($field_type);
+                        echo "<br />\n";
+                        echo 'Name: ' . $atts[$value];
+                        echo "<br />\n";
 
                         if ($field_type == "textarea") {
                             $additionalHTML .= '<tr><td width="200">' . $atts[$value] . $requiredIndicator . '</td><td><textarea name="'.$value.'" id="'.$value.'"" class="donation-textarea"'.$required.'"></textarea></td></tr>';
@@ -1252,6 +1259,7 @@ class SecureSubmit {
                         }
                         else
                         {
+                            echo 'yes';
                             $additionalHTML .= "<tr><td width='200'>" . $atts[$value] . $requiredIndicator . "</td><td><input name='" . $value . "' type=$field_type id='" . $value . "' class='checkout-input checkout-card" . $required . "'></td></tr>";
                         }
                     }
@@ -1309,12 +1317,10 @@ class SecureSubmit {
                     <td>Card CVC:</td>
                     <td><input class="form-text" type="text" id="<?php echo $prefix; ?>_card_cvc" style="width: 45px;" /></td>
                 </tr>
-                <?php if (empty($productid)) { ?>
-                    <tr>
-                        <td>Amount:</td>
-                        <td nowrap>$<input class="form-text" id="donation_amount_secure" style="display: inline;" type="text" value="<?php echo $amountdefault; ?>" name="donation_amount" /></td>
-                    </tr>
-                <?php } ?>
+                <tr>
+                    <td>Amount:</td>
+                    <td nowrap>$<input class="form-text" id="donation_amount_secure" style="display: inline;" type="text" value="<?php echo $amountdefault; ?>" name="donation_amount" <?php if (!empty($productid)):?>disabled="disabled"<?php endif;?>/></td>
+                </tr>
                 <tr>
                     <td colspan="2">
                         <div id="<?php echo $prefix; ?>-donate-response"></div>

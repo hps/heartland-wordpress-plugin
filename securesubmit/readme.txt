@@ -45,6 +45,10 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
+= 1.3.7 =
+* Fixed bug with button field types in non-modal forms
+* Removed more index warnings
+
 = 1.3.6 =
 * Fixed spacing bug with button builder
 
