@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+####1.3.9
+* Removed more debug text :/
+
 ####1.3.8
 * Removed debug text :/
 
