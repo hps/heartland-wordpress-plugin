@@ -773,7 +773,7 @@ class SecureSubmit {
                     configureCleanUp();
 
                     $(function(){
-                        if($.browser.msie && $.browser.version <= 9){
+                        if($.browser && $.browser.msie && $.browser.version <= 9){
                             frameBody.find("[placeholder]").focus(function(){
                                 if($(this).val() == $(this).attr("placeholder"))
                                     $(this).val("");
@@ -907,7 +907,7 @@ class SecureSubmit {
                         var datastring = form.serialize();
                         var url = "<?php echo admin_url('admin-ajax.php'); ?>";
 
-                        if($.browser.msie && $.browser.version <= 9) {
+                        if($.browser && $.browser.msie && $.browser.version <= 9) {
                             $(this).find('[placeholder]').each(function() {
                                 if ($(this).val() == $(this).attr("placeholder")) {
                                     $(this).val("");
@@ -1410,7 +1410,7 @@ class SecureSubmit {
                             var url = "<?php echo admin_url('admin-ajax.php'); ?>";
 
                             //wat?!
-                            if($.browser.msie && $.browser.version <= 9) {
+                            if($.browser && $.browser.msie && $.browser.version <= 9) {
                                 $(this).find('[placeholder]').each(function() {
                                     if ($(this).val() == $(this).attr("placeholder")) {
                                         $(this).val("");
