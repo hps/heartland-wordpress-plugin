@@ -45,6 +45,9 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
+= 1.3.10 =
+* Add check for `$.browser` which has been removed in recent version of jQuery
+
 = 1.3.9 =
 * Removed more debug text :/
 
