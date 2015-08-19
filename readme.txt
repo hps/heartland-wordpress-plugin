@@ -2,7 +2,7 @@
 Contributors: markhagan
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
-Tested up to: 3.9.1
+Tested up to: 4.3
 Stable tag: trunk
 License: Custom
 License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
@@ -44,6 +44,10 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+
+= 1.4.0 =
+* Update Heartland PHP SDK
+* Test against Wordpress 4.3
 
 = 1.3.10 =
 * Add check for `$.browser` which has been removed in recent version of jQuery
