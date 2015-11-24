@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+####1.4.1
+* Update certification url to support PCI DSS 3.1
+
 ####1.4.0
 * Update Heartland PHP SDK
 * Test against Wordpress 4.3
