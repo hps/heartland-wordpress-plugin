@@ -1353,7 +1353,10 @@ class SecureSubmit {
                         $("#a<?php echo $prefix; ?>-modal-content,#a<?php echo $prefix; ?>-modal-background").toggleClass("active");
                     });
 
-                    var pk = '<?php echo esc_attr($this->options['public_key']); ?>';
+                    <?php
+                    $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
+                    ?>
+                    var pk = '<?php echo esc_attr($pkey); ?>';
                     var url = "<?php echo admin_url('admin-ajax.php'); ?>";
 
                     $('#<?php echo $prefix; ?>-securesubmit-button').bind('click', a<?php echo $prefix; ?>_handleSubmit);
