@@ -45,7 +45,10 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
-= 1.4.1 = 
+= 1.4.2 =
+* Fix long form to allow public_key attribute
+
+= 1.4.1 =
 * Update certification url to support PCI DSS 3.1
 
 = 1.4.0 =
