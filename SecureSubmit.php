@@ -1675,7 +1675,7 @@ class SecureSubmit {
             if ($requireState)
                 $insert_array['shipping_state'] = $shipping_state;
             $insert_array['shipping_zip']       = $shipping_zip;
-            $insert_array['product_id']         = $productid;
+            $insert_array['product_id']         = (isset($productid) && is_numeric($productid) ? $productid : '0');
             $insert_array['amount']             = $amount;
             $insert_array['transaction_id']     = $transaction_id;
 
@@ -1685,7 +1685,6 @@ class SecureSubmit {
                 }
             }
 
-            $insert_array['product_id'] = strlen($insert_array['product_id'])==0 ? '0' : $insert_array['product_id'];
             $rows_affected = $wpdb->insert($table_name, $insert_array);
 
         } catch (HpsException $e) {
