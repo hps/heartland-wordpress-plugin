@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+####1.4.3
+* Fix for null product id on db insert
+
 ####1.4.2
 * Fix long form to allow public_key attribute
 
