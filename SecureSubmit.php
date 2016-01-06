@@ -1685,6 +1685,7 @@ class SecureSubmit {
                 }
             }
 
+            $insert_array['product_id'] = strlen($insert_array['product_id'])==0 ? '0' : $insert_array['product_id'];
             $rows_affected = $wpdb->insert($table_name, $insert_array);
 
         } catch (HpsException $e) {
