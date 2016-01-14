@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+####1.4.4
+* Ensure DC is present in all state select fields
+
 ####1.4.3
 * Fix for null product id on db insert
 

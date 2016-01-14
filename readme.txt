@@ -45,6 +45,9 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
+= 1.4.4 =
+* Ensure DC is present in all state select fields
+
 = 1.4.3 =
 * Fix issue with null product id on db insert
 
