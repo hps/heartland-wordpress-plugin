@@ -67,8 +67,6 @@ class SecureSubmit {
             }
         }
 
-        if(!session_id())
-            session_start();
     }
 
     function mce_buttons($buttons) {
@@ -462,9 +460,6 @@ class SecureSubmit {
 
     function shortcode($atts) {
         ob_start();
-
-        if( !session_id())
-            session_start();
 
         $buttonText = isset($atts['buttontext']) ? $atts['buttontext'] : 'Make Donation';
 
@@ -1473,9 +1468,6 @@ class SecureSubmit {
 
         if ($amount === 0)
         {
-            if(!session_id())
-                session_start();
-
             $amount = isset($atts['amount']) ? $atts['amount'] : 0;
             $memo = isset($atts['memo']) ? $atts['memo'] : 0;
             $productid = isset($atts['productid']) ? $atts['productid'] : 0;
