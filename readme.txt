@@ -45,6 +45,9 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
+= 1.4.5 =
+* Remove unncessary session_start calls.
+
 = 1.4.4 =
 * Ensure DC is present in all state select fields
 
