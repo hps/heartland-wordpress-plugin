@@ -1725,13 +1725,13 @@ class SecureSubmit {
             additional_info8 varchar(255) NOT NULL,
             additional_info9 varchar(255) NOT NULL,
             additional_info10 varchar(255) NOT NULL,
-            UNIQUE  KEY id (id)
+            UNIQUE KEY id (id)
            );";
 
             require_once( ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
 
-            update_option( "jal_db_version", $jal_db_version);
+            update_site_option( "jal_db_version", $jal_db_version);
 
         }
     }
