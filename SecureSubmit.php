@@ -804,7 +804,16 @@ class SecureSubmit {
                             additionalPanel.fadeIn();
                         } else if (<?php echo $prefix; ?>_requireShipping) {
                             cardPanel.hide();
-                            shippingPanel.fadeIn();
+                            if( frameBody.find("#shipping_same").attr("checked") ){
+                                cardPanel.fadeIn();
+                                frameBody.find("#shipping_name").val(frameBody.find("#cardholder_name").val());
+                                frameBody.find("#shipping_address").val(frameBody.find("#cardholder_address").val());
+                                frameBody.find("#shipping_city").val(frameBody.find("#cardholder_city").val());
+                                frameBody.find("#shipping_state").val(frameBody.find("#cardholder_state").val());
+                                frameBody.find("#shipping_zip").val(frameBody.find("#cardholder_zip").val());
+                            } else {
+                                shippingPanel.fadeIn();
+                            }
                         } else {
                             shippingPanel.hide();
                             cardPanel.fadeIn();
@@ -977,7 +986,7 @@ class SecureSubmit {
                     cardBack.on("click", function(event) {
                         billingPanel.hide();
 
-                        if (<?php echo $prefix; ?>_requireShipping) {
+                        if ((<?php echo $prefix; ?>_requireShipping) && (!frameBody.find("#shipping_same").attr("checked"))) {
                             shippingPanel.show();
                         } else {
                             <?php if(count($additionalFields)>0){ ?>
