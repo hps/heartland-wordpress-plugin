@@ -804,7 +804,16 @@ class SecureSubmit {
                             additionalPanel.fadeIn();
                         } else if (<?php echo $prefix; ?>_requireShipping) {
                             cardPanel.hide();
-                            shippingPanel.fadeIn();
+                            if( frameBody.find("#shipping_same").attr("checked") ){
+                                cardPanel.fadeIn();
+                                frameBody.find("#shipping_name").val(frameBody.find("#cardholder_name").val());
+                                frameBody.find("#shipping_address").val(frameBody.find("#cardholder_address").val());
+                                frameBody.find("#shipping_city").val(frameBody.find("#cardholder_city").val());
+                                frameBody.find("#shipping_state").val(frameBody.find("#cardholder_state").val());
+                                frameBody.find("#shipping_zip").val(frameBody.find("#cardholder_zip").val());
+                            } else {
+                                shippingPanel.fadeIn();
+                            }
                         } else {
                             shippingPanel.hide();
                             cardPanel.fadeIn();
@@ -977,7 +986,7 @@ class SecureSubmit {
                     cardBack.on("click", function(event) {
                         billingPanel.hide();
 
-                        if (<?php echo $prefix; ?>_requireShipping) {
+                        if ((<?php echo $prefix; ?>_requireShipping) && (!frameBody.find("#shipping_same").attr("checked"))) {
                             shippingPanel.show();
                         } else {
                             <?php if(count($additionalFields)>0){ ?>
@@ -1495,7 +1504,7 @@ class SecureSubmit {
 
             list($shipfirst, $shipmiddle, $shiplast) = split(' ', $_POST['shipping_name']);
 
-            if (isset($last)) {
+            if (isset($shiplast)) {
                 $shipping_firstname = $shipfirst;
                 $shipping_lastname = $shiplast;
             } else {
@@ -1725,13 +1734,13 @@ class SecureSubmit {
             additional_info8 varchar(255) NOT NULL,
             additional_info9 varchar(255) NOT NULL,
             additional_info10 varchar(255) NOT NULL,
-            UNIQUE  KEY id (id)
+            UNIQUE KEY id (id)
            );";
 
             require_once( ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
 
-            update_option( "jal_db_version", $jal_db_version);
+            update_site_option( "jal_db_version", $jal_db_version);
 
         }
     }
