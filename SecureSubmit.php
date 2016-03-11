@@ -1504,7 +1504,7 @@ class SecureSubmit {
 
             list($shipfirst, $shipmiddle, $shiplast) = split(' ', $_POST['shipping_name']);
 
-            if (isset($last)) {
+            if (isset($shiplast)) {
                 $shipping_firstname = $shipfirst;
                 $shipping_lastname = $shiplast;
             } else {
