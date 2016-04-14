@@ -2,7 +2,7 @@
 Contributors: markhagan
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
-Tested up to: 4.4
+Tested up to: 4.5
 Stable tag: trunk
 License: Custom
 License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
@@ -45,7 +45,11 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
+= 1.4.6 =
+* Clear payment fields in modal on tokenize error and after postback to WP Ajax handler
+
 = 1.4.5 =
+* Fix "Same as Shipping" for billing address not operating correctly
 * Remove unncessary session_start calls.
 
 = 1.4.4 =
