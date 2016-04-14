@@ -892,12 +892,19 @@ class SecureSubmit {
 
                     cardPanel.hide();
 
+                    function clearPaymentFields() {
+                        cardPanel.find('#card_number').val('');
+                        cardPanel.find('#card_exp').val('');
+                        cardPanel.find('#card_cvc').val('');
+                    }
+
                     function <?php echo $prefix; ?>_secureSubmitResponseHandler(response) {
                         if ( response.message ) {
                             processingPanel.hide();
                             failurePanel.show();
                             failurePanel.find('.transaction-error').text(response.message);
                             configureCleanUp();
+                            clearPaymentFields();
                         } else {
                             form.find('#securesubmit_token').remove();
                             var token_html = "<input type='hidden' id='securesubmit_token' name='securesubmit_token' value='" + response.token_value + "' />";
@@ -931,6 +938,7 @@ class SecureSubmit {
                             }
 
                             configureCleanUp();
+                            clearPaymentFields();
                         });
                     }
 
