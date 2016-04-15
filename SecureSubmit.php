@@ -1590,7 +1590,13 @@ class SecureSubmit {
         $billing_zip = preg_replace("/[^a-zA-Z0-9]/", "", $billing_zip);
 
         try {
-            $HPS_VarName = "HeartlandHPS_FailCount" . md5($_SERVER['REMOTE_ADDR']);
+            if(array_key_exists("HTTP_X_FORWARDED_FOR",$_SERVER) && $_SERVER["HTTP_X_FORWARDED_FOR"] != ""){
+                $IParray = array_values(array_filter(explode(',',$_SERVER['HTTP_X_FORWARDED_FOR'])));
+                $IP = end($IParray);
+            }else{
+                $IP = $_SERVER["REMOTE_ADDR"];
+            }
+            $HPS_VarName = "HeartlandHPS_FailCount" . md5($IP);
             $HeartlandHPS_FailCount = (int)get_transient( $HPS_VarName );
             if ( $HeartlandHPS_FailCount > 3) {
                 sleep(5);
