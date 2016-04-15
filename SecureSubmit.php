@@ -1465,12 +1465,33 @@ class SecureSubmit {
         global $table_name;
 
         $body = "";
+        $enable_fraud = false;
+        $fraud_message = "";
+        $fraud_velocity_attempts = 3;
+        $fraud_velocity_timeout = 10;
+
         $secureToken = isset($_POST['securesubmit_token']) ? $_POST['securesubmit_token'] : '';
         $amount = isset($_POST['donation_amount']) ? $_POST['donation_amount'] : 0;
         $atts = get_option('secure_submit_'. $_POST['product_id']);
 
         $skey = isset($atts['secret_key']) ? $atts['secret_key'] : $this->options['secret_key'];
         $requireState = isset($atts['requirestate']) ? $atts['requirestate'] : true;
+
+        if ($this->options['enable_fraud'] != null && $this->options['enable_fraud'] != '') {
+            $enable_fraud = (bool)$this->options['enable_fraud'];
+        }
+
+        if ($this->options['fraud_message'] != null && $this->options['fraud_message'] != '') {
+            $fraud_message = $this->options['fraud_message'];
+        }
+
+        if ($this->options['fraud_velocity_attempts'] != null && $this->options['fraud_velocity_attempts'] != '') {
+            $fraud_velocity_attempts = (int)$this->options['fraud_velocity_attempts'];
+        }
+
+        if ($this->options['fraud_velocity_timeout'] != null && $this->options['fraud_velocity_timeout'] != '') {
+            $fraud_velocity_timeout = (bool)$this->options['fraud_velocity_timeout'];
+        }
 
         if ($this->options['email_body'] != null && $this->options['email_body'] != '') {
             $body = $this->options['email_body'];
@@ -1590,18 +1611,24 @@ class SecureSubmit {
         $billing_zip = preg_replace("/[^a-zA-Z0-9]/", "", $billing_zip);
 
         try {
-            if(array_key_exists("HTTP_X_FORWARDED_FOR",$_SERVER) && $_SERVER["HTTP_X_FORWARDED_FOR"] != ""){
-                $IParray = array_values(array_filter(explode(',',$_SERVER['HTTP_X_FORWARDED_FOR'])));
-                $IP = end($IParray);
-            }else{
-                $IP = $_SERVER["REMOTE_ADDR"];
+            // check if advanced fraud is enabled
+            if ($enable_fraud) {
+                if(array_key_exists("HTTP_X_FORWARDED_FOR",$_SERVER) && $_SERVER["HTTP_X_FORWARDED_FOR"] != ""){
+                    $IParray = array_values(array_filter(explode(',',$_SERVER['HTTP_X_FORWARDED_FOR'])));
+                    $IP = end($IParray);
+                }else{
+                    $IP = $_SERVER["REMOTE_ADDR"];
+                }
+
+                $HPS_VarName = "HeartlandHPS_FailCount" . md5($IP);
+                $HeartlandHPS_FailCount = (int)get_transient( $HPS_VarName );
+
+                if ($HeartlandHPS_FailCount > $fraud_velocity_attempts) {
+                    sleep(5);
+                    throw new HpsException($fraud_message);
+                }
             }
-            $HPS_VarName = "HeartlandHPS_FailCount" . md5($IP);
-            $HeartlandHPS_FailCount = (int)get_transient( $HPS_VarName );
-            if ( $HeartlandHPS_FailCount > 3) {
-                sleep(5);
-                throw new HpsException(get_transient( $HPS_VarName . 'msg' ));
-            }
+
             $config = new HpsServicesConfig();
 
             $config->secretApiKey = esc_attr($skey);
@@ -1713,9 +1740,13 @@ class SecureSubmit {
             $rows_affected = $wpdb->insert($table_name, $insert_array);
 
         } catch (HpsException $e) {
-            $HeartlandHPS_FailCount = (int)get_transient( $HPS_VarName );
-            set_transient( $HPS_VarName, $HeartlandHPS_FailCount+1, MINUTE_IN_SECONDS*10 );
-            set_transient( $HPS_VarName . 'msg', __($e->getMessage()), MINUTE_IN_SECONDS*10 );
+            // if advanced fraud is enabled, increment the error count            
+            if ($enable_fraud) {
+                $HeartlandHPS_FailCount = (int)get_transient($HPS_VarName);
+                set_transient($HPS_VarName, $HeartlandHPS_FailCount + 1, MINUTE_IN_SECONDS * $fraud_velocity_timeout);
+                set_transient($HPS_VarName . 'msg', __($e->getMessage()), MINUTE_IN_SECONDS * $fraud_velocity_timeout);
+            }
+
             die($e->getMessage());
         }
 
