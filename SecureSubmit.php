@@ -1590,6 +1590,12 @@ class SecureSubmit {
         $billing_zip = preg_replace("/[^a-zA-Z0-9]/", "", $billing_zip);
 
         try {
+            $HPS_VarName = "HeartlandHPS_FailCount" . md5($_SERVER['REMOTE_ADDR']);
+            $HeartlandHPS_FailCount = (int)get_transient( $HPS_VarName );
+            if ( $HeartlandHPS_FailCount > 3) {
+                sleep(5);
+                throw new HpsException(get_transient( $HPS_VarName . 'msg' ));
+            }
             $config = new HpsServicesConfig();
 
             $config->secretApiKey = esc_attr($skey);
@@ -1701,6 +1707,9 @@ class SecureSubmit {
             $rows_affected = $wpdb->insert($table_name, $insert_array);
 
         } catch (HpsException $e) {
+            $HeartlandHPS_FailCount = (int)get_transient( $HPS_VarName );
+            set_transient( $HPS_VarName, $HeartlandHPS_FailCount+1, MINUTE_IN_SECONDS*10 );
+            set_transient( $HPS_VarName . 'msg', __($e->getMessage()), MINUTE_IN_SECONDS*10 );
             die($e->getMessage());
         }
 
