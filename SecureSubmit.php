@@ -1531,7 +1531,7 @@ class SecureSubmit {
         }
 
         if ($this->options['fraud_message'] != null && $this->options['fraud_message'] != '') {
-            $fraud_message = wp_sprintf('%s',$this->options['fraud_message']);
+            $fraud_message = $this->options['fraud_message'];
         }
 
         if ($this->options['fraud_velocity_attempts'] != null && $this->options['fraud_velocity_attempts'] != '') {
@@ -1671,10 +1671,11 @@ class SecureSubmit {
 
                 $HPS_VarName = "HeartlandHPS_FailCount" . md5($IP);
                 $HeartlandHPS_FailCount = (int)get_transient( $HPS_VarName );
+                $issuerResponse = get_transient( $HPS_VarName . 'IssuerResponse' );
 
                 if ($HeartlandHPS_FailCount >= $fraud_velocity_attempts) {
                     sleep(5);
-                    throw new HpsException($fraud_message);
+                    throw new HpsException(wp_sprintf('%s %s',$fraud_message, $issuerResponse));
                 }
             }
 
@@ -1792,6 +1793,9 @@ class SecureSubmit {
             // if advanced fraud is enabled, increment the error count
             if ($enable_fraud) {
                 set_transient($HPS_VarName, $HeartlandHPS_FailCount+1, MINUTE_IN_SECONDS * $fraud_velocity_timeout);
+                if ($HeartlandHPS_FailCount < $fraud_velocity_attempts){
+                    set_transient($HPS_VarName . 'IssuerResponse', $e->getMessage(), MINUTE_IN_SECONDS * $fraud_velocity_timeout);
+                }
             }
 
             die($e->getMessage());
