@@ -48,14 +48,16 @@ Changelog
 * Added Google reCaptcha (non-modal only)
 
 ####1.4.7
-* Added velocity fraud check settings
+* Add velocity checking for anti-fraud
+* Add velocity fraud check settings
 
 ####1.4.6
-* Added velocity fraud check
+* Clear payment fields in modal on tokenize error and after postback to WP Ajax handler
 
 ####1.4.5
+* Fix "Same as Shipping" for billing address not operating correctly
 * Remove unncessary session_start calls.
- 
+
 ####1.4.4
 * Ensure DC is present in all state select fields
 
