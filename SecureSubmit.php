@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.4.8
+Version: 1.4.9
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -1946,6 +1946,16 @@ class SecureSubmit {
             dbDelta($sql);
 
             update_site_option( "jal_db_version", $jal_db_version);
+            // set some defaults values to enable velocity checks
+            $data = array(
+                'enable_fraud' => 'true',
+                'fraud_message' => (string)'Please contact us to complete the transaction.',
+                'fraud_velocity_attempts' => (int)3,
+                'fraud_velocity_timeout' => (int)10,
+            );
+
+            update_option('securesubmit_options', $data);
+
 
         }
     }
