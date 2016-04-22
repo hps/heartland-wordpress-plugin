@@ -52,9 +52,6 @@ class SecureSubmit {
         if (!isset($this->options['secret_key'])) {
             $this->options['secret_key'] = '';
         }
-        if (!isset($this->options['secret_key'])) {
-            $this->options['secret_key'] = '';
-        }
         if (!isset($this->options['public_key'])) {
             $this->options['public_key'] = '';
         }
