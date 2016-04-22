@@ -44,7 +44,7 @@ Screenshots
 
 Changelog
 ------------
-####= 1.4.9
+####1.4.9
 * Enabled Velocity check by default
 
 ####1.4.8
