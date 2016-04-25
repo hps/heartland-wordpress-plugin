@@ -86,7 +86,7 @@ class SecureSubmit {
         if(is_admin()){
             if ( current_user_can('edit_posts') && current_user_can('edit_pages') && get_user_option('rich_editing') == 'true')
             {
-                if ($this->options['enable_button_builder'] == 'true') {
+                if (array_key_exists('enable_button_builder', $this->options ) && $this->options['enable_button_builder'] == 'true') {
                     add_filter('tiny_mce_version', array(&$this, 'tiny_mce_version') );
                     add_filter("mce_external_plugins", array(&$this, "mce_external_plugins"));
                     add_filter('mce_buttons_2', array(&$this, 'mce_buttons'));
