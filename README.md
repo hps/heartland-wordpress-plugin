@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+####1.5.0
+* Fixed button builder tinyMCE conflict when downloaded from github issue: 37
+
 ####1.4.9
 * Enabled Velocity check by default
 

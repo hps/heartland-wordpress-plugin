@@ -44,6 +44,9 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.0 =
+* Fixed button builder tinyMCE conflict when downloaded from github issue: 37
+
 = 1.4.9 =
 * Enabled Velocity check by default
 
