@@ -102,7 +102,7 @@ class SecureSubmit {
     }
 
     function mce_external_plugins($plugin_array) {
-        $plugin_array['securesubmit']  =  plugins_url('/securesubmit/js/securesubmit_plugin.js');
+        $plugin_array['securesubmit']  =  plugins_url('js/securesubmit_plugin.js', __FILE__ );
         return $plugin_array;
     }
 
