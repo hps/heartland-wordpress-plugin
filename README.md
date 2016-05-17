@@ -46,6 +46,7 @@ Changelog
 ------------
 #### 1.5.1
 * Corrected minor issue that only appeared with debug mode enabled. Warning on button builder
+* Fix compatibility regression with older versions of PHP
 
 ####1.5.0
 * Fixed button builder tinyMCE conflict when downloaded from github issue: 37
