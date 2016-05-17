@@ -1145,7 +1145,7 @@ class SecureSubmit {
         <?php } else {
 
             if($this->isRecaptchaEnabled) {
-                wp_enqueue_script('ssd-recaptcha', static::RECAPTCHA_CLIENT_URL);
+                wp_enqueue_script('ssd-recaptcha', self::RECAPTCHA_CLIENT_URL);
             }
 
             ?>
@@ -1599,13 +1599,13 @@ class SecureSubmit {
 
         $curl    = curl_init();
         $recaptchaInfo = array("secret" => $this->recaptchaSecretKey, "response" => $token);
-        curl_setopt_array($curl, [
-            CURLOPT_URL            => static::RECAPTCHA_VERIFY_URL,
+        curl_setopt_array($curl, array(
+            CURLOPT_URL            => self::RECAPTCHA_VERIFY_URL,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $recaptchaInfo,
-        ]);
+        ));
         $response = curl_exec($curl);
         curl_close($curl);
         if(empty($response)) {
