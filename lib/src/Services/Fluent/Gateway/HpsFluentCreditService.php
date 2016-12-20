@@ -36,7 +36,7 @@ class HpsFluentCreditService extends HpsSoapGatewayService
             ->withCurrency('usd');
     }
 
-    public function cpcEdit($transactionId)
+    public function cpcEdit($transactionId = null)
     {
         $builder = new HpsCreditServiceCpcEditBuilder($this);
         return $builder
@@ -46,6 +46,13 @@ class HpsFluentCreditService extends HpsSoapGatewayService
     public function edit()
     {
         return new HpsCreditServiceEditBuilder($this);
+    }
+
+    public function updateTokenExpiration()
+    {
+        $builder = new HpsCreditServiceUpdateTokenExpirationBuilder($this);
+        //print_r($builder);
+        return $builder;
     }
 
     public function get($transactionId = null)
@@ -189,7 +196,7 @@ class HpsFluentCreditService extends HpsSoapGatewayService
     public function _submitTransaction($transaction, $txnType, $clientTxnId = null, $cardData = null)
     {
         try {
-            $response = $this->doTransaction($transaction, $clientTxnId);
+            $response = $this->doRequest($transaction, $clientTxnId);
         } catch (HpsException $e) {
             if ($e->innerException != null && $e->innerException->getMessage() == 'gateway_time-out') {
                 if (in_array($txnType, array('CreditSale', 'CreditAuth'))) {
@@ -255,6 +262,9 @@ class HpsFluentCreditService extends HpsSoapGatewayService
                 break;
             case 'CreditOfflineAuth':
                 $rvalue = HpsOfflineAuthorization::fromDict($response, $txnType);
+                break;
+            case 'ManageTokens':
+                $rvalue = HpsManageTokensResponse::fromDict($response, $txnType);
                 break;
             default:
                 break;

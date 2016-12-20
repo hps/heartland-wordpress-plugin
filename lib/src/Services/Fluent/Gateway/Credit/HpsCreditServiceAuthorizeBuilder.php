@@ -83,6 +83,8 @@ class HpsCreditServiceAuthorizeBuilder extends HpsBuilderAbstract
     /** @var HpsDirectMarketData|null */
     protected $directMarketData         = null;
 
+    protected $secureEcommerce          = null;
+
     /**
      * Instatiates a new HpsCreditServiceAuthorizeBuilder
      *
@@ -184,6 +186,10 @@ class HpsCreditServiceAuthorizeBuilder extends HpsBuilderAbstract
             $hpsBlock1->appendChild($refElement);
         }
 
+        if ($this->secureEcommerce != null) {
+            $hpsBlock1->appendChild($this->service->_hydrateSecureEcommerce($this->secureEcommerce, $xml));
+        }
+
         $hpsCreditAuth->appendChild($hpsBlock1);
         $hpsTransaction->appendChild($hpsCreditAuth);
 
@@ -214,12 +220,11 @@ class HpsCreditServiceAuthorizeBuilder extends HpsBuilderAbstract
      */
     public function onlyOnePaymentMethod($actionCounts)
     {
-        return (isset($actionCounts['card']) && $actionCounts['card'] == 1
-                && (!isset($actionCounts['token'])
-                    || isset($actionCounts['token']) && $actionCounts['token'] == 0))
-            || (isset($actionCounts['token']) && $actionCounts['token'] == 1
-                && (!isset($actionCounts['card'])
-                    || isset($actionCounts['card']) && $actionCounts['card'] == 0));
+        $count = 0;
+        if (isset($actionCounts['card'])) { $count++; }
+        if (isset($actionCounts['token'])) { $count++; }
+        if (isset($actionCounts['trackData'])) { $count++; }
+        return 1 === $count;
     }
 
     /**
