@@ -66,7 +66,7 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
     protected $readerPresent            = false;
 
     protected $originalTxnReferenceData = null;
-    protected $paymentData              = null;
+    protected $secureEcommerce          = null;
 
     /**
      * Instatiates a new HpsCreditServiceChargeBuilder
@@ -116,7 +116,8 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
             ));
             if ($this->card->encryptionData != null) {
                 $cardData->appendChild($this->service->_hydrateEncryptionData(
-                    $this->card->encryptionData
+                    $this->card->encryptionData,
+                    $xml
                 ));
             }
         } else if ($this->token != null) {
@@ -127,10 +128,11 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
                 $this->readerPresent
             ));
         } else if ($this->trackData != null) {
-            $cardData->appendChild($this->service->_hydrateTrackData($this->trackData));
+            $cardData->appendChild($this->service->_hydrateTrackData($this->trackData, $xml));
             if ($this->trackData->encryptionData != null) {
                 $cardData->appendChild($this->service->_hydrateEncryptionData(
-                    $this->trackData->encryptionData
+                    $this->trackData->encryptionData,
+                    $xml
                 ));
             }
         } else if ($this->paymentData != null) {
@@ -168,8 +170,8 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
 
         $hpsBlock1->appendChild($cardData);
 
-        if ($this->paymentData != null) {
-            $hpsBlock1->appendChild($this->service->_hydrateSecureEcommerce($this->paymentData->paymentData, $xml));
+        if ($this->secureEcommerce != null) {
+            $hpsBlock1->appendChild($this->service->_hydrateSecureEcommerce($this->secureEcommerce, $xml));
         }
 
         $hpsCreditSale->appendChild($hpsBlock1);
