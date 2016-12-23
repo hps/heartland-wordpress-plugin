@@ -621,7 +621,7 @@ class SecureSubmit {
         if (empty($productid)) {
             $prefix = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10);
         } else {
-            $prefix = $productid;
+            $prefix = 'secure_submit_' .$productid;
         }
 
         update_option('secure_submit_'.$productid, $atts);
