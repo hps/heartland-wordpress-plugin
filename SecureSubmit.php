@@ -111,14 +111,14 @@ class SecureSubmit {
     }
 
     function options_page() {
-        if ($this->options['email_subject'] === '' || $this->options['email_subject'] == null) {
+        if (!isset($this->options['email_subject']) || $this->options['email_subject'] === '' || $this->options['email_subject'] == null) {
             $emailsubject = 'Thank you for your payment of $%amount%!';
         }
         else {
             $emailsubject = $this->options['email_subject'];
         }
 
-        if ($this->options['email_body'] === '' || $this->options['email_body'] == null) {
+        if (!isset($this->options['email_body']) || $this->options['email_body'] === '' || $this->options['email_body'] == null) {
             $emailbody = '%firstname%,<br /><br />Thank you for your payment!<br /><br />';
             $emailbody .= '<h2>%productinfo%</h2>';
             $emailbody .= '<h3>Billing Information</h3>%billingaddress%';
@@ -283,15 +283,15 @@ class SecureSubmit {
                 <tbody>
                 <tr>
                     <th scope="row">From Name</th>
-                    <td><input type="text" id="ssd_from_name" class="regular-text" value="<?php echo esc_attr($this->options['from_name']); ?>" />
+                    <td><input type="text" id="ssd_from_name" class="regular-text" value="<?php if (isset($this->options['from_name'])) echo esc_attr($this->options['from_name']); ?>" />
                 </tr>
                 <tr>
                     <th scope="row">From Email Address</th>
-                    <td><input type="text" id="ssd_from_email" class="regular-text" value="<?php echo esc_attr($this->options['from_email']); ?>" />
+                    <td><input type="text" id="ssd_from_email" class="regular-text" value="<?php if (isset($this->options['from_name'])) echo esc_attr($this->options['from_email']); ?>" />
                 </tr>
                 <tr>
                     <th scope="row">Payment Email Address</th>
-                    <td><input type="text" id="ssd_payment_email" class="regular-text" value="<?php echo esc_attr($this->options['payment_email']); ?>" />
+                    <td><input type="text" id="ssd_payment_email" class="regular-text" value="<?php if (isset($this->options['payment_email'])) echo esc_attr($this->options['payment_email']); ?>" />
                 </tr>
                 <tr>
                     <th scope="row">Customer Email Subject</th>
@@ -1682,7 +1682,8 @@ class SecureSubmit {
 
         // modal
         if (isset($_POST['cardholder_name'])) {
-            list($first, $middle, $last) = split(' ', $_POST['cardholder_name']);
+            // suppress warnings in case of missing components
+            @list($first, $middle, $last) = explode(' ', $_POST['cardholder_name']);
 
             if (isset($last)) {
                 $billing_firstname = $first;
@@ -1692,7 +1693,8 @@ class SecureSubmit {
                 $billing_lastname = $middle;
             }
 
-            list($shipfirst, $shipmiddle, $shiplast) = split(' ', $_POST['shipping_name']);
+            // suppress warnings in case of missing components
+            @list($shipfirst, $shipmiddle, $shiplast) = explode(' ', $_POST['shipping_name']);
 
             if (isset($shiplast)) {
                 $shipping_firstname = $shipfirst;
@@ -1815,6 +1817,7 @@ class SecureSubmit {
             $cardOrToken = new HpsTokenData();
             $cardOrToken->tokenValue = $secureToken;
 
+            $details = null;
             if (!empty($memo)) {
                 $details = new HpsTransactionDetails();
                 $details->memo = $memo;
@@ -1826,7 +1829,8 @@ class SecureSubmit {
                 $cardOrToken,
                 $cardHolder,
                 false,
-                $details);
+                $details
+            );
 
             add_filter('wp_mail_content_type', create_function('', 'return "text/html"; '));
 
