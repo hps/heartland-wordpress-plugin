@@ -116,8 +116,7 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
             ));
             if ($this->card->encryptionData != null) {
                 $cardData->appendChild($this->service->_hydrateEncryptionData(
-                    $this->card->encryptionData,
-                    $xml
+                    $this->card->encryptionData
                 ));
             }
         } else if ($this->token != null) {
@@ -128,11 +127,10 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
                 $this->readerPresent
             ));
         } else if ($this->trackData != null) {
-            $cardData->appendChild($this->service->_hydrateTrackData($this->trackData, $xml));
+            $cardData->appendChild($this->service->_hydrateTrackData($this->trackData));
             if ($this->trackData->encryptionData != null) {
                 $cardData->appendChild($this->service->_hydrateEncryptionData(
-                    $this->trackData->encryptionData,
-                    $xml
+                    $this->trackData->encryptionData
                 ));
             }
         } else if ($this->paymentData != null) {
