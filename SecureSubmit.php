@@ -190,7 +190,7 @@ class SecureSubmit {
             <h2>SecureSubmit Settings</h2>
             <div id="message" class="updated hidden"><p></p></div>
             <h3>API Credentials</h3>
-            <p><a href="https://developer.heartlandpaymentsystems.com/SecureSubmit/Account/" target="_blank">Click here</a> to get your SecureSubmit API keys!</p>
+            <p><a href="https://developer.heartlandpaymentsystems.com/Account/KeysAndCredentials" target="_blank">Click here</a> to get your SecureSubmit API keys!</p>
             <table class="form-table">
                 <tbody>
                 <tr>
@@ -223,8 +223,8 @@ class SecureSubmit {
                             $ischecked = "checked='checked'";
                         ?>
                         <input type="checkbox" id="enable_recaptcha" <?php echo $ischecked; ?> />
-                        <label for="enable_button_builder">Enable Google Recaptcha (non-modal only)</label>
-                        <span style="font-size: smaller; margin-left:5px">( What is <a target="_top" href="https://www.google.com/recaptcha/intro/index.html">Google ReCaptcha</a>? )</span>
+                        <label for="enable_recaptcha">Enable Google Recaptcha (non-modal only)</label>
+                        <span style="font-size: smaller; margin-left:5px">( What is <a target="_blank" href="https://www.google.com/recaptcha/intro/index.html">Google ReCaptcha</a>? )</span>
                     </td>
                 </tr>
                 <tr>
