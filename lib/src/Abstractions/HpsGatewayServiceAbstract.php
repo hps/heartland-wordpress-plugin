@@ -8,8 +8,9 @@ abstract class HpsGatewayServiceAbstract
     protected $_amount   = null;
     protected $_currency = null;
     protected $_filterBy = null;
+    const MIN_OPENSSL_VER = 268439615; //OPENSSL_VERSION_NUMBER openSSL 1.0.1c
 
-    public function __construct(HpsServicesConfig $config = null)
+    public function __construct(HpsConfigInterface $config = null)
     {
         if ($config != null) {
             $this->_config = $config;
@@ -26,8 +27,6 @@ abstract class HpsGatewayServiceAbstract
         $this->_config = $value;
     }
 
-    abstract protected function processResponse($curlResponse, $curlInfo, $curlError);
-
     protected function submitRequest($url, $headers, $data = null, $httpVerb = 'POST', $keyType = HpsServicesConfig::KEY_TYPE_SECRET, $options = null)
     {
         if ($this->_isConfigInvalid()) {
@@ -39,7 +38,7 @@ abstract class HpsGatewayServiceAbstract
             );
         }
 
-        if (!$this->_config->validateApiKey($keyType)) {
+        if (!$this->_config->validate($keyType) && ($this->_config->username == null && $this->_config->password == null)) {
             $type = $this->_config->getKeyType($keyType);
             $message = "The HPS SDK requires a valid {$keyType} API key to be used";
             if ($type == $keyType) {
@@ -53,18 +52,22 @@ abstract class HpsGatewayServiceAbstract
             );
         }
 
+        $logger = HpsLogger::getInstance();
+
         try {
             $request = curl_init();
             curl_setopt($request, CURLOPT_URL, $url);
-            curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 60);
-            curl_setopt($request, CURLOPT_TIMEOUT, 60);
+            curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 100);
+            curl_setopt($request, CURLOPT_TIMEOUT, 100);
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($request, CURLOPT_SSL_VERIFYHOST, false);
             if ($data != null) {
+                $logger->log('Request data', $data);
                 curl_setopt($request, CURLOPT_CUSTOMREQUEST, $httpVerb);
                 curl_setopt($request, CURLOPT_POSTFIELDS, $data);
             }
+            $logger->log('Request headers', $headers);
             curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($request, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
 
@@ -72,14 +75,33 @@ abstract class HpsGatewayServiceAbstract
                 curl_setopt($request, CURLOPT_PROXY, $this->_config->proxyOptions['proxy_host']);
                 curl_setopt($request, CURLOPT_PROXYPORT, $this->_config->proxyOptions['proxy_port']);
             }
+
+            if (
+                $this->_config->curlOptions != null
+                && !empty($this->_config->curlOptions)
+            ) {
+                curl_setopt_array($request, $this->_config->curlOptions);
+            }
+
             $curlResponse = curl_exec($request);
             $curlInfo = curl_getinfo($request);
             $curlError = curl_errno($request);
 
-            if ($curlError == 28) {
+            $logger->log('Response data', $curlResponse);
+            $logger->log('Curl info', $curlInfo);
+            $logger->log('Curl error', $curlError);
+
+            if ($curlError == 28) { //CURLE_OPERATION_TIMEOUTED
                 throw new HpsException("gateway_time-out");
             }
 
+            if ($curlError == 35) { //CURLE_SSL_CONNECT_ERROR
+                $err_msg = 'PHP-SDK cURL TLS 1.2 handshake failed. If you have any questions, please contact Specialty Products Team at 866.802.9753.';
+                if ( extension_loaded('openssl') && OPENSSL_VERSION_NUMBER <  self::MIN_OPENSSL_VER ) { // then you don't have openSSL 1.0.1c or greater
+                    $err_msg .= 'Your current version of OpenSSL is ' . OPENSSL_VERSION_TEXT . 'You do not have the minimum version of OpenSSL 1.0.1c which is required for curl to use TLS 1.2 handshake.';
+                }
+                throw new HpsGatewayException($curlError,$err_msg);
+            }
             return $this->processResponse($curlResponse, $curlInfo, $curlError);
         } catch (Exception $e) {
             throw new HpsGatewayException(
