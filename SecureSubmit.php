@@ -1768,8 +1768,7 @@ class SecureSubmit {
                 $email_additionalinfo .= 'additional_info' . strval($i) . ": " . $_POST['additional_info' . strval($i)] . '<br/>';
             }
         }
-
-        $billing_zip = preg_replace("/[^a-zA-Z0-9]/", "", $billing_zip);
+       
 
         try {
             // check if advanced fraud is enabled
@@ -1809,7 +1808,7 @@ class SecureSubmit {
             $cardHolder = new HpsCardHolder();
             $cardHolder->firstName = $billing_firstname;
             $cardHolder->lastName = $billing_lastname;
-            $cardHolder->emailAddress = $billing_email;
+            $cardHolder->email = $billing_email;
             $cardHolder->address = $address;
 
             $cardOrToken = new HpsTokenData();
