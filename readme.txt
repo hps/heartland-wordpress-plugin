@@ -44,6 +44,10 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.2 =
+* Updated Heartland PHP SDK
+* Test against Wordpress 4.7
+
 = 1.5.1 =
 * Corrected minor issue that only appeared with debug mode enabled. Warning on button builder
 * Fix compatibility regression with older versions of PHP
