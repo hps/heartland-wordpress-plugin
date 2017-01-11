@@ -44,7 +44,8 @@ Screenshots
 
 Changelog
 ------------
-= 1.5.2 =
+
+#### 1.5.2
 * Updated Heartland PHP SDK
 * Test against Wordpress 4.7
 
