@@ -1855,13 +1855,20 @@ class SecureSubmit {
                 $fromName = esc_attr($this->options['from_name']);
                 $header = 'From: "' . $fromName . '" <'.$fromAddress.'>'."\r\n";
             }
+            
+            $body = apply_filters('wp_securesubmit_email_body', $body);
+            
+            $defaultSubjectMerchant = 'SecureSubmit $' . $amount . ' Payment Received';
+            $subjectMerchant = apply_filters('wp_securesubmit_email_subject_merchant', $defaultSubjectMerchant);
 
             // send merchant email
             if ($header != '') {
-                wp_mail(esc_attr($this->options['payment_email']), 'SecureSubmit $' . $amount . ' Payment Received', $body, $header );
+                wp_mail(esc_attr($this->options['payment_email']), $subjectMerchant, $body, $header );
             } else {
-                wp_mail(esc_attr($this->options['payment_email']), 'SecureSubmit $' . $amount . ' Payment Received', $body );
+                wp_mail(esc_attr($this->options['payment_email']), $subjectMerchant, $body );
             }
+            
+            $email_subject = apply_filters('wp_securesubmit_email_subject_customer', $email_subject);
 
             // send customer email
             if (isset($_POST["email_reciept"]) && isset($_POST["email_address"])) {
