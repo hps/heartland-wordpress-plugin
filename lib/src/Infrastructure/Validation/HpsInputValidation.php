@@ -50,12 +50,12 @@ class HpsInputValidation
 
     public static function cleanPhoneNumber($number)
     {
-        return preg_replace('/\D+/', '', trim($number));
+        return preg_replace('/\D+/', '', $number);
     }
 
     public static function cleanZipCode($zip)
     {
-        return preg_replace('/[^0-9A-Za-z]/', '', trim($zip));
+        return preg_replace('/[^0-9A-Za-z]/', '', $zip);
     }
 
     public static function checkDateNotFuture($date)
