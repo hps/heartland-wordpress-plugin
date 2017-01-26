@@ -96,6 +96,12 @@
                 </div>
                 <div class="checkbox">
                     <label>
+                        <input type="checkbox" ng-model="collectBillinging" ng-true-value="true" ng-false-value="false">
+                        Collect Billing Information
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
                         <input type="checkbox" ng-model="collectAdditional" ng-true-value="true" ng-false-value="false">
                         Collection Additional Data
                     </label>
@@ -192,6 +198,9 @@
                   </span>
                   <span ng-switch="collectShipping">
                     <span ng-switch-when="true"> requireshipping="true"</span>
+                  </span>
+                  <span ng-switch="collectBillinging">
+                    <span ng-switch-when="true"> requirebillinging="true"</span>
                   </span>
                   <span ng-switch="allowAnonymous">
                     <span ng-switch-when="true"> allowanonymous="true"</span>
