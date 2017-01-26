@@ -45,6 +45,10 @@ Screenshots
 Changelog
 ------------
 
+#### 1.5.3
+* Added support for requiring shipping and billing information
+* Test against PHP 7.0.10 
+
 #### 1.5.2
 * Updated Heartland PHP SDK
 * Test against Wordpress 4.7
@@ -180,5 +184,6 @@ Tag Options
 1. productid="value" (this is required for non-donation)
 1. productname="value"
 1. buttontext="value"
+1. requirebilling="value"
 1. requireshipping="value"
 1. productimage="value" (default is a picture of a gift box)

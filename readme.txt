@@ -45,6 +45,11 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
+
+= 1.5.3 =
+* Added support for requiring shipping and billing information
+* Test against PHP 7.0.10
+
 = 1.5.2 =
 * Updated Heartland PHP SDK
 * Test against Wordpress 4.7
@@ -179,5 +184,6 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 2. productid="value" (this is required for non-donation)
 3. productname="value"
 4. buttontext="value"
-5. requireshipping="value"
-6. productimage="value" (default is a picture of a gift box)
+5. requirebilling="value"
+6. requireshipping="value"
+7. productimage="value" (default is a picture of a gift box)
