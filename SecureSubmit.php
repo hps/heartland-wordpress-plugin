@@ -640,16 +640,16 @@ class SecureSubmit {
             <script language="javascript" type="text/javascript">
 
                 <?php if ($requireShipping) { ?>
-                var <?php echo $prefix; ?>_requireShipping = true;
+                    var <?php echo $prefix; ?>_requireShipping = true;
                 <?php } else { ?>
-                var <?php echo $prefix; ?>_requireShipping = false;
+                    var <?php echo $prefix; ?>_requireShipping = false;
                 <?php } ?>
 
                 <?php if ($requireBilling) { ?>
-                var <?php echo $prefix; ?>_requireBilling = true;
+                    var <?php echo $prefix; ?>_requireBilling = true;
                 <?php } else { ?>
-                var <?php echo $prefix; ?>_requireBilling = false;
-                <?php  } ?>
+                    var <?php echo $prefix; ?>_requireBilling = false;
+                <?php } ?>
 
                 <?php
                 if(count($additionalFields)>0){
@@ -678,11 +678,11 @@ class SecureSubmit {
 
                 <?php echo $prefix; ?>_modal_html += "<div style='float: left;'>";
                 <?php if (!isset($atts["productimage"])) { ?>
-                <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url( 'assets/donation.png', __FILE__ ); ?>' class='checkout-product-image' />";
-                <?php } else if($atts["productimage"] == 'none') { ?>
-                <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url( 'assets/transparent.png', __FILE__ ); ?>' class='checkout-product-image' />";
-                <?php } else{ ?>
-                <?php echo $prefix; ?>_modal_html += "<img src='<?php echo isset($atts['productimage']) ? $atts["productimage"] : ''; ?>' class='checkout-product-image' />";
+                    <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url('assets/donation.png', __FILE__); ?>' class='checkout-product-image' />";
+                <?php } else if ($atts["productimage"] == 'none') { ?>
+                    <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url('assets/transparent.png', __FILE__); ?>' class='checkout-product-image' />";
+                <?php } else { ?>
+                    <?php echo $prefix; ?>_modal_html += "<img src='<?php echo isset($atts['productimage']) ? $atts["productimage"] : ''; ?>' class='checkout-product-image' />";
                 <?php } ?>
                 <?php echo $prefix; ?>_modal_html += "</div>";
                 <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='action' id='action' value='ssd_submit_payment'/>";
@@ -703,14 +703,12 @@ class SecureSubmit {
                 // BILLING BODY
                 var <?php echo $prefix; ?>_billing_html = "<div id='<?php echo $prefix; ?>_billing_panel'>";
                 <?php echo $prefix; ?>_billing_html += "<div class='checkout-card-information'>Billing Information</div>";
-                <?php echo $prefix; ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_name' id='cardholder_name' class='checkout-input checkout-card <?php
-                    echo $billingRequired;
-                    ?> ' placeholder='Name on Credit Card'></div>";
+                <?php echo $prefix; ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_name' id='cardholder_name' class='checkout-input checkout-card <?php echo $billingRequired; ?> ' placeholder='Name on Credit Card'></div>";
                 <?php echo $prefix; ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_address' id='cardholder_address' class='checkout-input checkout-card <?php echo $billingRequired; ?>' placeholder='Credit Card Billing Address'></div>";
                 <?php echo $prefix; ?>_billing_html += "<div class='card-number'>";
                 <?php echo $prefix; ?>_billing_html += "<input type='text' name='cardholder_city' id='cardholder_city' class='checkout-input city-field<?php echo $billingRequired; ?>' placeholder='City'>";
                 <?php if ($requireState) { ?>
-                <?php echo $prefix; ?>_billing_html += "<select name='cardholder_state' id='cardholder_state' class='checkout-input state-field<?php echo $billingRequired; ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
+                    <?php echo $prefix; ?>_billing_html += "<select name='cardholder_state' id='cardholder_state' class='checkout-input state-field<?php echo $billingRequired; ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
                 <?php } ?>
                 <?php echo $prefix; ?>_billing_html += "<input type='text' name='cardholder_zip' id='cardholder_zip' class='checkout-input zip-field<?php echo $billingRequired; ?>' placeholder='Zip'>";
                 <?php echo $prefix; ?>_billing_html += "</div>";
@@ -791,12 +789,12 @@ class SecureSubmit {
                 <?php echo $prefix; ?>_shipping_html += "<div class='card-number'>";
                 <?php echo $prefix; ?>_shipping_html += "<input type='text' name='shipping_city' id='shipping_city' class='checkout-input city-field<?php echo $shippingRequired; ?>' placeholder='City'>";
                 <?php if ($requireState) { ?>
-                <?php echo $prefix; ?>_shipping_html += "<select id='shipping_state' name='shipping_state' class='checkout-input state-field<?php echo $shippingRequired; ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
+                    <?php echo $prefix; ?>_shipping_html += "<select id='shipping_state' name='shipping_state' class='checkout-input state-field<?php echo $shippingRequired; ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
                 <?php } ?>
                 <?php echo $prefix; ?>_shipping_html += "<input type='text' name='shipping_zip' id='shipping_zip' class='checkout-input zip-field<?php echo $shippingRequired; ?>' placeholder='Zip'>";
                 <?php echo $prefix; ?>_shipping_html += "</div>";
                 <?php echo $prefix; ?>_shipping_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo $prefix; ?>_shipping_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='powered_by'><img src='<?php echo plugins_url( 'assets/heart.png', __FILE__ ); ?>' /></div>";
+                <?php echo $prefix; ?>_shipping_html += "<div class='powered_by'><img src='<?php echo plugins_url('assets/heart.png', __FILE__); ?>' /></div>";
                 <?php echo $prefix; ?>_shipping_html += "</div>";
 
                 // CARD BODY
