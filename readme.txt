@@ -47,7 +47,7 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 
 = 1.5.3 =
-* Added support for requiring shipping and billing information
+* Updated shipping and billing information (Card Holder Name, Address, City and Zip Code) as required fields. 
 * Test against PHP 7.0.10
 
 = 1.5.2 =
