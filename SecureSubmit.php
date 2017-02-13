@@ -1776,7 +1776,7 @@ class SecureSubmit {
 
         // modal
         if (isset($_POST['cardholder_name'])) {
-            list($first, $middle, $last) = preg_split ("/ /", $_POST['cardholder_name']);
+            list($first, $middle, $last) = explode (" ", $_POST['cardholder_name']);
 
             if (isset($last)) {
                 $billing_firstname = $first;
@@ -1786,7 +1786,7 @@ class SecureSubmit {
                 $billing_lastname = $middle;
             }
 
-            list($shipfirst, $shipmiddle, $shiplast) = preg_split ("/ /", $_POST['shipping_name']);
+            list($shipfirst, $shipmiddle, $shiplast) = explode (" ", $_POST['shipping_name']);
 
             if (isset($shiplast)) {
                 $shipping_firstname = $shipfirst;
