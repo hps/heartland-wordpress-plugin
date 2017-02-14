@@ -32,7 +32,7 @@
 
     jQuery(function(){
         var scriptpath = jQuery("script[src]").last().attr("src").split('?')[0].split('/').slice(0, -5).join('/')+'/';
-        scriptpath += 'wp-content/plugins/donate/template/index.html';
+        scriptpath += 'wp-content/plugins/securesubmit/template/index.html';
         
         var form = jQuery('<div id="securesubmit-form"><table id="securesubmit-table" class="form-table">\
             <tr>\
