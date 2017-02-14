@@ -50,7 +50,7 @@
         var table = form.find('table');
         form.appendTo('body').hide();
 
-        var height = jQuery(window).height() - 284;
+        var height = jQuery(window).height() - 200;
         jQuery('.bbIframe').css('height', height);
     });
 })();
