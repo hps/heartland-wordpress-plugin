@@ -686,8 +686,8 @@ class SecureSubmit {
                 <?php } ?>
                 <?php echo $prefix; ?>_modal_html += "</div>";
                 <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='action' id='action' value='ssd_submit_payment'/>";
-                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_sku' id='product_sku' value='<?php echo isset($atts['productid']) ? $atts['productid'] : ''; ?>'/>";
-                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_id' id='product_id' value='<?php echo isset($atts['productid']) ? $atts['productid'] : ''; ?>'/>";
+                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_sku' id='product_sku' value='<?php echo isset($atts['productid']) ? $atts['productid'] : get_the_title(); ?>'/>";
+                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_id' id='product_id' value='<?php echo isset($atts['productid']) ? $atts['productid'] : get_the_ID(); ?>'/>";
                 <?php echo $prefix; ?>_modal_html += "<div class='checkout-product-name'><?php echo isset($atts['productname']) ? $atts['productname'] : ''; ?></div>";
 
                 if ('<?php echo isset($atts['amount']) ? $atts['amount'] : ''; ?>' != '') {
@@ -1717,7 +1717,7 @@ class SecureSubmit {
             if(!$this->isValidRecaptchaToken($_POST['g-recaptcha-response'])){
                 die('Invalid recaptcha detected, please try to submit again.');
             }
-        }
+        }        
 
         $body = "";
         $enable_fraud = false;
@@ -1758,13 +1758,21 @@ class SecureSubmit {
             $body .= '<br/>%shippingaddress%';
             $body .= '<br/>%additionalinformation%';
         }
-
+        
         if ($amount === 0)
         {
             $amount = isset($atts['amount']) ? $atts['amount'] : 0;
             $memo = isset($atts['memo']) ? $atts['memo'] : 0;
             $productid = isset($atts['productid']) ? $atts['productid'] : 0;
             $productname = isset($atts['productname']) ? $atts['productname'] : 0;
+        }
+        //if productid is not already set in $attrs assign it from POST
+        if(!isset($atts['productid'])){
+            $productid = (!empty($_POST['product_id'])) ? $_POST['product_id'] : '';
+        }
+        //if productname is not already set in $attrs assign it from POST
+        if(!isset($atts['productname'])){
+            $productname = (!empty($_POST['product_name'])) ? $_POST['product_name'] : '';
         }
 
         //product info
