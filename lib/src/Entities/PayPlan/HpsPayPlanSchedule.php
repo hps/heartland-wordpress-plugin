@@ -83,14 +83,20 @@ class HpsPayPlanSchedule extends HpsPayPlanResourceAbstract
     /** @var string|null */
     public $scheduleStarted           = null;
 
+    /** @var string|null */
+    public $invoiceNbr           = null;
+
+    /** @var string|null */
+    public $description           = null;
+
     public function __construct() {
         $this->emailReceipt = 'Never';
         $this->emailAdvanceNotice = 'No';
     }
 
-    public static function getEditableFields()
+    public static function getEditableFields( HpsPayPlanSchedule $schedule = null  )
     {
-        return array(
+        $editableFields = array(
             'scheduleName',
             'scheduleStatus',
             'deviceId',
@@ -99,19 +105,25 @@ class HpsPayPlanSchedule extends HpsPayPlanResourceAbstract
             'taxAmount',
             'numberOfPaymentsRemaining',
             'endDate',
-            'cancellationDate',
             'reprocessingCount',
             'emailReceipt',
             'emailAdvanceNotice',
             'processingDateInfo',
-            // Only editable when scheduleStarted = false
-            'scheduleIdentifier',
-            'startDate',
-            'frequency',
-            'duration',
-            // Only editable when scheduleStarted = true
-            'nextProcessingDate',
+            'invoiceNbr',
+            'description',
         );
+        if ($schedule->scheduleStarted === 'true'){
+            $editableFields[] = 'cancellationDate';
+            $editableFields[] = 'nextProcessingDate';
+        }
+        // Only editable when scheduleStarted = false
+        else{
+            $editableFields[] = 'scheduleIdentifier';
+            $editableFields[] = 'startDate';
+            $editableFields[] = 'frequency';
+            $editableFields[] = 'duration';
+        }
+        return  $editableFields;
     }
 
     public static function getSearchableFields()
@@ -172,12 +184,16 @@ class HpsPayPlanSchedule extends HpsPayPlanResourceAbstract
         $ret->creationDate = property_exists($obj, 'creationDate') ? $obj->creationDate : null;
         $ret->lastChangeDate = property_exists($obj, 'lastChangeDate') ? $obj->lastChangeDate : null;
         $ret->statusSetDate = property_exists($obj, 'statusSetDate') ? $obj->statusSetDate : null;
+        $ret->description = property_exists($obj, 'description') ? $obj->description : null;
+        $ret->invoiceNbr = property_exists($obj, 'invoiceNbr') ? $obj->invoiceNbr : null;
         return $ret;
     }
 
     // Needs to be implemented to get name of child class
-    public function getEditableFieldsWithValues($class = '', $params = array())
-    {
-        return parent::getEditableFieldsWithValues(get_class(), $params);
+    public function getEditableFieldsWithValues($params = null,$class = 'HpsPayPlanSchedule'){
+        if ($params===null){
+            $params=$this;
+        }
+        return parent::getEditableFieldsWithValues($class, $params);
     }
 }

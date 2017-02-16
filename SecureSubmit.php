@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.5.1
+Version: 1.5.3
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -190,7 +190,7 @@ class SecureSubmit {
             <h2>SecureSubmit Settings</h2>
             <div id="message" class="updated hidden"><p></p></div>
             <h3>API Credentials</h3>
-            <p><a href="https://developer.heartlandpaymentsystems.com/SecureSubmit/Account/" target="_blank">Click here</a> to get your SecureSubmit API keys!</p>
+            <p><a href="https://developer.heartlandpaymentsystems.com/Account/KeysAndCredentials" target="_blank">Click here</a> to get your SecureSubmit API keys!</p>
             <table class="form-table">
                 <tbody>
                 <tr>
@@ -223,8 +223,8 @@ class SecureSubmit {
                             $ischecked = "checked='checked'";
                         ?>
                         <input type="checkbox" id="enable_recaptcha" <?php echo $ischecked; ?> />
-                        <label for="enable_button_builder">Enable Google Recaptcha (non-modal only)</label>
-                        <span style="font-size: smaller; margin-left:5px">( What is <a target="_top" href="https://www.google.com/recaptcha/intro/index.html">Google ReCaptcha</a>? )</span>
+                        <label for="enable_recaptcha">Enable Google Recaptcha (non-modal only)</label>
+                        <span style="font-size: smaller; margin-left:5px">( What is <a target="_blank" href="https://www.google.com/recaptcha/intro/index.html">Google ReCaptcha</a>? )</span>
                     </td>
                 </tr>
                 <tr>
@@ -621,9 +621,10 @@ class SecureSubmit {
         if (empty($productid)) {
             $prefix = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10);
         } else {
-            $prefix = $productid;
+            $prefix = 'secure_submit_' .$productid;
         }
 
+        $billingRequired = '';
         update_option('secure_submit_'.$productid, $atts);
 
         if (isset($atts['ignorelinebreaks']) && $atts['ignorelinebreaks'] === 'true') {
@@ -631,15 +632,23 @@ class SecureSubmit {
             [raw]
             <?php
         }
+        $billingRequired = $requireBilling ? ' required' : '';
+        $shippingRequired = $requireShipping ? ' required' : '';
         if ($modal) { ?>
             <div id="<?php echo $prefix; ?>_donation">
             </div>
             <script language="javascript" type="text/javascript">
 
                 <?php if ($requireShipping) { ?>
-                var <?php echo $prefix; ?>_requireShipping = true;
+                    var <?php echo $prefix; ?>_requireShipping = true;
                 <?php } else { ?>
-                var <?php echo $prefix; ?>_requireShipping = false;
+                    var <?php echo $prefix; ?>_requireShipping = false;
+                <?php } ?>
+
+                <?php if ($requireBilling) { ?>
+                    var <?php echo $prefix; ?>_requireBilling = true;
+                <?php } else { ?>
+                    var <?php echo $prefix; ?>_requireBilling = false;
                 <?php } ?>
 
                 <?php
@@ -669,16 +678,16 @@ class SecureSubmit {
 
                 <?php echo $prefix; ?>_modal_html += "<div style='float: left;'>";
                 <?php if (!isset($atts["productimage"])) { ?>
-                <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url( 'assets/donation.png', __FILE__ ); ?>' class='checkout-product-image' />";
-                <?php } else if($atts["productimage"] == 'none') { ?>
-                <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url( 'assets/transparent.png', __FILE__ ); ?>' class='checkout-product-image' />";
-                <?php } else{ ?>
-                <?php echo $prefix; ?>_modal_html += "<img src='<?php echo isset($atts['productimage']) ? $atts["productimage"] : ''; ?>' class='checkout-product-image' />";
+                    <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url('assets/donation.png', __FILE__); ?>' class='checkout-product-image' />";
+                <?php } else if ($atts["productimage"] == 'none') { ?>
+                    <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url('assets/transparent.png', __FILE__); ?>' class='checkout-product-image' />";
+                <?php } else { ?>
+                    <?php echo $prefix; ?>_modal_html += "<img src='<?php echo isset($atts['productimage']) ? $atts["productimage"] : ''; ?>' class='checkout-product-image' />";
                 <?php } ?>
                 <?php echo $prefix; ?>_modal_html += "</div>";
                 <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='action' id='action' value='ssd_submit_payment'/>";
-                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_sku' id='product_sku' value='<?php echo isset($atts['productid']) ? $atts['productid'] : ''; ?>'/>";
-                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_id' id='product_id' value='<?php echo isset($atts['productid']) ? $atts['productid'] : ''; ?>'/>";
+                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_sku' id='product_sku' value='<?php echo isset($atts['productid']) ? $atts['productid'] : get_the_title(); ?>'/>";
+                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_id' id='product_id' value='<?php echo isset($atts['productid']) ? $atts['productid'] : get_the_ID(); ?>'/>";
                 <?php echo $prefix; ?>_modal_html += "<div class='checkout-product-name'><?php echo isset($atts['productname']) ? $atts['productname'] : ''; ?></div>";
 
                 if ('<?php echo isset($atts['amount']) ? $atts['amount'] : ''; ?>' != '') {
@@ -694,14 +703,14 @@ class SecureSubmit {
                 // BILLING BODY
                 var <?php echo $prefix; ?>_billing_html = "<div id='<?php echo $prefix; ?>_billing_panel'>";
                 <?php echo $prefix; ?>_billing_html += "<div class='checkout-card-information'>Billing Information</div>";
-                <?php echo $prefix; ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_name' id='cardholder_name' class='checkout-input checkout-card' placeholder='Name on Credit Card'></div>";
-                <?php echo $prefix; ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_address' id='cardholder_address' class='checkout-input checkout-card' placeholder='Credit Card Billing Address'></div>";
+                <?php echo $prefix; ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_name' id='cardholder_name' class='checkout-input checkout-card <?php echo $billingRequired; ?> ' placeholder='Name on Credit Card'></div>";
+                <?php echo $prefix; ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_address' id='cardholder_address' class='checkout-input checkout-card <?php echo $billingRequired; ?>' placeholder='Credit Card Billing Address'></div>";
                 <?php echo $prefix; ?>_billing_html += "<div class='card-number'>";
-                <?php echo $prefix; ?>_billing_html += "<input type='text' name='cardholder_city' id='cardholder_city' class='checkout-input city-field' placeholder='City'>";
+                <?php echo $prefix; ?>_billing_html += "<input type='text' name='cardholder_city' id='cardholder_city' class='checkout-input city-field<?php echo $billingRequired; ?>' placeholder='City'>";
                 <?php if ($requireState) { ?>
-                <?php echo $prefix; ?>_billing_html += "<select name='cardholder_state' id='cardholder_state' class='checkout-input state-field'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
+                    <?php echo $prefix; ?>_billing_html += "<select name='cardholder_state' id='cardholder_state' class='checkout-input state-field<?php echo $billingRequired; ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
                 <?php } ?>
-                <?php echo $prefix; ?>_billing_html += "<input type='text' name='cardholder_zip' id='cardholder_zip' class='checkout-input zip-field' placeholder='Zip'>";
+                <?php echo $prefix; ?>_billing_html += "<input type='text' name='cardholder_zip' id='cardholder_zip' class='checkout-input zip-field<?php echo $billingRequired; ?>' placeholder='Zip'>";
                 <?php echo $prefix; ?>_billing_html += "</div>";
 
                 // Additional Info BODY
@@ -775,25 +784,25 @@ class SecureSubmit {
                 var <?php echo $prefix; ?>_shipping_html = "<div id='<?php echo $prefix; ?>_shipping_panel'>";
                 <?php echo $prefix; ?>_shipping_html += "<div class='back-button'><a href='#billing' id='<?php echo $prefix; ?>_shipping_back'>back</a></div>";
                 <?php echo $prefix; ?>_shipping_html += "<div class='checkout-card-information'>Shipping Information</div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='card-number'><input name='shipping_name' type='text' id='shipping_name' class='checkout-input checkout-card' placeholder='Shipping Name'></div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='card-number'><input name='shipping_address' type='text' id='shipping_address' class='checkout-input checkout-card' placeholder='Address'></div>";
+                <?php echo $prefix; ?>_shipping_html += "<div class='card-number'><input name='shipping_name' type='text' id='shipping_name' class='checkout-input checkout-card<?php echo $shippingRequired; ?>' placeholder='Shipping Name'></div>";
+                <?php echo $prefix; ?>_shipping_html += "<div class='card-number'><input name='shipping_address' type='text' id='shipping_address' class='checkout-input checkout-card<?php echo $shippingRequired; ?>' placeholder='Address'></div>";
                 <?php echo $prefix; ?>_shipping_html += "<div class='card-number'>";
-                <?php echo $prefix; ?>_shipping_html += "<input type='text' name='shipping_city' id='shipping_city' class='checkout-input city-field' placeholder='City'>";
+                <?php echo $prefix; ?>_shipping_html += "<input type='text' name='shipping_city' id='shipping_city' class='checkout-input city-field<?php echo $shippingRequired; ?>' placeholder='City'>";
                 <?php if ($requireState) { ?>
-                <?php echo $prefix; ?>_shipping_html += "<select id='shipping_state' name='shipping_state' class='checkout-input state-field'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
+                    <?php echo $prefix; ?>_shipping_html += "<select id='shipping_state' name='shipping_state' class='checkout-input state-field<?php echo $shippingRequired; ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
                 <?php } ?>
-                <?php echo $prefix; ?>_shipping_html += "<input type='text' name='shipping_zip' id='shipping_zip' class='checkout-input zip-field' placeholder='Zip'>";
+                <?php echo $prefix; ?>_shipping_html += "<input type='text' name='shipping_zip' id='shipping_zip' class='checkout-input zip-field<?php echo $shippingRequired; ?>' placeholder='Zip'>";
                 <?php echo $prefix; ?>_shipping_html += "</div>";
                 <?php echo $prefix; ?>_shipping_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo $prefix; ?>_shipping_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='powered_by'><img src='<?php echo plugins_url( 'assets/heart.png', __FILE__ ); ?>' /></div>";
+                <?php echo $prefix; ?>_shipping_html += "<div class='powered_by'><img src='<?php echo plugins_url('assets/heart.png', __FILE__); ?>' /></div>";
                 <?php echo $prefix; ?>_shipping_html += "</div>";
 
                 // CARD BODY
                 var <?php echo $prefix; ?>_card_html = "<div id='<?php echo $prefix; ?>_card_panel'>";
                 <?php echo $prefix; ?>_card_html += "<div class='back-button'><a href='#shipping' id='<?php echo $prefix; ?>_card_back'>back</a></div>";
                 <?php echo $prefix; ?>_card_html += "<div class='checkout-card-information'>Card Information</div>";
-                <?php echo $prefix; ?>_card_html += "<div class='card-number'><input type='text' id='card_number' class='checkout-input checkout-card' placeholder='4111 - 1111 - 1111 - 1111'></div>";
-                <?php echo $prefix; ?>_card_html += "<div class='card-exp'><input type='text' id='card_exp' class='checkout-exp' placeholder='MM/YY'></div>";
+                <?php echo $prefix; ?>_card_html += "<div class='card-number'><input type='text' id='card_number' class='checkout-input checkout-card required' placeholder='4111 - 1111 - 1111 - 1111'></div>";
+                <?php echo $prefix; ?>_card_html += "<div class='card-exp'><input type='text' id='card_exp' class='checkout-exp required' placeholder='MM/YY'></div>";
                 <?php echo $prefix; ?>_card_html += "<div class='card-cvc'><input type='text' id='card_cvc' class='checkout-exp' placeholder='CVC'></div>";
                 <?php echo $prefix; ?>_card_html += "<div class='clearfixcheckout'>&nbsp;</div>";
                 <?php echo $prefix; ?>_card_html += "<div class='email-reciept'><input name='email_reciept' type='checkbox' id='email_reciept' checked='true'>&nbsp;<label for='email_reciept'>Email Receipt</label></div>";
@@ -906,27 +915,52 @@ class SecureSubmit {
 
                         billingPanel.show();
 
-                        billingButton.on('click', function(event) {
-                            billingPanel.hide();
 
-                            if (<?php echo $prefix; ?>_requireAdditionalInfo) {
-                                additionalPanel.fadeIn();
-                            } else if (<?php echo $prefix; ?>_requireShipping) {
-                                cardPanel.hide();
-                                if( frameBody.find("#shipping_same").attr("checked") ){
-                                    cardPanel.fadeIn();
-                                    frameBody.find("#shipping_name").val(frameBody.find("#cardholder_name").val());
-                                    frameBody.find("#shipping_address").val(frameBody.find("#cardholder_address").val());
-                                    frameBody.find("#shipping_city").val(frameBody.find("#cardholder_city").val());
-                                    frameBody.find("#shipping_state").val(frameBody.find("#cardholder_state").val());
-                                    frameBody.find("#shipping_zip").val(frameBody.find("#cardholder_zip").val());
-                                } else {
-                                    shippingPanel.fadeIn();
+                        billingButton.on('click', function(event) {
+                            var continueProcessing = true;
+
+                            billingPanel.find('.required').each(function (i, obj) {
+                                if (continueProcessing) {
+                                    if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
+                                        var thisEle = jQuery(this);
+                                        var elementText = thisEle.attr("placeholder");
+                                        alert('Please complete all required fields before proceeding. \n[' + elementText + '] must be entered');
+                                        continueProcessing = false;
+                                        thisEle.focus();
+                                        return ;
+                                    }
                                 }
-                            } else {
-                                shippingPanel.hide();
-                                cardPanel.fadeIn();
+                            });
+
+                            if (continueProcessing) {
+
+                                billingPanel.hide();
+
+                                if (<?php echo $prefix; ?>_requireAdditionalInfo) {
+                                    additionalPanel.fadeIn();
+                                } else if (<?php echo $prefix; ?>_requireShipping) {
+                                    cardPanel.hide();
+                                    if( frameBody.find("#shipping_same").attr("checked") ){
+                                        cardPanel.fadeIn();
+                                        frameBody.find("#shipping_name").val(frameBody.find("#cardholder_name").val());
+                                        frameBody.find("#shipping_address").val(frameBody.find("#cardholder_address").val());
+                                        frameBody.find("#shipping_city").val(frameBody.find("#cardholder_city").val());
+                                        frameBody.find("#shipping_state").val(frameBody.find("#cardholder_state").val());
+                                        frameBody.find("#shipping_zip").val(frameBody.find("#cardholder_zip").val());
+                                    } else {
+                                        shippingPanel.fadeIn();
+                                    }
+                                } else {
+                                    shippingPanel.hide();
+                                    cardPanel.fadeIn();
+                                }
+
+
                             }
+
+
+
+
 
                             event.preventDefault();
                         });
@@ -936,6 +970,7 @@ class SecureSubmit {
                         var additionalBack = additionalPanel.find("#<?php echo $prefix; ?>_additional_back");
 
                         additionalPanel.hide();
+
 
                         additionalNext.on("click", function(event) {
                             var continueProcessing = true;
@@ -961,6 +996,7 @@ class SecureSubmit {
                             event.preventDefault();
                         });
 
+
                         additionalBack.on("click", function(event) {
                             additionalPanel.hide();
                             billingPanel.fadeIn();
@@ -975,10 +1011,26 @@ class SecureSubmit {
                         shippingPanel.hide();
 
                         shippingNext.on("click", function(event) {
-                            billingPanel.hide();
-                            shippingPanel.hide();
-                            cardPanel.fadeIn();
+                            var continueProcessing = true;
 
+                            shippingPanel.find('.required').each(function (i, obj) {
+                                if (continueProcessing) {
+                                    if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
+                                        var thisEle = jQuery(this);
+                                        var elementText = thisEle.attr("placeholder");
+                                        alert('Please complete all required fields before proceeding. \n[' + elementText + '] must be entered');
+                                        continueProcessing = false;
+                                        thisEle.focus();
+                                        return ;
+                                    }
+                                }
+                            });
+
+                            if (continueProcessing) {
+                                billingPanel.hide();
+                                shippingPanel.hide();
+                                cardPanel.fadeIn();
+                            }
                             event.preventDefault();
                         });
 
@@ -1087,17 +1139,35 @@ class SecureSubmit {
                         }
 
                         cardPay.on("click", function(event) {
-                            if (!frameBody.find('#donation_amount').val())
-                                frameBody.find('#donation_amount').val(frameBody.find('#donation_amount').attr('placeholder'));
 
-                            frameBody.find('.donation-price').hide();
-                            frameBody.find('.checkout-price').hide();
+                            var continueProcessing = true;
 
-                            cardPanel.hide();
-                            processingPanel.show();
-                            $('#modal-launcher, #modal-background').unbind('click');
-                            frameBody.find('.modal-close').unbind('click');
-                            <?php echo $prefix; ?>_tokenize();
+                            frameBody.find('.required').each(function (i, obj) {
+                                if (continueProcessing) {
+                                    if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
+                                        var thisEle = jQuery(this);
+                                        var elementText = thisEle.attr("placeholder");
+                                        alert('Please complete all required fields before proceeding. \n[' + elementText + '] must be entered');
+                                        continueProcessing = false;
+                                        thisEle.focus();
+                                        return ;
+                                    }
+                                }
+                            });
+                            if(continueProcessing){
+                                if (!frameBody.find('#donation_amount').val())
+                                    frameBody.find('#donation_amount').val(frameBody.find('#donation_amount').attr('placeholder'));
+
+                                frameBody.find('.donation-price').hide();
+                                frameBody.find('.checkout-price').hide();
+
+                                cardPanel.hide();
+                                processingPanel.show();
+                                $('#modal-launcher, #modal-background').unbind('click');
+                                frameBody.find('.modal-close').unbind('click');
+                                <?php echo $prefix; ?>_tokenize();
+                            }
+
 
                             event.preventDefault();
                         });
@@ -1161,11 +1231,11 @@ class SecureSubmit {
                         <table width="100%">
                             <tr>
                                 <td width="200">First Name:</td>
-                                <td><input class="form-text" name="billing_firstname" type="text" /></td>
+                                <td><input class="form-text<?php echo $billingRequired; ?>" name="billing_firstname" type="text" /></td>
                             </tr>
                             <tr>
                                 <td>Last Name:</td>
-                                <td><input class="form-text" name="billing_lastname" type="text" /></td>
+                                <td><input class="form-text<?php echo $billingRequired; ?>" name="billing_lastname" type="text"/></td>
                             </tr>
                             <tr>
                                 <td>Email Address:</td>
@@ -1178,17 +1248,17 @@ class SecureSubmit {
                             </tr>
                             <tr>
                                 <td>Address:</td>
-                                <td><input class="form-text" name="billing_address" type="text" /></td>
+                                <td><input class="form-text<?php echo $billingRequired; ?>" name="billing_address" type="text"" /></td>
                             </tr>
                             <tr>
                                 <td>City:</td>
-                                <td><input class="form-text" name="billing_city" type="text" /></td>
+                                <td><input class="form-text<?php echo $billingRequired; ?>" name="billing_city" type="text" "/></td>
                             </tr>
                             <?php if ($requireState) { ?>
                                 <tr>
                                     <td>State:</td>
                                     <td>
-                                        <select name="billing_state">
+                                        <select name="billing_state" class="<?php echo $billingRequired; ?>">
                                             <option value="AL">Alabama</option>
                                             <option value="AK">Alaska</option>
                                             <option value="AZ">Arizona</option>
@@ -1246,7 +1316,7 @@ class SecureSubmit {
                             <?php } ?>
                             <tr>
                                 <td>Zip/Postal Code:</td>
-                                <td><input class="form-text" name="billing_zip" type="text" /></td>
+                                <td><input class="form-text<?php echo $billingRequired; ?>" name="billing_zip" type="text""/></td>
                             </tr>
                         </table>
                     <?php } ?>
@@ -1257,25 +1327,25 @@ class SecureSubmit {
                         <table width="100%" style="display:none;" id="shipping_table">
                             <tr>
                                 <td width="200">First Name:</td>
-                                <td><input class="form-text" name="shipping_firstname" type="text" /></td>
+                                <td><input class="form-text<?php echo $shippingRequired; ?>" name="shipping_firstname" type="text" " /></td>
                             </tr>
                             <tr>
                                 <td>Last Name:</td>
-                                <td><input class="form-text" type="text" name="shipping_lastname" /></td>
+                                <td><input class="form-text<?php echo $shippingRequired; ?>" type="text" name="shipping_lastname" " /></td>
                             </tr>
                             <tr>
                                 <td>Address:</td>
-                                <td><input class="form-text" type="text" name="shipping_address" /></td>
+                                <td><input class="form-text<?php echo $shippingRequired; ?>" type="text" name="shipping_address" " /></td>
                             </tr>
                             <tr>
                                 <td>City:</td>
-                                <td><input class="form-text" type="text" name="shipping_city" /></td>
+                                <td><input class="form-text<?php echo $shippingRequired; ?>" type="text" name="shipping_city" " /></td>
                             </tr>
                             <?php if ($requireState) { ?>
                                 <tr>
                                     <td>State:</td>
                                     <td>
-                                        <select name="shipping_state">
+                                        <select name="shipping_state" class="<?php echo $shippingRequired; ?>" >
                                             <option value="AL">Alabama</option>
                                             <option value="AK">Alaska</option>
                                             <option value="AZ">Arizona</option>
@@ -1333,7 +1403,7 @@ class SecureSubmit {
                             <?php } ?>
                             <tr>
                                 <td>Shipping Zip Code:</td>
-                                <td><input class="form-text" type="text" name="shipping_zip" /></td>
+                                <td><input class="form-text<?php echo $shippingRequired; ?>" type="text" name="shipping_zip" /></td>
                             </tr>
                         </table>
                     <?php } ?>
@@ -1403,12 +1473,12 @@ class SecureSubmit {
                     <table width="100%">
                         <tr>
                             <td width="200">Card Number:</td>
-                            <td><input class="form-text" type="text" id="<?php echo $prefix; ?>_card_number" /></td>
+                            <td><input class="form-text required" type="text" id="<?php echo $prefix; ?>_card_number" /></td>
                         </tr>
                         <tr>
                             <td>Expiration:</td>
                             <td colspan="2">
-                                <select id="<?php echo $prefix; ?>_exp_month">
+                                <select id="<?php echo $prefix; ?>_exp_month" class="required">
                                     <option value="01">01</option>
                                     <option value="02">02</option>
                                     <option value="03">03</option>
@@ -1423,7 +1493,7 @@ class SecureSubmit {
                                     <option value="12">12</option>
                                 </select>
                                 /
-                                <select id="<?php echo $prefix; ?>_exp_year">
+                                <select id="<?php echo $prefix; ?>_exp_year" class="required">
                                     <option value="2016">2016</option>
                                     <option value="2017">2017</option>
                                     <option value="2018">2018</option>
@@ -1509,25 +1579,46 @@ class SecureSubmit {
                     $('#<?php echo $prefix; ?>-securesubmit-button').bind('click', a<?php echo $prefix; ?>_handleSubmit);
 
                     function a<?php echo $prefix; ?>_handleSubmit() {
-                        var cardNumber = $('#<?php echo $prefix; ?>_card_number').val().replace(/\D/g,''); // strip out non-numeric
 
-                        hps.tokenize({
-                            data: {
-                                public_key: pk,
-                                number: cardNumber,
-                                cvc: $('#<?php echo $prefix; ?>_card_cvc').val(),
-                                exp_month: $('#<?php echo $prefix; ?>_exp_month').val(),
-                                exp_year: $('#<?php echo $prefix; ?>_exp_year').val()
-                            },
-                            success: function(response) {
-                                a<?php echo $prefix; ?>_secureSubmitResponseHandler(response);
-                            },
-                            error: function(response) {
-                                a<?php echo $prefix; ?>_secureSubmitResponseHandler(response);
+
+
+                        var continueProcessing = true;
+                        jQuery("#<?php echo $prefix; ?>_form").find('.required').each(function (i, obj) {
+                            if (continueProcessing) {
+                                if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
+                                    var thisEle = jQuery(this);
+                                    var elementText = thisEle.closest('td').prev('td').text();
+                                    alert('Please complete all required fields before proceeding. \n'+elementText+' must be entered');
+                                    continueProcessing = false;
+                                    thisEle.focus();
+                                    return ;
+                                }
                             }
                         });
+                        if (continueProcessing) {
 
-                        $('#<?php echo $prefix; ?>-securesubmit-button').hide();
+                            var cardNumber = $('#<?php echo $prefix; ?>_card_number').val().replace(/\D/g,''); // strip out non-numeric
+
+                            hps.tokenize({
+                                data: {
+                                    public_key: pk,
+                                    number: cardNumber,
+                                    cvc: $('#<?php echo $prefix; ?>_card_cvc').val(),
+                                    exp_month: $('#<?php echo $prefix; ?>_exp_month').val(),
+                                    exp_year: $('#<?php echo $prefix; ?>_exp_year').val()
+                                },
+                                success: function(response) {
+                                    a<?php echo $prefix; ?>_secureSubmitResponseHandler(response);
+                                },
+                                error: function(response) {
+                                    a<?php echo $prefix; ?>_secureSubmitResponseHandler(response);
+                                }
+                            });
+
+                            $('#<?php echo $prefix; ?>-securesubmit-button').hide();
+                        }
+
+
 
                         return false;
                     };
@@ -1547,12 +1638,13 @@ class SecureSubmit {
                         var continueProcessing = true;
 
                         form.find('.required').each(function(i, obj) {
-                            if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
-                                alert('Please complete all required fields before proceeding.');
-                                $('#<?php echo $prefix; ?>-securesubmit-button').show();
-                                continueProcessing = false;
-                                return;
-                            }
+                            if (continueProcessing) {
+                                if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
+                                    alert('Please complete all required fields before proceeding.');
+                                    $('#<?php echo $prefix; ?>-securesubmit-button').show();
+                                    continueProcessing = false;
+                                    return;
+                                }}
                         });
 
                         if (continueProcessing) {
@@ -1586,6 +1678,8 @@ class SecureSubmit {
                     }
                 });
             })(jQuery);
+
+
         </script>
         <?php if (isset($atts['ignorelinebreaks']) && $atts['ignorelinebreaks'] === 'true') { ?>
             [/raw]
@@ -1623,7 +1717,7 @@ class SecureSubmit {
             if(!$this->isValidRecaptchaToken($_POST['g-recaptcha-response'])){
                 die('Invalid recaptcha detected, please try to submit again.');
             }
-        }
+        }        
 
         $body = "";
         $enable_fraud = false;
@@ -1664,13 +1758,21 @@ class SecureSubmit {
             $body .= '<br/>%shippingaddress%';
             $body .= '<br/>%additionalinformation%';
         }
-
+        
         if ($amount === 0)
         {
             $amount = isset($atts['amount']) ? $atts['amount'] : 0;
             $memo = isset($atts['memo']) ? $atts['memo'] : 0;
             $productid = isset($atts['productid']) ? $atts['productid'] : 0;
             $productname = isset($atts['productname']) ? $atts['productname'] : 0;
+        }
+        //if productid is not already set in $attrs assign it from POST
+        if(!isset($atts['productid'])){
+            $productid = (!empty($_POST['product_id'])) ? $_POST['product_id'] : '';
+        }
+        //if productname is not already set in $attrs assign it from POST
+        if(!isset($atts['productname'])){
+            $productname = (!empty($_POST['product_name'])) ? $_POST['product_name'] : '';
         }
 
         //product info
@@ -1682,7 +1784,7 @@ class SecureSubmit {
 
         // modal
         if (isset($_POST['cardholder_name'])) {
-            list($first, $middle, $last) = split(' ', $_POST['cardholder_name']);
+            list($first, $middle, $last) = explode (" ", $_POST['cardholder_name']);
 
             if (isset($last)) {
                 $billing_firstname = $first;
@@ -1692,7 +1794,7 @@ class SecureSubmit {
                 $billing_lastname = $middle;
             }
 
-            list($shipfirst, $shipmiddle, $shiplast) = split(' ', $_POST['shipping_name']);
+            list($shipfirst, $shipmiddle, $shiplast) = explode (" ", $_POST['shipping_name']);
 
             if (isset($shiplast)) {
                 $shipping_firstname = $shipfirst;
@@ -1769,7 +1871,6 @@ class SecureSubmit {
             }
         }
 
-        $billing_zip = preg_replace("/[^a-zA-Z0-9]/", "", $billing_zip);
 
         try {
             // check if advanced fraud is enabled
@@ -1809,7 +1910,7 @@ class SecureSubmit {
             $cardHolder = new HpsCardHolder();
             $cardHolder->firstName = $billing_firstname;
             $cardHolder->lastName = $billing_lastname;
-            $cardHolder->emailAddress = $billing_email;
+            $cardHolder->email = $billing_email;
             $cardHolder->address = $address;
 
             $cardOrToken = new HpsTokenData();

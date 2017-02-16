@@ -2,7 +2,7 @@
 Contributors: markhagan
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
-Tested up to: 4.5
+Tested up to: 4.7
 Stable tag: trunk
 License: Custom
 License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
@@ -44,6 +44,17 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+
+
+= 1.5.3 =
+* Updated shipping and billing information (Card Holder Name, Address, City and Zip Code) as required fields. 
+* Added support for PHP 7
+* Test against PHP 7.0.10
+
+= 1.5.2 =
+* Updated Heartland PHP SDK
+* Test against Wordpress 4.7
+
 = 1.5.1 =
 * Corrected minor issue that only appeared with debug mode enabled. Warning on button builder
 * Fix compatibility regression with older versions of PHP
@@ -174,5 +185,6 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 2. productid="value" (this is required for non-donation)
 3. productname="value"
 4. buttontext="value"
-5. requireshipping="value"
-6. productimage="value" (default is a picture of a gift box)
+5. requirebilling="value"
+6. requireshipping="value"
+7. productimage="value" (default is a picture of a gift box)
