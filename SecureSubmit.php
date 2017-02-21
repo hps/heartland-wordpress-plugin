@@ -976,8 +976,11 @@ class SecureSubmit {
                             var continueProcessing = true;
                             additionalPanel.find('.required').each(function(i, obj) {
                                 if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
+                                    var thisEle = jQuery(this);
+                                    var elementText = thisEle.attr("placeholder");
                                     alert('Please complete all required fields before proceeding.');
                                     continueProcessing = false;
+                                    thisEle.focus();
                                     return;
                                 }
                             });
