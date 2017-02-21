@@ -974,7 +974,7 @@ class SecureSubmit {
 
                         additionalNext.on("click", function(event) {
                             var continueProcessing = true;
-                            frameBody.find('.required').each(function(i, obj) {
+                            additionalPanel.find('.required').each(function(i, obj) {
                                 if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
                                     alert('Please complete all required fields before proceeding.');
                                     continueProcessing = false;
