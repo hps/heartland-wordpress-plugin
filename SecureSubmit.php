@@ -2024,7 +2024,10 @@ class SecureSubmit {
         global $jal_db_version;
         global $table_name;
 
-        $installed_ver = $this->options['jal_db_version'];
+        $installed_ver = null;
+        if (is_array($this->options) && in_array('jal_db_version',$this->options)) {
+            $installed_ver = $this->options['jal_db_version'];
+        }
 
         if($installed_ver != $jal_db_version){
             $sql = "CREATE TABLE $table_name (
