@@ -44,10 +44,13 @@ Screenshots
 
 Changelog
 ------------
+#### 1.5.4
+* Fix issue with additional information in modal form
 
 #### 1.5.3
-* Added support for requiring shipping and billing information
-* Test against PHP 7.0.10 
+* Updated shipping and billing information (Card Holder Name, Address, City and Zip Code) as required fields.
+* Added support for PHP 7
+* Test against PHP 7.0.10
 
 #### 1.5.2
 * Updated Heartland PHP SDK
