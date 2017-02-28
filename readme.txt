@@ -45,9 +45,11 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 
 == Changelog ==
 
+= 1.5.4 =
+* Fix issue with additional information in modal form
 
 = 1.5.3 =
-* Updated shipping and billing information (Card Holder Name, Address, City and Zip Code) as required fields. 
+* Updated shipping and billing information (Card Holder Name, Address, City and Zip Code) as required fields.
 * Added support for PHP 7
 * Test against PHP 7.0.10
 
