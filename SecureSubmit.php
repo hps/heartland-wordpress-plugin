@@ -801,7 +801,7 @@ class SecureSubmit {
                 var <?php echo $prefix; ?>_card_html = "<div id='<?php echo $prefix; ?>_card_panel'>";
                 <?php echo $prefix; ?>_card_html += "<div class='back-button'><a href='#shipping' id='<?php echo $prefix; ?>_card_back'>back</a></div>";
                 <?php echo $prefix; ?>_card_html += "<div class='checkout-card-information'>Card Information</div>";
-                <?php echo $prefix; ?>_card_html += "<div class='card-number'><input type='text' id='card_number' class='checkout-input checkout-card required' placeholder='4111 - 1111 - 1111 - 1111'></div>";
+                <?php echo $prefix; ?>_card_html += "<div class='card-number'><input type='text' id='card_number' class='checkout-input checkout-card required' placeholder='Credit Card'></div>";
                 <?php echo $prefix; ?>_card_html += "<div class='card-exp'><input type='text' id='card_exp' class='checkout-exp required' placeholder='MM/YY'></div>";
                 <?php echo $prefix; ?>_card_html += "<div class='card-cvc'><input type='text' id='card_cvc' class='checkout-exp' placeholder='CVC'></div>";
                 <?php echo $prefix; ?>_card_html += "<div class='clearfixcheckout'>&nbsp;</div>";
@@ -974,10 +974,12 @@ class SecureSubmit {
 
                         additionalNext.on("click", function(event) {
                             var continueProcessing = true;
-                            frameBody.find('.required').each(function(i, obj) {
+                            additionalPanel.find('.required').each(function(i, obj) {
                                 if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
+                                    var thisEle = jQuery(this);
                                     alert('Please complete all required fields before proceeding.');
                                     continueProcessing = false;
+                                    thisEle.focus();
                                     return;
                                 }
                             });
