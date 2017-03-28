@@ -1582,11 +1582,15 @@ class SecureSubmit {
 
                     function a<?php echo $prefix; ?>_handleSubmit() {
 
-
+                        var sameAsBilling = jQuery('[name="same_as_billing"]') && jQuery('[name="same_as_billing"]').is(':checked');
 
                         var continueProcessing = true;
                         jQuery("#<?php echo $prefix; ?>_form").find('.required').each(function (i, obj) {
                             if (continueProcessing) {
+                                // skip validation if "same as billing" checked and field is shipping info
+                                if (sameAsBilling && this.name.indexOf('shipping_') !== -1) {
+                                    return;
+                                }
                                 if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
                                     var thisEle = jQuery(this);
                                     var elementText = thisEle.closest('td').prev('td').text();
@@ -1637,10 +1641,14 @@ class SecureSubmit {
 
                     function a<?php echo $prefix; ?>_chargeToken() {
                         var form = $('#<?php echo $prefix; ?>_form');
+                        var sameAsBilling = jQuery('[name="same_as_billing"]') && jQuery('[name="same_as_billing"]').is(':checked');
                         var continueProcessing = true;
 
                         form.find('.required').each(function(i, obj) {
                             if (continueProcessing) {
+                                if (sameAsBilling && this.name.indexOf('shipping_') !== -1) {
+                                    return;
+                                }
                                 if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
                                     alert('Please complete all required fields before proceeding.');
                                     $('#<?php echo $prefix; ?>-securesubmit-button').show();
