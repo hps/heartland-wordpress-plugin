@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+#### 1.5.5
+* Fix issue issue with shipping fields when requirebilling="true"
+
 #### 1.5.4
 * Fix issue with additional information in modal form
 
