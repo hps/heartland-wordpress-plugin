@@ -190,7 +190,7 @@ class SecureSubmit {
 
         <div class="wrap">
 
-            <h1 class="wp-heading-inline">SecureSubmit <?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+            <h1 class="wp-heading-inline">SecureSubmit Donate / Pay Now <?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
 
             <div id="message" class="updated hidden"><p></p></div>
 
@@ -198,80 +198,74 @@ class SecureSubmit {
 
             <h3>API Credentials</h3>
             <p><a href="https://developer.heartlandpaymentsystems.com/Account/KeysAndCredentials" target="_blank">Click here</a> to get your SecureSubmit API keys!</p>
-            <table class="form-table">
-                <tbody>
-                <tr>
-                    <th scope="row">Public Key</th>
-                    <td><input type="text" id="ssd_public_key" class="regular-text" value="<?php if (isset($this->options['public_key'])) echo esc_attr($this->options['public_key']); ?>" />
-                </tr>
-                <tr>
-                    <th scope="row">Secret Key</th>
+            
+            
+            
+                    <label for="ssd_public_key">Public Key:</label>
+                    <input type="text" id="ssd_public_key" class="regular-text" value="<?php if (isset($this->options['public_key'])) echo esc_attr($this->options['public_key']); ?>" />
+               
+                    <label for="ssd_secret_key">Secret Key:</label>
                     <td><input type="text" id="ssd_secret_key" class="regular-text" value="<?php if (isset($this->options['secret_key'])) echo esc_attr($this->options['secret_key']); ?>" />
-                </tr>
-                </tbody>
-            </table>
+                
+
+
 </div>
 
 <div class="ss-panel">
             <h3>General Options</h3>
-            <table class="form-table">
-                <tbody><tr>
-                    <td>
+            
+           
                         <?php
                         $ischecked = '';
                         if (isset($this->options['enable_button_builder']) && $this->options['enable_button_builder'] == 'true')
                             $ischecked = "checked='checked'";
                         ?>
                         <input type="checkbox" id="enable_button_builder" <?php echo $ischecked; ?> />
-                        <label for="enable_button_builder">Enable Button Builder</label>
-                    </td>
-                </tr><tr>
-                    <td colspan="2">
+                        <label for="enable_button_builder" class="ss-checkbox-label">Enable Button Builder</label>
+                   
+                    <br />
+
                         <?php
                         $ischecked = '';
                         if (isset($this->options['enable_recaptcha']) && $this->options['enable_recaptcha'] == 'true')
                             $ischecked = "checked='checked'";
                         ?>
                         <input type="checkbox" id="enable_recaptcha" <?php echo $ischecked; ?> />
-                        <label for="enable_recaptcha">Enable Google Recaptcha (non-modal only)</label>
-                        <span style="font-size: smaller; margin-left:5px">( What is <a target="_blank" href="https://www.google.com/recaptcha/intro/index.html">Google ReCaptcha</a>? )</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">Recaptcha Site Key</th>
-                    <td><input type="text" id="recaptcha_site_key" class="regular-text" value="<?php if (isset($this->options['recaptcha_site_key'])) echo esc_attr($this->options['recaptcha_site_key']); ?>" />
-                </tr>
-                <tr>
-                    <th scope="row">Recaptcha Secret Key</th>
-                    <td><input type="text" id="recaptcha_secret_key" class="regular-text" value="<?php if (isset($this->options['recaptcha_secret_key'])) echo esc_attr($this->options['recaptcha_secret_key']); ?>" />
-                </tr>
-                </tbody>
-            </table>
+                        <label for="enable_recaptcha" class="ss-checkbox-label">Enable Google Recaptcha (non-modal only)</label>
+                        <br /><span style="font-size: smaller; margin-left:5px">( What is <a target="_blank" href="https://www.google.com/recaptcha/intro/index.html">Google ReCaptcha</a>? )</span>
+           
+                
+                <label for="recaptcha_site_key">Recaptcha Site Key:</label>
+                   <input type="text" id="recaptcha_site_key" class="regular-text" value="<?php if (isset($this->options['recaptcha_site_key'])) echo esc_attr($this->options['recaptcha_site_key']); ?>" />
+                
+
+                    <label for="recaptcha_secret_key">Recaptcha Secret Key:</label>
+                    <input type="text" id="recaptcha_secret_key" class="regular-text" value="<?php if (isset($this->options['recaptcha_secret_key'])) echo esc_attr($this->options['recaptcha_secret_key']); ?>" />
+              
 </div>
 
 <div class="ss-panel">
             <h3>Fraud Options</h3>
-            <table class="form-table">
-                <tbody><tr>
-                    <th scope="row" colspan="2">
+           
                         <?php
                         $ischecked = '';
                         if (isset($this->options['enable_fraud']) && $this->options['enable_fraud'] == 'true')
                             $ischecked = "checked='checked'";
                         ?>
                         <input type="checkbox" id="enable_fraud" <?php echo $ischecked; ?> />
-                        <label for="enable_fraud">Enable Fraud Options</label>
-                    </th></tr><tr>
-                    <th scope="row">
+                        <label for="enable_fraud" class="ss-checkbox-label">Enable Fraud Options</label>
+                    
+                   
+
                         <?php
                         $fraud_message = '';
                         if (isset($this->options['fraud_message']) )
                             $fraud_message = $this->options['fraud_message'];
                         ?>
-                        <label for="fraud_message">Displayed Message</label></th><td>
+                        <label for="fraud_message">Displayed Message:</label></th><td>
                         <textarea id="fraud_message"><?php echo wp_sprintf('%s',$fraud_message); ?></textarea>
-                    </td></tr><tr>
-                    <th scope="row">
+                    
+                  
                         <?php
                         $fraud_velocity_attempts = 0;
                         if (isset($this->options['fraud_velocity_attempts']) )
@@ -279,8 +273,7 @@ class SecureSubmit {
                         ?>
                         <label for="fraud_velocity_attempts">How many failed attempts before blocking?</label></th><td>
                         <input type="text" id="fraud_velocity_attempts" <?php echo $fraud_velocity_attempts; ?> />
-                    </td></tr><tr>
-                    <th scope="row">
+                  
                         <?php
                         $fraud_velocity_timeout = 0;
                         if (isset($this->options['fraud_velocity_timeout']) )
@@ -288,9 +281,7 @@ class SecureSubmit {
                         ?>
                         <label for="fraud_velocity_timeout">How long (in minutes) should we keep a tally of recent failures?</label></th><td>
                         <input type="text" id="fraud_velocity_timeout" <?php echo $fraud_velocity_timeout; ?> />
-                    </td></tr>
-                </tbody>
-            </table>
+                  
 </div>
 <div class="ss-panel">            
             <h3>Email Options</h3>
