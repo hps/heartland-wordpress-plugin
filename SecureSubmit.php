@@ -184,11 +184,18 @@ class SecureSubmit {
                     });
                 });
             })(jQuery);
-        </script>
+</script>
+
+        <?php require 'admin-styles.php'; ?>    
 
         <div class="wrap">
-            <h2>SecureSubmit Settings</h2>
+
+            <h1 class="wp-heading-inline">SecureSubmit <?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+
             <div id="message" class="updated hidden"><p></p></div>
+
+            <div class="ss-panel">
+
             <h3>API Credentials</h3>
             <p><a href="https://developer.heartlandpaymentsystems.com/Account/KeysAndCredentials" target="_blank">Click here</a> to get your SecureSubmit API keys!</p>
             <table class="form-table">
@@ -203,6 +210,9 @@ class SecureSubmit {
                 </tr>
                 </tbody>
             </table>
+</div>
+
+<div class="ss-panel">
             <h3>General Options</h3>
             <table class="form-table">
                 <tbody><tr>
@@ -237,6 +247,9 @@ class SecureSubmit {
                 </tr>
                 </tbody>
             </table>
+</div>
+
+<div class="ss-panel">
             <h3>Fraud Options</h3>
             <table class="form-table">
                 <tbody><tr>
@@ -278,6 +291,8 @@ class SecureSubmit {
                     </td></tr>
                 </tbody>
             </table>
+</div>
+<div class="ss-panel">            
             <h3>Email Options</h3>
             <table class="form-table">
                 <tbody>
@@ -352,6 +367,7 @@ class SecureSubmit {
                 <input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
             </p>
         </div>
+</div>
         <?php
     }
 
@@ -391,6 +407,7 @@ class SecureSubmit {
         if(isset($_POST['ship']) && $_POST['ship'] == 'on'){ $shipping = true;}
         if(isset($_POST['additional']) && $_POST['additional'] == 'on'){ $additional = true;}
         ?>
+        
         <style>
             .even{
                 background-color: #bbb;
