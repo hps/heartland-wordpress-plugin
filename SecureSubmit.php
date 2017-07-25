@@ -425,10 +425,15 @@ class SecureSubmit {
             .even{
                 background-color: #bbb;
             }
-        </style>
+</style>
+ <?php require 'admin-styles.php'; ?>  
+
         <div class="wrap">
+
+<h1 class="wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+
         <form name="report_data" method="post" action="admin.php?page=sub-reporting">
-            <h2>SecureSubmit Reporting</h2>
+
             <div id="message" class="updated hidden"><p></p></div>
             <br>
             <h3>Report Options</h3>
@@ -558,32 +563,42 @@ class SecureSubmit {
 
     function faq_page(){
         ?>
+        <?php require 'admin-styles.php'; ?>  
+
         <div class="wrap">
-            <h2>SecureSubmit FAQ</h2>
+
+<h1 class="wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+         
             <div id="message" class="updated hidden"><p></p></div>
 
-            <br><br><br>
-            <h2>How do I get started?</h2>
+    <div class="ss-panel ss-faq-panel">
+            <h3>How do I get started?</h3>
             <p>The default usage for SecureSubmit is as easy as putting the following in any page or post.</p>
             <pre>[securesubmit modal='true']</pre>
             <p> This will create a "Make Donation" button on the page. Which when clicked will open a modal window.<br>
                 Where the user can input their info and process the payment.</p>
-            <br>
-            <h2>I don't want to do a donation. How do I change the button text?</h2>
+    </div>
+
+    <div class="ss-panel ss-faq-panel">
+            <h3>I don't want to do a donation. How do I change the button text?</h3>
             <p>To change the button text you just add the field 'buttontext' to your setup and give it a value as follows.</p>
             <pre>[securesubmit modal='true' buttontext='Pay Now']</pre>
+    </div>
 
-            <br>
-            <h2>I need to collect extra information. How do I do that?</h2>
+    <div class="ss-panel ss-faq-panel">
+            <h3>I need to collect extra information. How do I do that?</h3>
             <p>The plugin allows you to collect up to 10 additional fields of information. The field names are additional_info1 additional_info2 and so on.<br>
                 For the value just set the name of the field. The information collected will be included in the email you receive and will be stored on your server
                 for later retrieval.</p>
             <pre>[securesubmit modal='true' additional_info1='Invoice Number' additional_info2='messagebox']</pre>
+    </div>
 
-            <br>
-            <h2>Can I set a default value other than $100?</h2>
+    <div class="ss-panel ss-faq-panel">
+            <h3>Can I set a default value other than $100?</h3>
             <p>Yes you can. Just add the attribute "amountdefault" and set the value equal to the amount you would like to see.</p>
             <pre>[securesubmit modal='true' additional_info1='Invoice Number' additional_info2='messagebox' buttontext='Pay Now' amountdefault='25.00']</pre>
+    </div>
+
         </div>
         <?php
     }

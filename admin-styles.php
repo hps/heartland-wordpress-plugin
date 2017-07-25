@@ -95,6 +95,26 @@
     height: 34px;
 }
 
+.ss-panel.ss-faq-panel {
+
+}
+
+.ss-panel.ss-faq-panel p {
+    font-size: 15px;
+}
+
+.ss-panel.ss-faq-panel pre {
+    display: inline-block;
+    font-size: 16px;
+    background-color: #444;
+    color: #fff;
+    width: auto;
+    padding: 10px 15px;
+    margin: 0;
+    white-space: normal;
+    line-height: 22px;
+}
+
 .ss-checkbox {
     display: block;
     width: 100%;
