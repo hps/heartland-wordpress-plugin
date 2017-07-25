@@ -188,51 +188,56 @@ class SecureSubmit {
 
         <?php require 'admin-styles.php'; ?>    
 
+        <!-- Start Page Wrapper -->
         <div class="wrap">
 
-            <h1 class="wp-heading-inline">SecureSubmit Donate / Pay Now <?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+        
+
+            <h1 class="wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
 
             <div id="message" class="updated hidden"><p></p></div>
 
-            <div class="ss-panel">
+<div class="ss-top-container clearfix">
+            <!-- Start API Credentials Panel -->
+            <div class="ss-panel ss-api-credentials">
 
-            <h3>API Credentials</h3>
-            <p><a href="https://developer.heartlandpaymentsystems.com/Account/KeysAndCredentials" target="_blank">Click here</a> to get your SecureSubmit API keys!</p>
-            
-            
-            
-                    <label for="ssd_public_key">Public Key:</label>
-                    <input type="text" id="ssd_public_key" class="regular-text" value="<?php if (isset($this->options['public_key'])) echo esc_attr($this->options['public_key']); ?>" />
+                <h3>API Credentials</h3>
+                <p><a href="https://developer.heartlandpaymentsystems.com/Account/KeysAndCredentials" target="_blank">Click here</a> to get your SecureSubmit API keys!</p>
+
+                <label for="ssd_public_key">Public Key:</label>
+                <input type="text" id="ssd_public_key" class="regular-text" value="<?php if (isset($this->options['public_key'])) echo esc_attr($this->options['public_key']); ?>" />
                
-                    <label for="ssd_secret_key">Secret Key:</label>
-                    <td><input type="text" id="ssd_secret_key" class="regular-text" value="<?php if (isset($this->options['secret_key'])) echo esc_attr($this->options['secret_key']); ?>" />
+                <label for="ssd_secret_key">Secret Key:</label>
+                <td><input type="text" id="ssd_secret_key" class="regular-text" value="<?php if (isset($this->options['secret_key'])) echo esc_attr($this->options['secret_key']); ?>" />
                 
+            </div>
+            <!-- End API Credentials Panel -->
 
-
-</div>
-
-<div class="ss-panel">
-            <h3>General Options</h3>
+            <!-- Start General Options Panel -->
+            <div class="ss-panel ss-general-options">
+                <h3>General Options</h3>
             
-           
-                        <?php
+                <?php
                         $ischecked = '';
                         if (isset($this->options['enable_button_builder']) && $this->options['enable_button_builder'] == 'true')
                             $ischecked = "checked='checked'";
                         ?>
+                        
+                        <div class="ss-checkbox">
                         <input type="checkbox" id="enable_button_builder" <?php echo $ischecked; ?> />
                         <label for="enable_button_builder" class="ss-checkbox-label">Enable Button Builder</label>
-                   
-                    <br />
-
+                        </div>
+            
+                        <div class="ss-checkbox clearfix">
                         <?php
                         $ischecked = '';
                         if (isset($this->options['enable_recaptcha']) && $this->options['enable_recaptcha'] == 'true')
                             $ischecked = "checked='checked'";
                         ?>
                         <input type="checkbox" id="enable_recaptcha" <?php echo $ischecked; ?> />
-                        <label for="enable_recaptcha" class="ss-checkbox-label">Enable Google Recaptcha (non-modal only)</label>
-                        <br /><span style="font-size: smaller; margin-left:5px">( What is <a target="_blank" href="https://www.google.com/recaptcha/intro/index.html">Google ReCaptcha</a>? )</span>
+                        <label for="enable_recaptcha" class="ss-checkbox-label">Enable Google Recaptcha</label>
+                        <br /><span class="ss-subtext">Non-modal only. What is <a target="_blank" href="https://www.google.com/recaptcha/intro/index.html">Google ReCaptcha</a>?</span>
+                        </div>
            
                 
                 <label for="recaptcha_site_key">Recaptcha Site Key:</label>
@@ -242,11 +247,14 @@ class SecureSubmit {
                     <label for="recaptcha_secret_key">Recaptcha Secret Key:</label>
                     <input type="text" id="recaptcha_secret_key" class="regular-text" value="<?php if (isset($this->options['recaptcha_secret_key'])) echo esc_attr($this->options['recaptcha_secret_key']); ?>" />
               
-</div>
+            </div>
+            <!-- End General Options Panel -->
 
-<div class="ss-panel">
-            <h3>Fraud Options</h3>
+            <!-- Start Fraud Options Panel -->
+            <div class="ss-panel ss-fraud-options">
+                <h3>Fraud Options</h3>
            
+                <div class="ss-checkbox">
                         <?php
                         $ischecked = '';
                         if (isset($this->options['enable_fraud']) && $this->options['enable_fraud'] == 'true')
@@ -254,7 +262,7 @@ class SecureSubmit {
                         ?>
                         <input type="checkbox" id="enable_fraud" <?php echo $ischecked; ?> />
                         <label for="enable_fraud" class="ss-checkbox-label">Enable Fraud Options</label>
-                    
+                </div>
                    
 
                         <?php
@@ -282,36 +290,44 @@ class SecureSubmit {
                         <label for="fraud_velocity_timeout">How long (in minutes) should we keep a tally of recent failures?</label></th><td>
                         <input type="text" id="fraud_velocity_timeout" <?php echo $fraud_velocity_timeout; ?> />
                   
+            </div>
+            <!-- End Fraud Options Panel -->
 </div>
-<div class="ss-panel">            
+
+<div class="ss-lower-container clearfix">
+            
+
+            
+            <!-- Start Email Options Panel -->
+            <div class="ss-panel">            
             <h3>Email Options</h3>
-            <table class="form-table">
-                <tbody>
-                <tr>
-                    <th scope="row">From Name</th>
-                    <td><input type="text" id="ssd_from_name" class="regular-text" value="<?php echo esc_attr($this->options['from_name']); ?>" />
-                </tr>
-                <tr>
-                    <th scope="row">From Email Address</th>
-                    <td><input type="text" id="ssd_from_email" class="regular-text" value="<?php echo esc_attr($this->options['from_email']); ?>" />
-                </tr>
-                <tr>
-                    <th scope="row">Payment Email Address</th>
-                    <td><input type="text" id="ssd_payment_email" class="regular-text" value="<?php echo esc_attr($this->options['payment_email']); ?>" />
-                </tr>
-                <tr>
-                    <th scope="row">Customer Email Subject</th>
+            
+                    <label for="ssd_from_name">From Name:</label>
+                    <input type="text" id="ssd_from_name" class="regular-text" value="<?php echo esc_attr($this->options['from_name']); ?>" />
+               
+
+
+                    <label for="ssd_from_email">From Email Address:</label>
+                    <input type="text" id="ssd_from_email" class="regular-text" value="<?php echo esc_attr($this->options['from_email']); ?>" />
+              
+
+                    <label for="ssd_payment_email">Payment Email Address:</label>
+                    <input type="text" id="ssd_payment_email" class="regular-text" value="<?php echo esc_attr($this->options['payment_email']); ?>" />
+               
+                    <label for="customer_email_subject">Customer Email Subject:</label>
                     <td><input type="text" id="customer_email_subject" class="regular-text" value="<?php echo esc_attr($emailsubject); ?>" />
-                </tr>
-                <tr>
-                    <th scope="row">Customer Email Template</th>
-                    <td>
+                
+                    <label>Customer Email Template:</label>
+                    
                         <?php
                         wp_editor($emailbody, 'customer_email_body', array('textarea_name'=>'customer_email_template','textarea_rows'=>10,'wpautop'=>false));
-                        ?>
+?>
+
                         <p>
                             The following variables can be used in the above email templates.
                         </p>
+
+                        
                         <table class="widefat fixed" cellspacing="0">
                             <thead>
                             <tr>
@@ -354,11 +370,17 @@ class SecureSubmit {
                 </tr>
                 </tbody>
             </table>
+            
+            </div>
+
+            
+
+
+            </div>
             <p class="submit">
-                <input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
+                <input type="submit" name="submit" id="submit" class="button button-primary ss-button" value="Save Changes">
             </p>
-        </div>
-</div>
+            </div>
         <?php
     }
 

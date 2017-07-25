@@ -1,5 +1,12 @@
 <style type="text/css">
     
+    .clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+
+
 	.wrap *{
 		box-sizing:border-box;
 	}
@@ -42,7 +49,7 @@
         position: relative;
         box-shadow: 3px 3px 10px rgba(0,0,0,.1);
         padding: 40px;
-        float: left;
+        /*float: left;*/
         border-left: 10px solid #ccc;
     }
 
@@ -88,11 +95,155 @@
     height: 34px;
 }
 
+.ss-checkbox {
+    display: block;
+    width: 100%;
+    margin: 15px 0px;
+}
+
+.ss-checkbox .ss-subtext {
+    font-size: 10px;
+    margin-left: 33px;
+}
+
 .ss-panel label.ss-checkbox-label {
     display: inline-block;
     margin: 0;
+    position: relative;
+    top: -2px;
 }
+
+
+/* page layout */
+
+        .hidden-small {
+            display: none;
+        }
+
+        .ss-top-container, .ss-lower-container {
+            display: block;
+            width: 100%;
+        }
+
+        .ss-top-container .ss-panel, .ss-lower-container .ss-panel {
+            width: 100%;
+        }
+
+        .ss-checkbox {
+            margin: 30px 0px;
+        }
+
+
+/*==========  Mobile First Method  ==========*/
+
+    /* Custom, iPhone Retina */ 
+    @media only screen and (min-width : 320px) {
+
+    }
+
+    /* Extra Small Devices, Phones */ 
+    @media only screen and (min-width : 480px) {
+
+         .ss-top-container .ss-panel, .ss-lower-container .ss-panel {
+            width: 90%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    }
+
+    /* Small Devices, Tablets */
+    @media only screen and (min-width : 768px) {
+       
+        .ss-top-container .ss-panel, .ss-lower-container .ss-panel {
+            width: 80%;
+        }
+
+          .hidden-small {
+            display: inline-block;
+        }
+    }
+
+    /* Medium Devices, Desktops */
+    @media only screen and (min-width : 961px) {
+
+
+    .ss-top-container .ss-panel.ss-api-credentials { width: 100%; }
+
+.ss-top-container .ss-panel.ss-general-options,
+.ss-top-container .ss-panel.ss-fraud-options {
+    width: 48%;
+    float: left;
+    min-height: 420px;
+}
+
+    .ss-top-container .ss-panel.ss-general-options { margin-right: 4%; }
+
+    .ss-top-container .ss-panel, .ss-lower-container .ss-panel {
+    width: 100%;
+}
+
+        /*.ss-top-container .ss-panel, .ss-lower-container .ss-panel {
+            width: 500px;
+        }*/
+    }
+
+    /* Large Devices, Wide Screens */
+    @media only screen and (min-width : 1441px) {
+
+        .ss-top-container .ss-panel.ss-api-credentials,
+        .ss-top-container .ss-panel.ss-general-options,
+        .ss-top-container .ss-panel.ss-fraud-options
+         {
+            float: left;
+            margin-right: 2%;
+            width: 32%;
+            min-height: 405px;
+        }
+
+        .ss-fraud-options {
+            margin-right: 0 !important;
+        }
+
+        .ss-lower-container { 
+            width: 100%;
+        }
+
+        .ss-lower-container .ss-panel { 
+            float: left;
+            width: 100%;
+            max-width: 1500px;
+        }
+
+        .ss-lower-container, .ss-top-container {
+            max-width: 1500px;
+        }
+        
+
+    }
+
+
 
 
 </style>
 
+<!--
+
+.ss-top-container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+}
+
+.ss-top-container .ss-panel {
+    min-height: 370px;
+    width: 480px;
+    margin-right: 50px;
+}
+
+.ss-lower-container {
+    max-width: 70%;
+}
+
+    -->
