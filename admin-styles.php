@@ -113,6 +113,15 @@ h1.wp-heading-inline:before {
 	line-height: 22px;
 }
 
+.ss-panel.ss-report-otions-panel {
+		margin-top: 30px;
+}
+
+.ss-panel.ss-faq-panel {
+		margin-top: 30px;
+}
+
+
 .ss-checkbox {
 	display: block;
 	width: 100%;
