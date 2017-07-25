@@ -150,7 +150,11 @@
         }
 
         .ss-checkbox {
-            margin: 30px 0px;
+            margin: 15px 0px;
+        }
+
+        .ss-report-button {
+            margin-top: 5px !important;
         }
 
 
@@ -178,6 +182,10 @@
        
         .ss-top-container .ss-panel, .ss-lower-container .ss-panel {
             width: 80%;
+        }
+
+        .ss-report-otions-panel {
+            width: 400px;
         }
 
           .hidden-small {
@@ -221,6 +229,7 @@
             width: 32%;
             min-height: 405px;
         }
+
 
         .ss-fraud-options {
             margin-right: 0 !important;

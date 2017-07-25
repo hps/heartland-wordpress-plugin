@@ -435,14 +435,22 @@ class SecureSubmit {
         <form name="report_data" method="post" action="admin.php?page=sub-reporting">
 
             <div id="message" class="updated hidden"><p></p></div>
-            <br>
+<div class="ss-panel ss-report-otions-panel">
             <h3>Report Options</h3>
-            <input type="checkbox" name="ship" <?php if($shipping){echo 'checked="checked"'; } ?> >Include Shipping Information
-            <br>
-            <input type="checkbox" name="additional" <?php if($additional){echo 'checked="checked"'; } ?> >Include Additional Information
-            <br><br>
-            <input type="submit" class="button-primary" value="View Transactions">
+
+
+
+
+<div class="ss-checkbox">
+            <input type="checkbox" name="ship" id="ship" <?php if($shipping){echo 'checked="checked"'; } ?> ><label for="ship" class="ss-checkbox-label">Include Shipping Information</label>
+</div>
+<div class="ss-checkbox">
+            <input type="checkbox" name="additional" id="additional" <?php if($additional){echo 'checked="checked"'; } ?> ><label for="additional" class="ss-checkbox-label">Include Additional Information</label>
+</div>
+            <input type="submit" class="button-primary ss-report-button" value="View Transactions">
+
         </form>
+        </div>
         <br><br>
         <form name="export_data" method="post" action="">
             <input type="hidden" name="export_transaction" value="true">
@@ -575,8 +583,7 @@ class SecureSubmit {
             <h3>How do I get started?</h3>
             <p>The default usage for SecureSubmit is as easy as putting the following in any page or post.</p>
             <pre>[securesubmit modal='true']</pre>
-            <p> This will create a "Make Donation" button on the page. Which when clicked will open a modal window.<br>
-                Where the user can input their info and process the payment.</p>
+            <p> This will create a "Make Donation" button on the page which, when clicked, will open a modal window where the user can input their info and process the payment.</p>
     </div>
 
     <div class="ss-panel ss-faq-panel">
