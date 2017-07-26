@@ -250,9 +250,7 @@ class SecureSubmit {
                             $fraud_message = $this->options['fraud_message'];
                         ?>
 						<label for="fraud_message">Displayed Message:</label>
-							<textarea id="fraud_message">
-                                <?php echo wp_sprintf('%s',$fraud_message); ?>
-							</textarea>
+							<textarea id="fraud_message"><?php echo wp_sprintf('%s',$fraud_message); ?></textarea>
 							<?php
                         $fraud_velocity_attempts = 0;
                         if (isset($this->options['fraud_velocity_attempts']) )
