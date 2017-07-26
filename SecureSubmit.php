@@ -80,10 +80,14 @@ class SecureSubmit {
         register_activation_hook(__FILE__, array($this, 'jal_install'));
     }
 
+
     function init() {
         wp_enqueue_script('jquery');
 
         if(is_admin()){
+            
+            wp_enqueue_style( 'admin-style', plugins_url( '/assets/admin-style.css', __FILE__ ) );
+        
             if ( current_user_can('edit_posts') && current_user_can('edit_pages') && get_user_option('rich_editing') == 'true')
             {
                 if (array_key_exists('enable_button_builder', $this->options ) && $this->options['enable_button_builder'] == 'true') {
@@ -184,8 +188,6 @@ class SecureSubmit {
 			});
 		})(jQuery);
 	</script>
-
-	<?php require 'admin-styles.php'; ?>
 
 		<!-- Start Page Wrapper -->
 		<div class="wrap">
@@ -376,7 +378,6 @@ class SecureSubmit {
 					background-color: #bbb;
 				}
 			</style>
-			<?php require 'admin-styles.php'; ?>
 				<div class="wrap">
 					<h1 class="wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
 					<form name="report_data" method="post" action="admin.php?page=sub-reporting">
@@ -583,7 +584,6 @@ class SecureSubmit {
 
     function faq_page(){
         ?>
-					<?php require 'admin-styles.php'; ?>
 						<div class="wrap">
 							<h1 class="wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
 							<div id="message" class="updated hidden">
