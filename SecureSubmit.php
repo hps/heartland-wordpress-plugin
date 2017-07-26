@@ -201,7 +201,6 @@ class SecureSubmit {
 					<label for="ssd_public_key">Public Key:</label>
 					<input type="text" id="ssd_public_key" class="regular-text" value="<?php if (isset($this->options['public_key'])) echo esc_attr($this->options['public_key']); ?>" />
 					<label for="ssd_secret_key">Secret Key:</label>
-					<td>
 						<input type="text" id="ssd_secret_key" class="regular-text" value="<?php if (isset($this->options['secret_key'])) echo esc_attr($this->options['secret_key']); ?>" />
 				</div>
 				<!-- End API Credentials Panel -->
@@ -251,10 +250,8 @@ class SecureSubmit {
                             $fraud_message = $this->options['fraud_message'];
                         ?>
 						<label for="fraud_message">Displayed Message:</label>
-						</th>
-						<td>
 							<textarea id="fraud_message">
-								<?php echo wp_sprintf('%s',$fraud_message); ?>
+                                <?php echo wp_sprintf('%s',$fraud_message); ?>
 							</textarea>
 							<?php
                         $fraud_velocity_attempts = 0;
@@ -262,8 +259,6 @@ class SecureSubmit {
                             $fraud_velocity_attempts = (string)"value='" . ((int)$this->options['fraud_velocity_attempts']) . "'";
                         ?>
 								<label for="fraud_velocity_attempts">How many failed attempts before blocking?</label>
-								</th>
-								<td>
 									<input type="text" id="fraud_velocity_attempts" <?php echo $fraud_velocity_attempts; ?> />
 									<?php
                         $fraud_velocity_timeout = 0;
@@ -271,8 +266,6 @@ class SecureSubmit {
                             $fraud_velocity_timeout = "value='" . ((int)$this->options['fraud_velocity_timeout']) . "'";
                         ?>
 										<label for="fraud_velocity_timeout">How long (in minutes) should we keep a tally of recent failures?</label>
-										</th>
-										<td>
 											<input type="text" id="fraud_velocity_timeout" <?php echo $fraud_velocity_timeout; ?> />
 				</div>
 				<!-- End Fraud Options Panel -->
@@ -288,7 +281,6 @@ class SecureSubmit {
 					<label for="ssd_payment_email">Payment Email Address:</label>
 					<input type="text" id="ssd_payment_email" class="regular-text" value="<?php echo esc_attr($this->options['payment_email']); ?>" />
 					<label for="customer_email_subject">Customer Email Subject:</label>
-					<td>
 						<input type="text" id="customer_email_subject" class="regular-text" value="<?php echo esc_attr($emailsubject); ?>" />
 						<label>Customer Email Template:</label>
 						<?php
