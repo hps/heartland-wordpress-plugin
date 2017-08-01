@@ -176,6 +176,7 @@ class SecureSubmit {
 						$.post(ajaxurl, data, function (response) {
 							$('#message').html(response);
 							$('#message').show();
+                            window.location.href = '#';
 						});
 					} else {
 						alert("Your keys must be both cert or both production. ");
