@@ -85,9 +85,9 @@ class SecureSubmit {
         wp_enqueue_script('jquery');
 
         if(is_admin()){
-            
+
             wp_enqueue_style( 'admin-style', plugins_url( '/assets/admin-style.css', __FILE__ ) );
-        
+
             if ( current_user_can('edit_posts') && current_user_can('edit_pages') && get_user_option('rich_editing') == 'true')
             {
                 if (array_key_exists('enable_button_builder', $this->options ) && $this->options['enable_button_builder'] == 'true') {
@@ -115,14 +115,14 @@ class SecureSubmit {
     }
 
     function options_page() {
-        if ($this->options['email_subject'] === '' || $this->options['email_subject'] == null) {
+        if (!isset($this->options['email_subject']) || $this->options['email_subject'] === '' || $this->options['email_subject'] == null) {
             $emailsubject = 'Thank you for your payment of $%amount%!';
         }
         else {
             $emailsubject = $this->options['email_subject'];
         }
 
-        if ($this->options['email_body'] === '' || $this->options['email_body'] == null) {
+        if (!isset($this->options['email_body']) || $this->options['email_body'] === '' || $this->options['email_body'] == null) {
             $emailbody = '%firstname%,<br /><br />Thank you for your payment!<br /><br />';
             $emailbody .= '<h2>%productinfo%</h2>';
             $emailbody .= '<h3>Billing Information</h3>%billingaddress%';
@@ -275,11 +275,11 @@ class SecureSubmit {
 				<div class="ss-panel">
 					<h3>Email Options</h3>
 					<label for="ssd_from_name">From Name:</label>
-					<input type="text" id="ssd_from_name" class="regular-text" value="<?php echo esc_attr($this->options['from_name']); ?>" />
+					<input type="text" id="ssd_from_name" class="regular-text" value="<?php echo isset($this->options['from_name']) ? esc_attr($this->options['from_name']) : ''; ?>" />
 					<label for="ssd_from_email">From Email Address:</label>
-					<input type="text" id="ssd_from_email" class="regular-text" value="<?php echo esc_attr($this->options['from_email']); ?>" />
+					<input type="text" id="ssd_from_email" class="regular-text" value="<?php echo isset($this->options['from_email']) ? esc_attr($this->options['from_email']) : ''; ?>" />
 					<label for="ssd_payment_email">Payment Email Address:</label>
-					<input type="text" id="ssd_payment_email" class="regular-text" value="<?php echo esc_attr($this->options['payment_email']); ?>" />
+					<input type="text" id="ssd_payment_email" class="regular-text" value="<?php echo isset($this->options['payment_email']) ? esc_attr($this->options['payment_email']) : ''; ?>" />
 					<label for="customer_email_subject">Customer Email Subject:</label>
 						<input type="text" id="customer_email_subject" class="regular-text" value="<?php echo esc_attr($emailsubject); ?>" />
 						<label>Customer Email Template:</label>
