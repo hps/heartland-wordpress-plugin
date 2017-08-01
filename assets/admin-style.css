@@ -4,16 +4,16 @@
 	clear: both;
 }
 
-.wrap * {
+.ss-wrap * {
 	box-sizing: border-box;
 }
 
-.wrap {
+.ss-wrap {
 	padding: 12px;
 	box-sizing: border-box;
 }
 
-.wrap h1.wp-heading-inline {
+.ss-wrap h1.ss-wp-heading-inline {
 	background: #ce1025;
 	color: #fff;
 	width: 100%;
@@ -29,7 +29,7 @@
 	padding: 0px 0px 0px 150px;
 }
 
-h1.wp-heading-inline:before {
+h1.ss-wp-heading-inline:before {
 	content: '';
 	width: 1px;
 	height: 30px;

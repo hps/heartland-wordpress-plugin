@@ -191,8 +191,8 @@ class SecureSubmit {
 	</script>
 
 		<!-- Start Page Wrapper -->
-		<div class="wrap">
-			<h1 class="wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+		<div class="wrap ss-wrap">
+			<h1 class="ss-wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
 			<div id="message" class="updated hidden">
 				<p></p>
 			</div>
@@ -379,8 +379,8 @@ class SecureSubmit {
 					background-color: #bbb;
 				}
 			</style>
-				<div class="wrap">
-					<h1 class="wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+				<div class="wrap ss-wrap">
+					<h1 class="ss-wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
 					<form name="report_data" method="post" action="admin.php?page=sub-reporting">
 						<div id="message" class="updated hidden">
 							<p></p>
@@ -585,8 +585,8 @@ class SecureSubmit {
 
     function faq_page(){
         ?>
-						<div class="wrap">
-							<h1 class="wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+						<div class="wrap ss-wrap">
+							<h1 class="ss-wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
 							<div id="message" class="updated hidden">
 								<p></p>
 							</div>
