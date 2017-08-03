@@ -1196,12 +1196,10 @@ class SecureSubmit {
                                     exp_year: year
                                 },
                                 success: function (response) {
-                                    <?php echo $prefix; ?>
-                                    _secureSubmitResponseHandler(response);
+                                    <?php echo $prefix; ?>_secureSubmitResponseHandler(response);
                                 },
                                 error: function (response) {
-                                    <?php echo $prefix; ?>
-                                    _secureSubmitResponseHandler(response);
+                                    <?php echo $prefix; ?>_secureSubmitResponseHandler(response);
                                 }
                             });
                         }
