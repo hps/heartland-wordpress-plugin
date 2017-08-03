@@ -44,6 +44,11 @@ Screenshots
 
 Changelog
 ------------
+#### 1.5.5
+* Fix issue with shipping fields when requirebilling="true"
+* Fix modal issue when amount is specified
+* Improve admin styling/messaging
+
 #### 1.5.4
 * Fix issue with additional information in modal form
 
@@ -60,88 +65,88 @@ Changelog
 * Corrected minor issue that only appeared with debug mode enabled. Warning on button builder
 * Fix compatibility regression with older versions of PHP
 
-####1.5.0
+#### 1.5.0
 * Fixed button builder tinyMCE conflict when downloaded from github issue: 37
 
-####1.4.9
+#### 1.4.9
 * Enabled Velocity check by default
 
-####1.4.8
+#### 1.4.8
 * Added Google reCaptcha (non-modal only)
 
-####1.4.7
+#### 1.4.7
 * Add velocity checking for anti-fraud
 * Add velocity fraud check settings
 
-####1.4.6
+#### 1.4.6
 * Clear payment fields in modal on tokenize error and after postback to WP Ajax handler
 
-####1.4.5
+#### 1.4.5
 * Fix "Same as Shipping" for billing address not operating correctly
 * Remove unncessary session_start calls.
 
-####1.4.4
+#### 1.4.4
 * Ensure DC is present in all state select fields
 
-####1.4.3
+#### 1.4.3
 * Fix for null product id on db insert
 
-####1.4.2
+#### 1.4.2
 * Fix long form to allow public_key attribute
 
-####1.4.1
+#### 1.4.1
 * Update certification url to support PCI DSS 3.1
 
-####1.4.0
+#### 1.4.0
 * Update Heartland PHP SDK
 * Test against Wordpress 4.3
 
-####1.3.10
+#### 1.3.10
 * Add check for `$.browser` which has been removed in recent version of jQuery
 
-####1.3.9
+#### 1.3.9
 * Removed more debug text :/
 
-####1.3.8
+#### 1.3.8
 * Removed debug text :/
 
-####1.3.7
+#### 1.3.7
 * Fixed bug with button field types in non-modal forms
 * Removed more index warnings
 
-####1.3.6
+#### 1.3.6
 * Fixed spacing bug with button builder
 
-####1.3.5
+#### 1.3.5
 * Fixed PHP warnings for shortcode attribute edge cases
 
-####1.3.4
+#### 1.3.4
 * Matching Wordpress.org and GitHub version numbers
 
-####1.3.3
+#### 1.3.3
 * Fixed Subject Line variable swapping
 * Fixed render long form in button builder
 
-####1.3.2
+#### 1.3.2
 * Ensure SDK isn't already loaded
 
-####1.3.1
+#### 1.3.1
 * Made State an option for multi-national
 * Added e-mail reciept for long-form
 * Allowing non-numeric characters in card number
 * Amount field is automatically populated based on what value is selected from radio buttons
 
-####1.3.0
+#### 1.3.0
 * Added Button Builder to WordPress WYSIWYG Editor
 * Cleaned up long-form
 
-####1.2.2
+#### 1.2.2
 * Updated payment email to use configurable settings.
 
-####1.2.1
+#### 1.2.1
 * Updated version of DB
 
-####1.2.0
+#### 1.2.0
 * Added Admin view of transactions.
 * Default amount can now be modified.
 * FAQ section added to admin.
@@ -150,34 +155,34 @@ Changelog
 * Upgraded version of jQuery tokenization library.
 * From email address is now configurable from settings.
 
-####1.1.6
+#### 1.1.6
 * Allowing non-modal users to configure the header text.
 * amountdefault attribute added for default donation amounts.
 * productimage can now be set to "none".
 
-####1.1.5
+#### 1.1.5
 * Internet Explorer 6-9 placeholder fix.
 * CSS Fix for additional style clearing.
 
-####1.1.4
+#### 1.1.4
 * Updated styles to clear textbox attributes.
 
-####1.1.3
+#### 1.1.3
 * Added work around for sites running line break conversion plugins.
 
-####1.1.2
+#### 1.1.2
 * Added RAW tags to ignore line breaks.
 
-####1.1.1
+#### 1.1.1
 * Fixed multiple buttons on the same page.
 * Added dropdown as an additional option type.
 
-####1.1.0
+#### 1.1.0
 * Added some screenshots of the plugin in action.
 * Added ability to change button text.
 * Added additional option types.
 
-####1.0.0
+#### 1.0.0
 * Initial Release
 
 Tag Options
