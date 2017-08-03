@@ -2,7 +2,7 @@
 Contributors: markhagan
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
-Tested up to: 4.7
+Tested up to: 4.8
 Stable tag: trunk
 License: Custom
 License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
@@ -46,7 +46,9 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 == Changelog ==
 
 = 1.5.5 =
-* Fix issue issue with shipping fields when requirebilling="true"
+* Fix issue with shipping fields when requirebilling="true"
+* Fix modal issue when amount is specified
+* Improve admin styling/messaging
 
 = 1.5.4 =
 * Fix issue with additional information in modal form
