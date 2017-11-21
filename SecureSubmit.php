@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.5.5
+Version: 1.5.7
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -1580,17 +1580,16 @@ class SecureSubmit {
                                 </select>
                                 /
                                 <select id="<?php echo $prefix; ?>_exp_year" class="required">
-                                    <option value="2016">2016</option>
-                                    <option value="2017">2017</option>
-                                    <option value="2018">2018</option>
-                                    <option value="2019">2019</option>
-                                    <option value="2020">2020</option>
-                                    <option value="2021">2021</option>
-                                    <option value="2022">2022</option>
-                                    <option value="2023">2023</option>
-                                    <option value="2024">2024</option>
-                                    <option value="2025">2025</option>
                                 </select>
+                                <script>
+                                  (function () {
+                                    var myselect = document.getElementById("<?php echo $prefix; ?>_exp_year"),
+                                        year = (new Date).getFullYear(),
+                                        gen = function (e) {
+                                            do { myselect.add(new Option(year++)); } while (e-- > 0);
+                                        }(10);
+                                  }())
+                                </script>
                             </td>
                         </tr>
                         <tr>
@@ -1772,7 +1771,9 @@ class SecureSubmit {
 
                                 } else {
                                     alert(response);
-                                    grecaptcha.reset($(".g-recaptcha").attr('data-widgit-id'));
+                                    if (grecaptcha) {
+                                        grecaptcha.reset($(".g-recaptcha").attr('data-widgit-id'));
+                                    }
                                     $('#<?php echo $prefix; ?>-securesubmit-button').show();
                                 }
                             });
@@ -1826,7 +1827,9 @@ class SecureSubmit {
         $fraud_velocity_timeout = 10;
 
         $secureToken = isset($_POST['securesubmit_token']) ? $_POST['securesubmit_token'] : '';
-        $amount = isset($_POST['donation_amount']) ? (float)$_POST['donation_amount'] : 0;
+        $amount = isset($_POST['donation_amount'])
+            ? floatval(filter_var($_POST['donation_amount'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION))
+            : 0;
         $atts = get_option('secure_submit_'. $_POST['product_id']);
 
         $skey = isset($atts['secret_key']) ? $atts['secret_key'] : $this->options['secret_key'];
