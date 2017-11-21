@@ -1828,7 +1828,9 @@ class SecureSubmit {
         $fraud_velocity_timeout = 10;
 
         $secureToken = isset($_POST['securesubmit_token']) ? $_POST['securesubmit_token'] : '';
-        $amount = isset($_POST['donation_amount']) ? (float)$_POST['donation_amount'] : 0;
+        $amount = isset($_POST['donation_amount'])
+            ? floatval(filter_var($_POST['donation_amount'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION))
+            : 0;
         $atts = get_option('secure_submit_'. $_POST['product_id']);
 
         $skey = isset($atts['secret_key']) ? $atts['secret_key'] : $this->options['secret_key'];
