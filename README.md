@@ -44,6 +44,11 @@ Screenshots
 
 Changelog
 ------------
+#### 1.5.7
+* Fix amount parsing when `,` separator is used
+* Fix issue on error where `grecaptcha` is not on page when ReCaptcha is disabled
+* Update non-modal form to not have past expiration years in dropdown
+
 #### 1.5.6
 * Fix modal issue when amount is specified
 * Improve admin styling/messaging
