@@ -1772,7 +1772,9 @@ class SecureSubmit {
 
                                 } else {
                                     alert(response);
-                                    grecaptcha.reset($(".g-recaptcha").attr('data-widgit-id'));
+                                    if (grecaptcha) {
+                                        grecaptcha.reset($(".g-recaptcha").attr('data-widgit-id'));
+                                    }
                                     $('#<?php echo $prefix; ?>-securesubmit-button').show();
                                 }
                             });
