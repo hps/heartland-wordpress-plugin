@@ -1580,17 +1580,16 @@ class SecureSubmit {
                                 </select>
                                 /
                                 <select id="<?php echo $prefix; ?>_exp_year" class="required">
-                                    <option value="2016">2016</option>
-                                    <option value="2017">2017</option>
-                                    <option value="2018">2018</option>
-                                    <option value="2019">2019</option>
-                                    <option value="2020">2020</option>
-                                    <option value="2021">2021</option>
-                                    <option value="2022">2022</option>
-                                    <option value="2023">2023</option>
-                                    <option value="2024">2024</option>
-                                    <option value="2025">2025</option>
                                 </select>
+                                <script>
+                                  (function () {
+                                    var myselect = document.getElementById("<?php echo $prefix; ?>_exp_year"),
+                                        year = (new Date).getFullYear(),
+                                        gen = function (e) {
+                                            do { myselect.add(new Option(year++)); } while (e-- > 0);
+                                        }(10);
+                                  }())
+                                </script>
                             </td>
                         </tr>
                         <tr>
