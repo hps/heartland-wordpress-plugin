@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+#### 1.5.8
+* Fix settings page issue with tinymce on save which occurred on some systems
+
 #### 1.5.7
 * Fix amount parsing when `,` separator is used
 * Fix issue on error where `grecaptcha` is not on page when ReCaptcha is disabled
