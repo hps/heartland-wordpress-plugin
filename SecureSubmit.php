@@ -139,13 +139,21 @@ class SecureSubmit {
                         $('#message').hide();
 
                         var content;
-                        var editor = tinyMCE.get('customer_email_body');
-                        if (editor) {
-                            // Ok, the active tab is Visual
-                            content = editor.getContent();
+                        var fallbackGetContent = function () {
+                            return $('#' + 'customer_email_body').val();
+                        };
+
+                        if (tinyMCE) {
+                            var editor = tinyMCE.get('customer_email_body');
+                            if (editor) {
+                                // Ok, the active tab is Visual
+                                content = editor.getContent();
+                            } else {
+                                // The active tab is HTML, so just query the textarea
+                                content = fallbackGetContent();
+                            }
                         } else {
-                            // The active tab is HTML, so just query the textarea
-                            content = $('#' + 'customer_email_body').val();
+                            content = fallbackGetContent();
                         }
 
                         var data = {
