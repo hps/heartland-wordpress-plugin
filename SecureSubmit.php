@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.5.7
+Version: 1.5.8
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -139,13 +139,21 @@ class SecureSubmit {
                         $('#message').hide();
 
                         var content;
-                        var editor = tinyMCE.get('customer_email_body');
-                        if (editor) {
-                            // Ok, the active tab is Visual
-                            content = editor.getContent();
+                        var fallbackGetContent = function () {
+                            return $('#' + 'customer_email_body').val();
+                        };
+
+                        if (tinyMCE) {
+                            var editor = tinyMCE.get('customer_email_body');
+                            if (editor) {
+                                // Ok, the active tab is Visual
+                                content = editor.getContent();
+                            } else {
+                                // The active tab is HTML, so just query the textarea
+                                content = fallbackGetContent();
+                            }
                         } else {
-                            // The active tab is HTML, so just query the textarea
-                            content = $('#' + 'customer_email_body').val();
+                            content = fallbackGetContent();
                         }
 
                         var data = {
