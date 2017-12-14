@@ -44,6 +44,9 @@ Screenshots
 
 Changelog
 ------------
+#### 1.5.9
+* Fix shipping name parsing in modal form
+
 #### 1.5.8
 * Fix settings page issue with tinymce on save which occurred on some systems
 

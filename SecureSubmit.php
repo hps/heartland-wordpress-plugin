@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.5.8
+Version: 1.5.9
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -1905,15 +1905,7 @@ class SecureSubmit {
                 $billing_lastname = $middle;
             }
 
-            list($shipfirst, $shipmiddle, $shiplast) = explode (" ", $_POST['shipping_name']);
-
-            if (isset($shiplast)) {
-                $shipping_firstname = $shipfirst;
-                $shipping_lastname = $shiplast;
-            } else {
-                $shipping_firstname = $shipfirst;
-                $shipping_lastname = $shipmiddle;
-            }
+            $shipping_name = isset($_POST['shipping_name']) ? $_POST['shipping_name'] : '';
 
             $billing_address = isset($_POST['cardholder_address']) ? $_POST['cardholder_address'] : '';
             $billing_city= isset($_POST['cardholder_city']) ? $_POST['cardholder_city'] : '';
@@ -1967,7 +1959,11 @@ class SecureSubmit {
 
         // shipping info
         $email_shippinginfo = '<h3>Shipping Information</h3>';
-        $email_shippinginfo .= 'Name: ' . $shipping_firstname . ' ' . $shipping_lastname . '<br/>';
+        $email_shippinginfo .= 'Name: '
+            . (isset($shipping_name)
+                ? $shipping_name
+                : $shipping_firstname . ' ' . $shipping_lastname)
+                . '<br/>';
         $email_shippinginfo .= 'Address: ' . $shipping_address . '<br/>';
         $email_shippinginfo .= 'City: ' . $shipping_city . '<br/>';
         if ($requireState)
@@ -2096,7 +2092,10 @@ class SecureSubmit {
             $insert_array['billing_state']      = $billing_state;
             $insert_array['billing_zip']        = $billing_zip;
             $insert_array['billing_email']      = $billing_email;
-            $insert_array['shipping_name']      = $shipping_firstname . ' ' . $shipping_lastname;
+            $insert_array['shipping_name']      =
+                isset($shipping_name)
+                ? $shipping_name
+                : $shipping_firstname . ' ' . $shipping_lastname;
             $insert_array['shipping_address']   = $shipping_address;
             $insert_array['shipping_city']      = $shipping_city;
             if ($requireState)
