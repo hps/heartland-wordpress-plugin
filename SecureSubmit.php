@@ -1525,7 +1525,7 @@ class SecureSubmit {
                                 $additionalHTML .= '<tr><td width="200">' . $atts[$value] . $requiredIndicator . '</td><td><textarea name="'.$value.'" id="'.$value.'"" class="donation-textarea"'.$required.'"></textarea></td></tr>';
                             }
                             else if ($field_type == "dropdown") {
-                                $additionalHTML .= '<tr><td width="200" colspan="2"><select name="'.$value.'" id="'.$value.'"" class="donation-textarea'.$required.'"><option>Select an option below</option>';
+                                $additionalHTML .= '<tr><td width="200" colspan="2"><select name="'.$value.'" id="'.$value.'"" class="donation-dropdown'.$required.'"><option>Select an option below</option>';
                                 $options = explode("|", $atts[$value]);
                                 foreach($options as $option) {
                                     $additionalHTML .= '<option>' . $option . '</option>'.$requiredIndicator;
@@ -1658,7 +1658,7 @@ class SecureSubmit {
         <script type="text/javascript">
             (function ($) {
                 $(function () {
-                    $('.securesubmitradio').change(
+                    $('.securesubmitradio, .donation-dropdown').change(
                         function () {
                             if (this.value.indexOf("(") > 0 && this.value.indexOf(")") > 0) {
                                 var currentVal = this.value.substring(this.value.indexOf("(") + 2, this.value.indexOf(")"));
