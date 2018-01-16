@@ -793,9 +793,11 @@ class SecureSubmit {
                             }
                         }
 
+                        $field_type = trim($field_type);
+
                         if (strpos($field_type, '*') > -1) {
                             $required = ' required';
-                            $field_type = str_replace('*', '', $field_type);
+                            $field_type = trim(str_replace('*', '', $field_type));
                         }
 
                         if ($field_type == "textarea") {
