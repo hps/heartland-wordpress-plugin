@@ -366,7 +366,7 @@ class SecureSubmit {
 
         update_option('securesubmit_options', $data);
 
-        echo 'Settings saved.';
+        echo '<p>Settings Saved</p>';
         exit;
     }
     function report_page(){
