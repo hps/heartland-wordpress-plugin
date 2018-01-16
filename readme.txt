@@ -44,6 +44,8 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.9 =
+* Fix shipping name parsing in modal form
 
 = 1.5.8 =
 * Fix settings page issue with tinymce on save which occurred on some systems
