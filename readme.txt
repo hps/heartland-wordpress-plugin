@@ -44,6 +44,9 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.10 =
+* Correct automatic amount change feature in modal and non-modal forms
+
 = 1.5.9 =
 * Fix shipping name parsing in modal form
 
