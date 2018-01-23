@@ -366,7 +366,7 @@ class SecureSubmit {
 
         update_option('securesubmit_options', $data);
 
-        echo 'Settings saved.';
+        echo '<p>Settings Saved</p>';
         exit;
     }
     function report_page(){
@@ -793,16 +793,18 @@ class SecureSubmit {
                             }
                         }
 
+                        $field_type = trim($field_type);
+
                         if (strpos($field_type, '*') > -1) {
                             $required = ' required';
-                            $field_type = str_replace('*', '', $field_type);
+                            $field_type = trim(str_replace('*', '', $field_type));
                         }
 
                         if ($field_type == "textarea") {
                             echo $prefix . '_additional_html += "<div class=\'card-number\'><textarea name=\''.$value.'\' id=\''.$value.'\' class=\'donation-textarea'.$required.'\' placeholder=\''.$atts[$value].'\'></textarea></div>";';
                         }
                         else if ($field_type == "dropdown") {
-                            echo $prefix . '_additional_html += "<div class=\'card-number\'><select name=\''.$value.'\' id=\''.$value.'\' class=\'donation-textarea'.$required.'\'><option>Select an option below</option>";';
+                            echo $prefix . '_additional_html += "<div class=\'card-number\'><select name=\''.$value.'\' id=\''.$value.'\' class=\'donation-dropdown'.$required.'\'><option>Select an option below</option>";';
                             $options = explode("|", $atts[$value]);
                             foreach($options as $option) {
                                 echo $prefix . '_additional_html += "<option>' . $option . '</option>";';
@@ -812,7 +814,7 @@ class SecureSubmit {
                             echo $prefix . '_additional_html += "<div class=\'card-number\'>";';
                             $options = explode("|", $atts[$value]);
                             foreach($options as $option) {
-                                echo $prefix . '_additional_html += "<input type=\'radio\' name=\''.$value.'\' value=\'' . $option . '\'>' . $option . '</input><br />";';
+                                echo $prefix . '_additional_html += "<input type=\'radio\' name=\''.$value.'\' value=\'' . $option . '\' class=\'securesubmitradio\'>' . $option . '</input><br />";';
                             }
                             echo $prefix . '_additional_html += "</div>";';
                         } else if ($field_type == "checkbox") {
@@ -1044,6 +1046,14 @@ class SecureSubmit {
 
                         additionalPanel.hide();
 
+                        additionalPanel.find('.securesubmitradio, .donation-dropdown').change(
+                            function () {
+                                if (this.value.indexOf("(") > 0 && this.value.indexOf(")") > 0) {
+                                    var currentVal = this.value.substring(this.value.indexOf("(") + 2, this.value.indexOf(")"));
+                                    frameBody.find('#donation_amount').val(currentVal);
+                                }
+                            }
+                        );
 
                         additionalNext.on("click", function (event) {
                             var continueProcessing = true;
@@ -1525,7 +1535,7 @@ class SecureSubmit {
                                 $additionalHTML .= '<tr><td width="200">' . $atts[$value] . $requiredIndicator . '</td><td><textarea name="'.$value.'" id="'.$value.'"" class="donation-textarea"'.$required.'"></textarea></td></tr>';
                             }
                             else if ($field_type == "dropdown") {
-                                $additionalHTML .= '<tr><td width="200" colspan="2"><select name="'.$value.'" id="'.$value.'"" class="donation-textarea'.$required.'"><option>Select an option below</option>';
+                                $additionalHTML .= '<tr><td width="200" colspan="2"><select name="'.$value.'" id="'.$value.'"" class="donation-dropdown'.$required.'"><option>Select an option below</option>';
                                 $options = explode("|", $atts[$value]);
                                 foreach($options as $option) {
                                     $additionalHTML .= '<option>' . $option . '</option>'.$requiredIndicator;
@@ -1658,7 +1668,7 @@ class SecureSubmit {
         <script type="text/javascript">
             (function ($) {
                 $(function () {
-                    $('.securesubmitradio').change(
+                    $('.securesubmitradio, .donation-dropdown').change(
                         function () {
                             if (this.value.indexOf("(") > 0 && this.value.indexOf(")") > 0) {
                                 var currentVal = this.value.substring(this.value.indexOf("(") + 2, this.value.indexOf(")"));
