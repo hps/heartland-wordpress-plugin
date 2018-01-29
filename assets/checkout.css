@@ -1,20 +1,35 @@
+
+.checkout-product-image {
+    display:none;
+}
+form input {
+    border-radius:0px;
+}
 body {
     margin: 0;
     background-color: none transparent;
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: 400;
+    position:fixed;
+    width:100%;
+}
+
+div#modal-content {
+  position:absolute !important;
+}
+#modal-background.active {
+  position:fixed !important;
 }
 
 form {
     background-color: white;
-    border-radius: 3px;
+    border-radius: 0px;
     border: 2px solid #e3e3e3;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
     box-shadow: 0 0 20px 0 #222;
     -webkit-box-shadow: 0 0 20px 0 #222;
     -moz-box-shadow: 0 0 20px 0 #222;
-    height: 535px;
 }
 
 .email-reciept label {
@@ -55,6 +70,10 @@ select {
     background: #fff;
     cursor: pointer;
     cursor: hand;
+}
+
+body {
+  position:fixed;
 }
 
 #modal-background {
@@ -110,9 +129,8 @@ select {
 
 #modal-header {
     background-color: #e3e3e3;
-    height: 160px;
-    padding: 15px;
-
+    padding: 10px;
+    text-align:center;
     /* these will fix the padding width/height increases */
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -120,7 +138,7 @@ select {
 }
 
 #modal-body {
-    padding: 15px;
+    padding: 10px;
 
     /* these will fix the padding width/height increases */
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
@@ -165,11 +183,7 @@ select {
 }
 
 .checkout-product-image {
-    max-width: 140px;
-    max-height: 140px;
-    width: auto;
-    height: auto;
-    padding-right: 15px;
+    display:none;
 }
 
 .checkout-card-information {
@@ -179,7 +193,6 @@ select {
 
 .checkout-input {
     padding: 10px 10px;
-    text-align: center;
 }
 
 .checkout-card {
@@ -236,15 +249,12 @@ select {
 }
 
 .pay-button {
-    margin-left: 90px;
 
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
     cursor: pointer;
     cursor: hand;
-    top: 440px;
-    position: absolute;
 }
 
 .pay-button:hover {
@@ -262,13 +272,15 @@ select {
     width: 150px;
     height: 44px;
     text-align: center;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
     color: #ffffff;
     display: block;
-    background-color: #5F8A9C;
+    background-color: #3989e3;
     text-decoration: none;
+    margin:auto;
+    float:none;
 
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -288,6 +300,7 @@ select {
 }
 
 .pay-button-border {
+  display:none;
     margin-top: -5px;
     background-color: #4B6E7D;
     width: 150px;
@@ -408,8 +421,5 @@ select {
 .powered_by {
     text-align: center;
     padding-top: 10px;
-    top: 490px;
-    position: absolute;
-    left: 125px;
 
 }

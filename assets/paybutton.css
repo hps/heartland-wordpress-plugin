@@ -1,3 +1,19 @@
+
+div#modal-content {
+  position:relative !important;
+  display:flex;
+}
+#modal-background.active {
+display:flex !important;
+}
+.pay-button {
+    border-radius:0px !important;
+    border:0px solid transparent;
+}
+.pay-button-border {
+    display:none;
+}
+/*.entry-content { position:absolute;} */
 #button-main, #button-main *, #pay-button, #pay-button *,#modal-content,#modal-content *,#modal-content a:hover,#modal-content a:visited,#modal-content a:active{
     background:none;
     border: none;
@@ -49,11 +65,8 @@
 #modal-content {
     display: none;
     position: fixed;
-    left: 50%;
-    top: 50px;
-    width: 360px;
+
     height: 557px;
-    margin-left: -180px;
     z-index: 1000;
     font-family: Verdana, Helvetica, sans-serif;
     font-weight: 400;
@@ -83,14 +96,13 @@
     width: 150px !important;
     height: 44px !important;
     text-align: center !important;
-    border-radius: 5px !important;
-    -webkit-border-radius: 5px !important;
-    -moz-border-radius: 5px !important;
+    border-radius: 0px !important;
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
     color: #ffffff !important;
     display: block !important;
-    background-color: #5F8A9C !important;
+    background-color: #3989e3 !important;
     text-decoration: none !important;
-
     -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
     box-sizing: border-box !important;         /* Opera/IE 8+ */
