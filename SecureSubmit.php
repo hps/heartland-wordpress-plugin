@@ -1418,8 +1418,8 @@ class SecureSubmit {
 
                     <?php if ($requireShipping) { ?>
                         <h3>Shipping Information</h3>
-                        <input type="checkbox " name="same_as_billing " value="1 " checked="true " onclick="jQuery( '#shipping_table').toggle(); ">&nbsp;<label for="same_as_billing ">Same as Billing Address</label>
-                        <table width="100% " style="display:none; " id="shipping_table ">
+                        <input type="checkbox" name="same_as_billing" value="1" checked="true" onclick="jQuery('#shipping_table').toggle();">&nbsp;<label for="same_as_billing ">Same as Billing Address</label>
+                        <table width="100%" style="display:none;" id="shipping_table">
                             <tr>
                                 <td width="200 ">First Name:</td>
                                 <td><input class="form-text<?php echo $shippingRequired; ?>" name="shipping_firstname" type="text"  /></td>
@@ -1444,7 +1444,7 @@ class SecureSubmit {
                                 <tr>
                                     <td>State:</td>
                                     <td>
-                                        <select name="shipping_state " class="<?php echo $shippingRequired; ?>" >
+                                        <select name="shipping_state" class="<?php echo $shippingRequired; ?>" >
                                             <option value="AL">Alabama</option>
                                             <option value="AK">Alaska</option>
                                             <option value="AZ">Arizona</option>
