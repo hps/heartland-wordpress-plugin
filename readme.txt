@@ -2,7 +2,7 @@
 Contributors: markhagan
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
-Tested up to: 4.8
+Tested up to: 4.9
 Stable tag: trunk
 License: Custom
 License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
@@ -44,6 +44,9 @@ Get your Certification (Dev) API keys by creating an account by [Clicking Here](
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.11 =
+* Correct checkbox display on non-modal form
+
 = 1.5.10 =
 * Correct automatic amount change feature in modal and non-modal forms
 
