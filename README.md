@@ -43,6 +43,10 @@ Get your Certification (Dev) API keys by creating an account by Clicking Here he
 
 ## Changelog
 
+#### 1.5.11
+
+* Correct checkbox display on non-modal form
+
 #### 1.5.10
 
 * Correct automatic amount change feature in modal and non-modal forms
