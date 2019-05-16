@@ -2,7 +2,7 @@
 Contributors: markhagan
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
-Tested up to: 4.9
+Tested up to: 5.2
 Stable tag: trunk
 License: Custom
 License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
@@ -35,6 +35,11 @@ Features of SecureSubmit:
 = How do I get started? =
 
 Get your Certification (Dev) API keys by creating an account by [Clicking Here](here: https://developer.heartlandpaymentsystems.com/SecureSubmit/ "Heartland SecureSubmit")
+
+= Does this support sites using the Gutenberg editor?
+
+This plugin's features should work without issue using the Gutenberg editor except for
+the button builder. To use the button builder, the classic editor is currently required.
 
 == Screenshots ==
 
