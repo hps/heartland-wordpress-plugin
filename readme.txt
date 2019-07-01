@@ -49,6 +49,9 @@ the button builder. To use the button builder, the classic editor is currently r
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.12 =
+* Add amount cap feature/filter
+
 = 1.5.11 =
 * Correct checkbox display on non-modal form
 

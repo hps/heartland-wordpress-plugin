@@ -1887,6 +1887,14 @@ class SecureSubmit {
             $productid = isset($atts['productid']) ? $atts['productid'] : 0;
             $productname = isset($atts['productname']) ? $atts['productname'] : 0;
         }
+
+        $amountCap = 25000.00;
+        apply_filters('hps_amount_cap', $amountCap);
+
+        if($amount > $amountCap){
+            die(sprintf('Amount cannot be greater than %s. Please contact customer support for assistance.', $amountCap));
+        }
+
         //if productid is not already set in $attrs assign it from POST
         if(!isset($atts['productid'])){
             $productid = (!empty($_POST['product_id'])) ? $_POST['product_id'] : '';
