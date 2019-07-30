@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.5.11
+Version: 1.5.12
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -306,6 +306,10 @@ class SecureSubmit {
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td>%transactionid%</td>
+                                <td>Heartland's Gateway Transaction ID</td>
+                            </tr>
                             <tr>
                                 <td>%firstname%</td>
                                 <td>Customer's First Name</td>
@@ -2047,8 +2051,11 @@ class SecureSubmit {
                 $details
             );
 
+            $transaction_id = $response->transactionId;
+
             add_filter('wp_mail_content_type', create_function('', 'return "text/html"; '));
 
+            $body = str_replace('%transactionid%', $transaction_id, $body);
             $body = str_replace('%firstname%', $billing_firstname, $body);
             $body = str_replace('%lastname%', $billing_lastname, $body);
             $body = str_replace('%amount%', $amount, $body);
@@ -2059,6 +2066,7 @@ class SecureSubmit {
 
             $email_subject = $this->options['email_subject'];
 
+            $email_subject = str_replace('%transactionid%', $transaction_id, $email_subject);
             $email_subject = str_replace('%firstname%', $billing_firstname, $email_subject);
             $email_subject = str_replace('%lastname%', $billing_lastname, $email_subject);
             $email_subject = str_replace('%amount%', $amount, $email_subject);
@@ -2092,8 +2100,6 @@ class SecureSubmit {
             }
 
             // Save to Data Base
-            $transaction_id = $response->transactionId;
-
             $insert_array = array();
             $insert_array['time']               = current_time('mysql');
             $insert_array['billing_name']       = $billing_firstname . ' ' . $billing_lastname;
