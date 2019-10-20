@@ -1,13 +1,38 @@
 <?php
 
+/**
+ * Class HpsCreditService
+ */
 class HpsCreditService extends HpsSoapGatewayService
 {
+    /**
+     * HpsCreditService constructor.
+     *
+     * @param \HpsServicesConfig|null $config
+     */
     public function __construct(HpsServicesConfig $config = null)
     {
         parent::__construct($config);
     }
-
-    public function authorize($amount, $currency, $cardOrToken, $cardHolder = null, $requestMultiUseToken = false, $details = null, $txnDescriptor = null, $allowPartialAuth = false, $cpcReq = false)
+    /**
+     * @param      $amount
+     * @param      $currency
+     * @param      $cardOrToken
+     * @param null $cardHolder
+     * @param bool $requestMultiUseToken
+     * @param null $details
+     * @param null $txnDescriptor
+     * @param bool $allowPartialAuth
+     * @param bool $cpcReq
+     * @param null $convenienceAmtInfo
+     * @param null $shippingAmtInfo
+     *
+     * @return array|null
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     * @throws \HpsInvalidRequestException
+     */
+    public function authorize($amount, $currency, $cardOrToken, $cardHolder = null, $requestMultiUseToken = false, $details = null, $txnDescriptor = null, $allowPartialAuth = false, $cpcReq = false, $convenienceAmtInfo = null, $shippingAmtInfo = null)
     {
         HpsInputValidation::checkCurrency($currency);
         $this->_currency = $currency;
@@ -21,6 +46,16 @@ class HpsCreditService extends HpsSoapGatewayService
         $hpsBlock1->appendChild($xml->createElement('hps:AllowDup', 'Y'));
         $hpsBlock1->appendChild($xml->createElement('hps:AllowPartialAuth', ($allowPartialAuth ? 'Y' : 'N')));
         $hpsBlock1->appendChild($xml->createElement('hps:Amt', $amount));
+        //update convenienceAmtInfo if passed
+        if ($convenienceAmtInfo != null && $convenienceAmtInfo != '') {
+            $hpsBlock1->appendChild($xml->createElement('hps:ConvenienceAmtInfo', $convenienceAmtInfo));
+        }
+        
+         //update shippingAmtInfo if passed
+        if ($shippingAmtInfo != null && $shippingAmtInfo != '') {
+            $hpsBlock1->appendChild($xml->createElement('hps:ShippingAmtInfo', $shippingAmtInfo));
+        }
+        
         if ($cardHolder != null) {
             $hpsBlock1->appendChild($this->_hydrateCardHolderData($cardHolder, $xml));
         }
@@ -30,7 +65,7 @@ class HpsCreditService extends HpsSoapGatewayService
         if ($txnDescriptor != null && $txnDescriptor != '') {
             $hpsBlock1->appendChild($xml->createElement('hps:TxnDescriptor', $txnDescriptor));
         }
-
+        
         $cardData = $xml->createElement('hps:CardData');
         if ($cardOrToken instanceof HpsCreditCard) {
             $cardData->appendChild($this->_hydrateManualEntry($cardOrToken, $xml));
@@ -48,7 +83,17 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'CreditAuth', (isset($details->clientTransactionId) ? $details->clientTransactionId : null), $cardOrToken);
     }
-
+    /**
+     * @param      $transactionId
+     * @param null $amount
+     * @param null $gratuity
+     * @param null $clientTransactionId
+     * @param null $directMarketData
+     *
+     * @return array|null
+     * @throws \HpsArgumentException
+     * @throws \HpsGatewayException
+     */
     public function capture($transactionId, $amount = null, $gratuity = null, $clientTransactionId = null, $directMarketData = null)
     {
         $xml = new DOMDocument();
@@ -78,8 +123,26 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->get($transactionId);
     }
-
-    public function charge($amount, $currency, $cardOrToken, $cardHolder = null, $requestMultiUseToken = false, $details = null, $txnDescriptor = null, $allowPartialAuth = false, $cpcReq = false, $directMarketData = null)
+    /**
+     * @param      $amount
+     * @param      $currency
+     * @param      $cardOrToken
+     * @param null $cardHolder
+     * @param bool $requestMultiUseToken
+     * @param null $details
+     * @param null $txnDescriptor
+     * @param bool $allowPartialAuth
+     * @param bool $cpcReq
+     * @param null $directMarketData
+     * @param null $convenienceAmtInfo
+     * @param null $shippingAmtInfo
+     *
+     * @return array|null
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     * @throws \HpsInvalidRequestException
+     */
+    public function charge($amount, $currency, $cardOrToken, $cardHolder = null, $requestMultiUseToken = false, $details = null, $txnDescriptor = null, $allowPartialAuth = false, $cpcReq = false, $directMarketData = null, $convenienceAmtInfo = null, $shippingAmtInfo = null)
     {
         HpsInputValidation::checkCurrency($currency);
         $this->_currency = $currency;
@@ -93,6 +156,15 @@ class HpsCreditService extends HpsSoapGatewayService
         $hpsBlock1->appendChild($xml->createElement('hps:AllowDup', 'Y'));
         $hpsBlock1->appendChild($xml->createElement('hps:AllowPartialAuth', ($allowPartialAuth ? 'Y' : 'N')));
         $hpsBlock1->appendChild($xml->createElement('hps:Amt', $amount));
+        //update convenienceAmtInfo if passed
+        if ($convenienceAmtInfo != null && $convenienceAmtInfo != '') {
+            $hpsBlock1->appendChild($xml->createElement('hps:ConvenienceAmtInfo', $convenienceAmtInfo));
+        }
+        
+         //update shippingAmtInfo if passed
+        if ($shippingAmtInfo != null && $shippingAmtInfo != '') {
+            $hpsBlock1->appendChild($xml->createElement('hps:ShippingAmtInfo', $shippingAmtInfo));
+        }
         if ($cardHolder != null) {
             $hpsBlock1->appendChild($this->_hydrateCardHolderData($cardHolder, $xml));
         }
@@ -124,7 +196,19 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'CreditSale', (isset($details->clientTransactionId) ? $details->clientTransactionId : null), $cardOrToken);
     }
-
+    /**
+     * @param      $schedule
+     * @param      $amount
+     * @param      $cardOrTokenOrPMKey
+     * @param null $cardHolder
+     * @param bool $oneTime
+     * @param null $details
+     *
+     * @return array|null
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     * @throws \HpsInvalidRequestException
+     */
     public function recurring($schedule, $amount, $cardOrTokenOrPMKey, $cardHolder = null, $oneTime = false, $details = null)
     {
         $this->_amount = HpsInputValidation::checkAmount($amount);
@@ -169,7 +253,14 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'RecurringBilling', (isset($details->clientTransactionId) ? $details->clientTransactionId : null), $cardOrTokenOrPMKey);
     }
-
+    /**
+     * @param $transactionId
+     * @param $cpcData
+     *
+     * @return array|null
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     */
     public function cpcEdit($transactionId, $cpcData)
     {
         $xml = new DOMDocument();
@@ -181,7 +272,16 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'CreditCPCEdit');
     }
-
+    /**
+     * @param      $transactionId
+     * @param null $amount
+     * @param null $gratuity
+     * @param null $clientTransactionId
+     *
+     * @return array|null
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     */
     public function edit($transactionId, $amount = null, $gratuity = null, $clientTransactionId = null)
     {
         $xml = new DOMDocument();
@@ -247,11 +347,18 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'ManageTokens');
     }
-
+    /**
+     * @param $transactionId
+     *
+     * @return array|null
+     * @throws \HpsArgumentException
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     */
     public function get($transactionId)
     {
         if ($transactionId <= 0) {
-            throw new HpsArgumentException('Invalid Transaction Id');
+            throw new HpsArgumentException('Invalid Transaction Id',HpsExceptionCodes::INVALID_ORIGINAL_TRANSACTION);
         }
 
         $xml = new DOMDocument();
@@ -262,7 +369,16 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'ReportTxnDetail');
     }
-
+    /**
+     * @param      $startDate
+     * @param      $endDate
+     * @param null $filterBy
+     *
+     * @return array|null
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     * @throws \HpsInvalidRequestException
+     */
     public function listTransactions($startDate, $endDate, $filterBy = null)
     {
         $this->_filterBy = $filterBy;
@@ -283,7 +399,18 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'ReportActivity');
     }
-
+    /**
+     * @param      $amount
+     * @param      $currency
+     * @param      $cardData
+     * @param null $cardHolder
+     * @param null $details
+     *
+     * @return array|null
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     * @throws \HpsInvalidRequestException
+     */
     public function refund($amount, $currency, $cardData, $cardHolder = null, $details = null)
     {
         HpsInputValidation::checkCurrency($currency);
@@ -323,7 +450,7 @@ class HpsCreditService extends HpsSoapGatewayService
      /**
      * @param HpsCreditCard|HpsTokenData|int                $cardData GatewayTxnId
      * @param float                                         $amount
-     * @param USD                                           $currency
+     * @param string                                           $currency
      * @param null|HpsTransactionDetails                    $details
      * @param null|float                                    $authAmount
      * @return HpsReversal
@@ -366,7 +493,16 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'CreditReversal', (isset($details->clientTransactionId) ? $details->clientTransactionId : null));
     }
-
+    /**
+     * @param      $cardOrToken
+     * @param null $cardHolder
+     * @param bool $requestMultiUseToken
+     * @param null $clientTransactionId
+     *
+     * @return array|null
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     */
     public function verify($cardOrToken, $cardHolder = null, $requestMultiUseToken = false, $clientTransactionId = null)
     {
         $xml = new DOMDocument();
@@ -392,7 +528,14 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'CreditAccountVerify', $clientTransactionId);
     }
-
+    /**
+     * @param      $transactionId
+     * @param null $clientTransactionId
+     *
+     * @return array|null
+     * @throws \HpsException
+     * @throws \HpsGatewayException
+     */
     public function void($transactionId, $clientTransactionId = null)
     {
         $xml = new DOMDocument();
@@ -403,7 +546,14 @@ class HpsCreditService extends HpsSoapGatewayService
 
         return $this->_submitTransaction($hpsTransaction, 'CreditVoid', $clientTransactionId);
     }
-
+    /**
+     * @param $response
+     * @param $expectedType
+     *
+     * @throws \HpsAuthenticationException
+     * @throws \HpsGatewayException
+     * @throws null
+     */
     private function _processChargeGatewayResponse($response, $expectedType)
     {
         $gatewayRspCode = (isset($response->Header->GatewayRspCode) ? $response->Header->GatewayRspCode : null);
@@ -427,7 +577,13 @@ class HpsCreditService extends HpsSoapGatewayService
 
         HpsGatewayResponseValidation::checkResponse($response, $expectedType);
     }
-
+    /**
+     * @param $response
+     * @param $expectedType
+     *
+     * @throws \HpsCreditException
+     * @throws null
+     */
     private function _processChargeIssuerResponse($response, $expectedType)
     {
         $transactionId = (isset($response->Header->GatewayTxnId) ? $response->Header->GatewayTxnId : null);

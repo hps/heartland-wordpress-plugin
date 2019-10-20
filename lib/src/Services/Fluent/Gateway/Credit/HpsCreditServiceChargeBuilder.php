@@ -17,6 +17,8 @@
  * @method HpsCreditServiceChargeBuilder withDirectMarketData(HpsDirectMarketData $directMarketData)
  * @method HpsCreditServiceChargeBuilder withAllowDuplicates(bool $allowDuplicates)
  * @method HpsCreditServiceChargeBuilder withGratuity(double $gratuity)
+ * @method HpsCreditServiceChargeBuilder withConvenienceAmtInfo(double $convenienceAmtInfo)
+ * @method HpsCreditServiceChargeBuilder withShippingAmtInfo(double $shippingAmtInfo)
  */
 class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
 {
@@ -68,6 +70,12 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
     protected $originalTxnReferenceData = null;
     protected $secureEcommerce          = null;
 
+    /** @var double|null */
+    protected $convenienceAmtInfo       = null;
+    
+    /** @var double|null */
+    protected $shippingAmtInfo          = null;
+    
     /**
      * Instatiates a new HpsCreditServiceChargeBuilder
      *
@@ -97,6 +105,16 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
         $hpsBlock1->appendChild($xml->createElement('hps:AllowDup', ($this->allowDuplicates ? 'Y' : 'N')));
         $hpsBlock1->appendChild($xml->createElement('hps:AllowPartialAuth', ($this->allowPartialAuth ? 'Y' : 'N')));
         $hpsBlock1->appendChild($xml->createElement('hps:Amt', $this->amount));
+        
+        //update convenienceAmtInfo if passed
+        if ($this->convenienceAmtInfo != null && $this->convenienceAmtInfo != '') {
+            $hpsBlock1->appendChild($xml->createElement('hps:ConvenienceAmtInfo', HpsInputValidation::checkAmount($this->convenienceAmtInfo)));
+        }
+        
+         //update shippingAmtInfo if passed
+        if ($this->shippingAmtInfo != null && $this->shippingAmtInfo != '') {
+            $hpsBlock1->appendChild($xml->createElement('hps:ShippingAmtInfo', HpsInputValidation::checkAmount($this->shippingAmtInfo)));
+        }
 
         if ($this->gratuity != null) {
             $hpsBlock1->appendChild($xml->createElement('hps:GratuityAmtInfo', $this->gratuity));
@@ -116,7 +134,8 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
             ));
             if ($this->card->encryptionData != null) {
                 $cardData->appendChild($this->service->_hydrateEncryptionData(
-                    $this->card->encryptionData
+                    $this->card->encryptionData,
+                    $xml
                 ));
             }
         } else if ($this->token != null) {
@@ -127,10 +146,11 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
                 $this->readerPresent
             ));
         } else if ($this->trackData != null) {
-            $cardData->appendChild($this->service->_hydrateTrackData($this->trackData));
+            $cardData->appendChild($this->service->_hydrateTrackData($this->trackData, $xml));
             if ($this->trackData->encryptionData != null) {
                 $cardData->appendChild($this->service->_hydrateEncryptionData(
-                    $this->trackData->encryptionData
+                    $this->trackData->encryptionData,
+                    $xml
                 ));
             }
         } else if ($this->paymentData != null) {
@@ -175,7 +195,7 @@ class HpsCreditServiceChargeBuilder extends HpsBuilderAbstract
         $hpsCreditSale->appendChild($hpsBlock1);
         $hpsTransaction->appendChild($hpsCreditSale);
 
-        return $this->service->_submitTransaction($hpsTransaction, 'CreditSale', (isset($details->clientTransactionId) ? $details->clientTransactionId : null));
+        return $this->service->_submitTransaction($hpsTransaction, 'CreditSale', (isset($this->details->clientTransactionId) ? $this->details->clientTransactionId : null));
     }
 
     /**
