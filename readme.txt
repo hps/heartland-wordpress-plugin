@@ -50,6 +50,7 @@ the button builder. To use the button builder, the classic editor is currently r
 
 == Changelog ==
 = 1.5.12 =
+* Add amount cap feature/filter
 * Added Transaction ID to thank you email
 
 = 1.5.11 =
