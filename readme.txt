@@ -49,10 +49,8 @@ the button builder. To use the button builder, the classic editor is currently r
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
-= 1.5.13 =
-* Add amount cap feature/filter
-
 = 1.5.12 =
+* Add amount cap feature/filter
 * Added Transaction ID to thank you email
 
 = 1.5.11 =
