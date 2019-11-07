@@ -43,6 +43,11 @@ Get your Certification (Dev) API keys by creating an account by Clicking Here he
 
 ## Changelog
 
+#### 1.5.12
+
+* Add amount cap feature/filter
+* Added Transaction ID to thank you email
+
 #### 1.5.11
 
 * Correct checkbox display on non-modal form
