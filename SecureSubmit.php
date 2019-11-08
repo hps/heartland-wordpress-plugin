@@ -11,6 +11,16 @@ global $jal_db_version;
 global $wpdb;
 global $table_name;
 
+use GlobalPayments\Api\Entities\EncryptionData;
+use GlobalPayments\Api\PaymentMethods\CreditCardData;
+use GlobalPayments\Api\PaymentMethods\CreditTrackData;
+use GlobalPayments\Api\Services\CreditService;
+use GlobalPayments\Api\ServicesConfig;
+use GlobalPayments\Api\ServicesContainer;
+use GlobalPayments\Api\Entities\Address;
+use GlobalPayments\Api\Entities\Customer;
+use GlobalPayments\Api\Entities\TransactionSummary;
+
 $table_name = $wpdb->prefix . "securesubmit";
 $jal_db_version = "1.2.0";
 $secureSubmit = new SecureSubmit();
@@ -29,8 +39,8 @@ class SecureSubmit {
     function __construct() {
         $this->dir = (string) dirname(__FILE__);
 
-        if ( ! class_exists('HpsServicesConfig' ) ) {
-            require_once($this->dir . '/lib/Hps.php');
+        if ( ! class_exists('ServicesConfig' ) ) {
+            require_once($this->dir . '/lib/vendor/autoload.php');
         }
 
         $this->url = plugins_url('securesubmit');
@@ -2020,44 +2030,26 @@ class SecureSubmit {
                 }
             }
 
-            $config = new HpsServicesConfig();
-
-            $config->secretApiKey = esc_attr($skey);
-            $config->versionNumber = '1648';
-            $config->developerId = '002914';
-
-            $chargeService = new HpsCreditService($config);
-
-            $address = new HpsAddress();
-            $address->address = $billing_address;
+            $config = $this->setConfig($skey);
+            $address = new Address();
+            $address->streetAddress1 = $billing_address;
             $address->city = $billing_city;
             if ($requireState)
                 $address->state = $billing_state;
             $address->zip = $billing_zip;
-
-            $cardHolder = new HpsCardHolder();
-            $cardHolder->firstName = $billing_firstname;
-            $cardHolder->lastName = $billing_lastname;
-            $cardHolder->email = $billing_email;
-            $cardHolder->address = $address;
-
-            $cardOrToken = new HpsTokenData();
-            $cardOrToken->tokenValue = $secureToken;
-
+   
+            $cardOrToken = new CreditCardData();
+            $cardOrToken->token = $secureToken; 
+            $cardOrToken->cardHolderName = $billing_firstname. ' ' .$billing_lastname;
+        
             if (!empty($memo)) {
-                $details = new HpsTransactionDetails();
-                $details->memo = $memo;
+                $details = $memo; 
             }
-
-            $response = $chargeService->charge(
-                $amount,
-                'usd',
-                $cardOrToken,
-                $cardHolder,
-                false,
-                $details
-            );
-
+            $response = $cardOrToken->charge($amount)
+                    ->withCurrency('usd')
+                    ->withAddress($address)
+                    ->withDescription($details)
+                    ->execute();
             $transaction_id = $response->transactionId;
 
             add_filter('wp_mail_content_type', create_function('', 'return "text/html"; '));
@@ -2214,5 +2206,14 @@ class SecureSubmit {
         if (get_site_option( 'jal_db_version' ) != $jal_db_version){
             $this->jal_install();
         }
+    }
+    
+    public function setConfig($skey)
+    {
+        $config = new ServicesConfig();
+        $config->secretApiKey = esc_attr($skey);
+        $config->serviceUrl = 'https://cert.api2.heartlandportico.com'; 
+        $service =  ServicesContainer::configure($config);
+        return $service;    
     }
 }
