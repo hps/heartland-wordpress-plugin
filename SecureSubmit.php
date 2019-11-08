@@ -2025,7 +2025,7 @@ class SecureSubmit {
 
             $config = $this->setConfig($skey);
             $address = new Address();
-            $address->address = $billing_address;
+            $address->streetAddress1 = $billing_address;
             $address->city = $billing_city;
             if ($requireState)
                 $address->state = $billing_state;
@@ -2033,7 +2033,7 @@ class SecureSubmit {
    
             $cardOrToken = new CreditCardData();
             $cardOrToken->token = $secureToken; 
-            $cardOrToken->cardHolderName = $billing_firstname;
+            $cardOrToken->cardHolderName = $billing_firstname. ' ' .$billing_lastname;
         
             if (!empty($memo)) {
                 $details = $memo; 
