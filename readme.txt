@@ -1,8 +1,8 @@
 === WP SecureSubmit ===
-Contributors: markhagan
+Contributors: markhagan, tonysmedal
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
-Tested up to: 5.5.1
+Tested up to: 6.3
 Stable tag: trunk
 License: Custom
 License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
@@ -49,6 +49,9 @@ the button builder. To use the button builder, the classic editor is currently r
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.14 =
+* Replaced deprecated method
+
 = 1.5.13 =
 * Add amount cap feature/filter
 
