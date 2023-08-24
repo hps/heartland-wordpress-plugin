@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.5.13
+Version: 1.5.14
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -1852,7 +1852,8 @@ class SecureSubmit {
         $amount = isset($_POST['donation_amount'])
             ? floatval(filter_var($_POST['donation_amount'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION))
             : 0;
-        $atts = get_option('secure_submit_'. $_POST['product_id']);
+        if (array_key_exists('product_id', $_POST))
+            $atts = get_option('secure_submit_'. $_POST['product_id']);
 
         $skey = isset($atts['secret_key']) ? $atts['secret_key'] : $this->options['secret_key'];
         $requireState = isset($atts['requirestate']) ? $atts['requirestate'] : true;
@@ -2055,12 +2056,14 @@ class SecureSubmit {
                 $cardOrToken,
                 $cardHolder,
                 false,
-                $details
+                $details = null
             );
 
             $transaction_id = $response->transactionId;
 
-            add_filter('wp_mail_content_type', create_function('', 'return "text/html"; '));
+            add_filter('wp_mail_content_type', function() {
+                return "text/html";
+            });
 
             $body = str_replace('%transactionid%', $transaction_id, $body);
             $body = str_replace('%firstname%', $billing_firstname, $body);
@@ -2202,10 +2205,6 @@ class SecureSubmit {
             );
 
             update_option('securesubmit_options', $data);
-
-
-
-
         }
     }
 

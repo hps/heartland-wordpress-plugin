@@ -27,7 +27,6 @@ class HpsSoapGatewayService extends HpsGatewayServiceAbstract implements HpsGate
         if ($this->_config->developerId != null && $this->_config->developerId != "") {
             $hpsHeader->appendChild($xml->createElement('hps:DeveloperID', $this->_config->developerId));
             $hpsHeader->appendChild($xml->createElement('hps:VersionNbr', $this->_config->versionNumber));
-            $hpsHeader->appendChild($xml->createElement('hps:SiteTrace', $this->_config->siteTrace));
         }
         if (isset($options['clientTransactionId'])) {
             $hpsHeader->appendChild($xml->createElement('hps:ClientTxnId', $options['clientTransactionId']));
@@ -105,14 +104,22 @@ class HpsSoapGatewayService extends HpsGatewayServiceAbstract implements HpsGate
         }               
         
         $cardHolderData = $xml->createElement('hps:CardHolderData');
-        $cardHolderData->appendChild($xml->createElement('hps:CardHolderFirstName', HpsInputValidation::checkCardHolderData($cardHolder->firstName, 'FirstName')));
-        $cardHolderData->appendChild($xml->createElement('hps:CardHolderLastName', HpsInputValidation::checkCardHolderData($cardHolder->lastName,'LastName')));
-        $cardHolderData->appendChild($xml->createElement('hps:CardHolderEmail', HpsInputValidation::checkEmailAddress($cardHolder->email)));
-        $cardHolderData->appendChild($xml->createElement('hps:CardHolderPhone', HpsInputValidation::checkPhoneNumber($cardHolder->phone)));
-        $cardHolderData->appendChild($xml->createElement('hps:CardHolderAddr', HpsInputValidation::checkCardHolderData($cardHolder->address->address)));
-        $cardHolderData->appendChild($xml->createElement('hps:CardHolderCity', HpsInputValidation::checkCardHolderData($cardHolder->address->city, 'City')));
-        $cardHolderData->appendChild($xml->createElement('hps:CardHolderState', HpsInputValidation::checkCardHolderData($cardHolder->address->state, 'State')));
-        $cardHolderData->appendChild($xml->createElement('hps:CardHolderZip', HpsInputValidation::checkZipCode($cardHolder->address->zip)));
+        if (!empty($cardHolder->firstName))
+            $cardHolderData->appendChild($xml->createElement('hps:CardHolderFirstName', HpsInputValidation::checkCardHolderData($cardHolder->firstName, 'FirstName')));
+        if (!empty($cardHolder->lastName))
+            $cardHolderData->appendChild($xml->createElement('hps:CardHolderLastName', HpsInputValidation::checkCardHolderData($cardHolder->lastName,'LastName')));
+        if (!empty($cardHolder->email))
+            $cardHolderData->appendChild($xml->createElement('hps:CardHolderEmail', HpsInputValidation::checkEmailAddress($cardHolder->email)));
+        if (!empty($cardHolder->phone))
+            $cardHolderData->appendChild($xml->createElement('hps:CardHolderPhone', HpsInputValidation::checkPhoneNumber($cardHolder->phone)));
+        if (!empty($cardHolder->address->address))
+            $cardHolderData->appendChild($xml->createElement('hps:CardHolderAddr', HpsInputValidation::checkCardHolderData($cardHolder->address->address)));
+        if (!empty($cardHolder->address->city))
+            $cardHolderData->appendChild($xml->createElement('hps:CardHolderCity', HpsInputValidation::checkCardHolderData($cardHolder->address->city, 'City')));
+        if (!empty($cardHolder->address->state))
+            $cardHolderData->appendChild($xml->createElement('hps:CardHolderState', HpsInputValidation::checkCardHolderData($cardHolder->address->state, 'State')));
+        if (!empty($cardHolder->address->zip))
+            $cardHolderData->appendChild($xml->createElement('hps:CardHolderZip', HpsInputValidation::checkZipCode($cardHolder->address->zip)));
 
         return $cardHolderData;
     }

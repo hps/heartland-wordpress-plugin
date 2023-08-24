@@ -43,6 +43,10 @@ Get your Certification (Dev) API keys by creating an account by Clicking Here he
 
 ## Changelog
 
+#### 1.5.14
+
+* Replaced deprecated method
+
 #### 1.5.13
 
 * Add amount cap feature/filter
