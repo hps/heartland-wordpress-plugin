@@ -2262,7 +2262,6 @@ class SecureSubmit {
             id bigint NOT NULL AUTO_INCREMENT,
             product_id varchar(255) NOT NULL,
             amount varchar(255) NOT NULL,
-            time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             transaction_id varchar(255) NOT NULL,
             time datetime DEFAULT '1000-01-01 00:00:00' NOT NULL,
             billing_name varchar(255) NOT NULL,
