@@ -1586,7 +1586,6 @@ class SecureSubmit {
                         <tr>
                             <td width="200">Card Number:</td>
                             <td>
-
                                 <div id="<?php echo $prefix; ?>_card_number"></div>
                             </td>
                         </tr>
@@ -1652,25 +1651,20 @@ class SecureSubmit {
         </script>
         <script src="https://js.globalpay.com/v1/globalpayments.js"></script>
         <script type="text/javascript">
-            <?php
-            $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
-            ?>
+        <?php
+        $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
+        ?>
 
             var pk = '<?php echo esc_attr($pkey); ?>';
             GlobalPayments.configure({
                 publicApiKey: pk
             });
 
-
             var prefix = '<?php echo $prefix; ?>';
 
             // Create Form
             const cardForm = GlobalPayments.ui.form({
                 fields: {
-                    // "card-holder-name": {
-                    //     placeholder: "Jane Smith",
-                    //     target: "#"+prefix+"_card_number"
-                    // },
                     "card-number": {
                         placeholder: "•••• •••• •••• ••••",
                         target: "#"+prefix+"_card_number"
@@ -1687,9 +1681,6 @@ class SecureSubmit {
                         value: "Submit",
                         target: "#credit-card-submit"//"#"+prefix+"-securesubmit-button"
                     }
-                },
-                styles: {
-                    // Your styles
                 }
             });
             var frame = jQuery('<iframe />', {
@@ -1728,6 +1719,7 @@ class SecureSubmit {
             });
             cardForm.on("token-error", (resp) => {
                 // show error to the consumer
+                alert(resp);
             });
 
             function secureSubmitResponseHandler(response) {
@@ -1761,8 +1753,6 @@ class SecureSubmit {
                         failurePanel.show();
                         failurePanel.find(".transaction-error").text(response);
                     }
-                    // configureCleanUp();
-                    // clearPaymentFields();
                 });
             }
             (function ($) {
@@ -1902,9 +1892,8 @@ class SecureSubmit {
         <?php if (isset($atts['ignorelinebreaks']) && $atts['ignorelinebreaks'] === 'true') { ?>
             [/raw]
         <?php } ?>
-<!--            <script src="--><?php //echo plugins_url( 'js/jquery.securesubmit.js', __FILE__ ); ?><!--"></script>-->
         <script src="https://js.globalpay.com/v1/globalpayments.js"></script>
-		<?php
+        <?php
         return ob_get_clean();
     }
 
