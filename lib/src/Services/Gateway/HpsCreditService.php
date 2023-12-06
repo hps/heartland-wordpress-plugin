@@ -79,8 +79,18 @@ class HpsCreditService extends HpsSoapGatewayService
         return $this->get($transactionId);
     }
 
-    public function charge($amount, $currency, $cardOrToken, $cardHolder = null, $requestMultiUseToken = false, $details = null, $txnDescriptor = null, $allowPartialAuth = false, $cpcReq = false, $directMarketData = null)
-    {
+    public function charge(
+        $amount,
+        $currency,
+        $cardOrToken,
+        $cardHolder = null,
+        $requestMultiUseToken = false,
+        $details = null,
+        $txnDescriptor = null,
+        $allowPartialAuth = false,
+        $cpcReq = false,
+        $directMarketData = null
+    ) {
         HpsInputValidation::checkCurrency($currency);
         $this->_currency = $currency;
         $this->_amount = HpsInputValidation::checkAmount($amount);
@@ -473,7 +483,7 @@ class HpsCreditService extends HpsSoapGatewayService
      * @param null $clientTxnId
      * @param null $cardData
      *
-     * @return array|null
+     * @return HPSTransaction
      * @throws \HpsCreditException
      * @throws \HpsException
      * @throws \HpsGatewayException
