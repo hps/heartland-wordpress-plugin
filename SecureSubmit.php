@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.5.14
+Version: 1.5.15
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -1208,7 +1208,11 @@ class SecureSubmit {
                             <?php
                             $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
                             ?>
+                            GlobalPayments.configure({
+                                publicApiKey: "<?php echo esc_attr($pkey); ?>"
+                            });
 
+                            // Create Form
                             hps.tokenize({
                                 data: {
                                     public_key: '<?php echo esc_attr($pkey); ?>',
@@ -1309,7 +1313,7 @@ class SecureSubmit {
             ?>
             <div id="<?php echo $prefix; ?>_formContainer">
                 <form id="<?php echo $prefix; ?>_form">
-                    <input type="hidden" name="securesubmit_token" id="<?php echo $prefix; ?>_securesubmit_token" />
+                    <input type="hidden" value="" name="securesubmit_token" id="securesubmit_token" />
                     <input type="hidden" name="<?php echo $prefix; ?>_product_id" value="<?php echo $productid; ?>" />
                     <input type="hidden" name="action" value="ssd_submit_payment" />
                     <input type="hidden" name="prefix" value="<?php echo $prefix; ?>">
@@ -1575,49 +1579,27 @@ class SecureSubmit {
                     <?php } else { ?>
                         <h3>Payment Information</h3>
                     <?php } ?>
+                    <div id="credit-card-card-holder"></div>
+
 
                     <table width="100%">
                         <tr>
                             <td width="200">Card Number:</td>
                             <td>
-                                <input class="form-text required" type="text" id="<?php echo $prefix; ?>_card_number" />
+                                <div id="<?php echo $prefix; ?>_card_number"></div>
                             </td>
                         </tr>
                         <tr>
                             <td>Expiration:</td>
                             <td colspan="2">
-                                <select id="<?php echo $prefix; ?>_exp_month" class="required">
-                                    <option value="01">01</option>
-                                    <option value="02">02</option>
-                                    <option value="03">03</option>
-                                    <option value="04">04</option>
-                                    <option value="05">05</option>
-                                    <option value="06">06</option>
-                                    <option value="07">07</option>
-                                    <option value="08">08</option>
-                                    <option value="09">09</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                </select>
-                                /
-                                <select id="<?php echo $prefix; ?>_exp_year" class="required">
-                                </select>
-                                <script>
-                                  (function () {
-                                    var myselect = document.getElementById("<?php echo $prefix; ?>_exp_year"),
-                                        year = (new Date).getFullYear(),
-                                        gen = function (e) {
-                                            do { myselect.add(new Option(year++)); } while (e-- > 0);
-                                        }(10);
-                                  }())
-                                </script>
+                                <div id="<?php echo $prefix; ?>_exp_month"></div>
                             </td>
                         </tr>
                         <tr>
                             <td>Card CVC:</td>
                             <td>
                                 <input class="form-text" type="text" id="<?php echo $prefix; ?>_card_cvc" style="width: 45px;" />
+                                <div id="<?php echo $prefix; ?>_card_cvc"></div>
                             </td>
                         </tr>
                         <tr>
@@ -1643,9 +1625,7 @@ class SecureSubmit {
 
                         <tr>
                             <td colspan="2 " style="text-align: center; ">
-                                <button id="<?php echo $prefix; ?>-securesubmit-button" class="button-primary">
-                                    <?php echo $buttonText; ?>
-                                </button>
+                                <div id="credit-card-submit"></div>
 
                                 <?php if ($modal) { ?>
                                     <button id="a<?php echo $prefix; ?>-modal-launcher" class="button-secondary">cancel</button>
@@ -1669,7 +1649,112 @@ class SecureSubmit {
                 jQuery(domElement).attr('data-widget-id', widgetId);
             }
         </script>
+        <script src="https://js.globalpay.com/v1/globalpayments.js"></script>
         <script type="text/javascript">
+        <?php
+        $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
+        ?>
+
+            var pk = '<?php echo esc_attr($pkey); ?>';
+            GlobalPayments.configure({
+                publicApiKey: pk
+            });
+
+            var prefix = '<?php echo $prefix; ?>';
+
+            // Create Form
+            const cardForm = GlobalPayments.ui.form({
+                fields: {
+                    "card-number": {
+                        placeholder: "•••• •••• •••• ••••",
+                        target: "#"+prefix+"_card_number"
+                    },
+                    "card-expiration": {
+                        placeholder: "MM / YYYY",
+                        target: "#"+prefix+"_exp_month"
+                    },
+                    "card-cvv": {
+                        placeholder: "•••",
+                        target: "#"+prefix+"_card_cvc"
+                    },
+                    "submit": {
+                        value: "Submit",
+                        target: "#credit-card-submit"//"#"+prefix+"-securesubmit-button"
+                    }
+                }
+            });
+            var frame = jQuery('<iframe />', {
+                id: prefix + '_frame',
+                frameborder: 0,
+                allowTransparency: true
+            });
+            var frameBody = frame.contents().find('body');
+
+            function getPanel(panelName) {
+                return frameBody.find('#'+prefix+'_' + panelName);
+            }
+
+            // Get Panels
+            var billingPanel = getPanel('billing');
+            var additionalPanel = getPanel('additional');
+            var shippingPanel = getPanel('shipping');
+            var processingPanel = getPanel('processing');
+            var cardPanel = getPanel('card');
+            var successPanel = getPanel('success');
+            var failurePanel = getPanel('failure');
+            successPanel.show();
+            cardForm.ready(() => {
+                console.log("Registration of all credit card fields occurred");
+            });
+
+            cardForm.on("token-success", (resp) => {
+                // add payment token to form as a hidden input
+                const token = document.createElement("input");
+                token.type = "hidden";
+                token.name = "payment-reference";
+                token.value = resp.paymentReference;
+
+                // submit data to the integration's backend for processing
+                secureSubmitResponseHandler(resp);
+            });
+            cardForm.on("token-error", (resp) => {
+                // show error to the consumer
+                alert(resp);
+            });
+
+            function secureSubmitResponseHandler(response) {
+                if (response.message) {
+                    processingPanel.hide();
+                    failurePanel.show();
+                    failurePanel.find('.transaction-error').text(response.message);
+                    configureCleanUp();
+                    clearPaymentFields();
+                } else {
+                    var prefix = '<?php echo $prefix; ?>';
+                    document.getElementById("securesubmit_token").value = response.paymentReference;
+                    do_post();
+                }
+            }
+
+            function do_post() {
+                let form = document.getElementById(prefix+"_form");
+
+                var datastring = jQuery("#"+prefix+"_form").serialize();
+                var url = "<?php echo admin_url('admin-ajax.php'); ?>";
+
+                jQuery.post(url, datastring, function (response) {
+                    if (response.indexOf("successful") >= 0) {
+                        jQuery('#'+prefix+'_formContainer').hide();
+                        jQuery('#'+prefix+'_card_number').val('');
+                        jQuery('#'+prefix+'_card_cvc').val('');
+                        jQuery('#'+prefix+'_success').show();
+                    } else {
+                        processingPanel.hide();
+                        failurePanel.show();
+                        failurePanel.find(".transaction-error").text(response);
+                    }
+                });
+            }
             (function ($) {
                 $(function () {
                     $('.securesubmitradio, .donation-dropdown').change(
@@ -1807,7 +1892,7 @@ class SecureSubmit {
         <?php if (isset($atts['ignorelinebreaks']) && $atts['ignorelinebreaks'] === 'true') { ?>
             [/raw]
         <?php } ?>
-            <script src="<?php echo plugins_url( 'js/jquery.securesubmit.js', __FILE__ ); ?>"></script>
+        <script src="https://js.globalpay.com/v1/globalpayments.js"></script>
         <?php
         return ob_get_clean();
     }
@@ -2166,8 +2251,8 @@ class SecureSubmit {
             id bigint NOT NULL AUTO_INCREMENT,
             product_id varchar(255) NOT NULL,
             amount varchar(255) NOT NULL,
-            transaction_id int NOT NULL,
-            time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+            transaction_id varchar(255) NOT NULL,
+            time datetime DEFAULT '1000-01-01 00:00:00' NOT NULL,
             billing_name varchar(255) NOT NULL,
             billing_address varchar(255) NOT NULL,
             billing_city varchar(255) NOT NULL,
