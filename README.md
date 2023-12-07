@@ -42,6 +42,10 @@ Get your Certification (Dev) API keys by creating an account by Clicking Here he
 4. This screenshot shows a non-modal view.
 
 ## Changelog
+#### 1.5.15
+
+* Update of securesubmit.js to globalpayments.js
+* Bugfix: Fixed an issue where transaction ID isn't displayed correctly
 
 #### 1.5.14
 

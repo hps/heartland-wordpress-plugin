@@ -1,5 +1,5 @@
 === WP SecureSubmit ===
-Contributors: markhagan, tonysmedal
+Contributors: markhagan, tonysmedal, mayur-vachchewar
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
 Tested up to: 6.3
@@ -49,6 +49,10 @@ the button builder. To use the button builder, the classic editor is currently r
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.15 =
+* Update of securesubmit.js to globalpayments.js
+* Bugfix: Fixed an issue where transaction ID isn't displayed correctly
+
 = 1.5.14 =
 * Replaced deprecated method
 
