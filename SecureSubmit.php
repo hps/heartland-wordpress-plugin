@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.5.15
+Version: 1.5.16
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -1208,26 +1208,34 @@ class SecureSubmit {
                             <?php
                             $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
                             ?>
-                            GlobalPayments.configure({
-                                publicApiKey: "<?php echo esc_attr($pkey); ?>"
-                            });
 
-                            // Create Form
-                            hps.tokenize({
-                                data: {
-                                    public_key: '<?php echo esc_attr($pkey); ?>',
-                                    number: cardNumber,
-                                    cvc: cardPanel.find('#card_cvc').val(),
-                                    exp_month: month,
-                                    exp_year: year
-                                },
-                                success: function (response) {
-                                    <?php echo $prefix; ?>_secureSubmitResponseHandler(response);
-                                },
-                                error: function (response) {
-                                    <?php echo $prefix; ?>_secureSubmitResponseHandler(response);
+                            const xhr = new XMLHttpRequest();
+                            xhr.open(
+                                "POST",
+                                "https://cert.api2-c.heartlandportico.com/Hps.Exchange.PosGateway.Hpf.v1/api/token?api_key="
+                                + "<?php echo esc_attr($pkey); ?>"
+                            );
+                            xhr.setRequestHeader("Content-type", "application/json");
+                            xhr.onload = () => {
+                                if (xhr.readyState == 4 && xhr.status == 201) {
+                                    <?php echo $prefix; ?>_secureSubmitResponseHandler(JSON.parse(xhr.responseText));
+                                } else {
+                                    <?php echo $prefix; ?>_secureSubmitResponseHandler(`Error: ${xhr.status}`);
                                 }
-                            });
+                            };
+
+                            xhr.send(
+                                JSON.stringify({
+                                    "object": "token",
+                                    "token_type": "supt",
+                                    "card": {
+                                        "number": cardNumber,
+                                        "cvc": cardPanel.find('#card_cvc').val(),
+                                        "exp_month": month,
+                                        "exp_year": year
+                                    }
+                                }),
+                            );
                         }
 
                         cardPay.on("click", function (event) {

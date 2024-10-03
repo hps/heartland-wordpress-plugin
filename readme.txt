@@ -2,7 +2,7 @@
 Contributors: markhagan, tonysmedal, mayur-vachchewar
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
-Tested up to: 6.3
+Tested up to: 6.6.2
 Stable tag: trunk
 License: Custom
 License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
@@ -49,6 +49,9 @@ the button builder. To use the button builder, the classic editor is currently r
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.16 =
+* Bugfix: Fix tokenization when modal is used
+
 = 1.5.15 =
 * Update of securesubmit.js to globalpayments.js
 * Bugfix: Fixed an issue where transaction ID isn't displayed correctly
