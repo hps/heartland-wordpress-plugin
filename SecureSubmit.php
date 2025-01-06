@@ -1206,14 +1206,18 @@ class SecureSubmit {
                             }
 
                             <?php
-                            $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
+                                $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
+
+                                $endpoint = (str_contains($pkey, 'prod')) ?
+                                    'https://api2.heartlandportico.com/SecureSubmit.v1/api/token?api_key=' :
+                                    'https://cert.api2-c.heartlandportico.com/Hps.Exchange.PosGateway.Hpf.v1/api/token?api_key='
                             ?>
 
                             const xhr = new XMLHttpRequest();
+
                             xhr.open(
                                 "POST",
-                                "https://cert.api2-c.heartlandportico.com/Hps.Exchange.PosGateway.Hpf.v1/api/token?api_key="
-                                + "<?php echo esc_attr($pkey); ?>"
+                                "<?php echo esc_attr($endpoint) . esc_attr($pkey); ?>"
                             );
                             xhr.setRequestHeader("Content-type", "application/json");
                             xhr.onload = () => {
