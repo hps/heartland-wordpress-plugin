@@ -2,7 +2,7 @@
 Contributors: markhagan, tonysmedal, mayur-vachchewar
 Tags: donation, donations, payment, buy now, gateway, heartland
 Requires at least: 3.0.1
-Tested up to: 6.6.2
+Tested up to: 6.7.1
 Stable tag: trunk
 License: Custom
 License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
