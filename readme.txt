@@ -5,7 +5,7 @@ Requires at least: 3.0.1
 Tested up to: 6.7.1
 Stable tag: trunk
 License: GPLv2
-License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
+License URI: https://github.com/hps/heartland-wordpress-plugin/blob/master/LICENSE.md
 
 SecureSubmit allows merchants using Heartland Payment Systems to take PCI-Friendly donations on their WordPress site.
 
