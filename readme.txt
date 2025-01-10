@@ -1,5 +1,5 @@
 === WP SecureSubmit ===
-Contributors: markhagan, msmedalj
+Contributors: markhagan
 Tags: donation, payment, buy now, securesubmit, heartland
 Requires at least: 3.0.1
 Tested up to: 6.7.1
