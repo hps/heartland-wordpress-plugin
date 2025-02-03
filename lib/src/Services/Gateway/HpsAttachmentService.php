@@ -52,14 +52,14 @@ class HpsAttachmentService extends HpsSoapGatewayService
     {
         $GatewayTxnId = filter_var($GatewayTxnId, FILTER_SANITIZE_NUMBER_FLOAT);
         if (!$GatewayTxnId) {
-            throw new HpsArgumentException('Gateway Transaction ID required', HpsExceptionCodes::INVALID_NUMBER);
+            throw new HpsArgumentException('Gateway Transaction ID required', esc_attr(HpsExceptionCodes::INVALID_NUMBER));
         }
 
         $AttachmentTypeProvided = preg_match(HpsAttachmentType::VALID_ATTACHMENT_TYPE, $AttachmentType) === 1;
         $AttachmentDataId = filter_var($AttachmentDataId, FILTER_SANITIZE_NUMBER_INT);
         // this is a limitation of the gateway and we want to inform the user
         if ($AttachmentTypeProvided && $AttachmentDataId) {
-            throw new HpsGatewayException(HpsExceptionCodes::GATEWAY_ERROR, "Since the AttachmentDataId was provided the AttachmentType was ignored by the server");
+            throw new HpsGatewayException(esc_attr(HpsExceptionCodes::GATEWAY_ERROR), "Since the AttachmentDataId was provided the AttachmentType was ignored by the server");
             trigger_error("Since the AttachmentDataId was provided the AttachmentType was ignored by the server", E_USER_NOTICE);
         }
         $xml = new DOMDocument();
@@ -101,7 +101,7 @@ class HpsAttachmentService extends HpsSoapGatewayService
             $response = $this->doRequest($transaction);
         } catch (HpsException $e) {
             if ($e->innerException != null && $e->innerException->getMessage() == 'gateway_time-out') {
-                throw new HpsException('An error occurred and the gateway has timed out', 'gateway_timeout', $e, 'gateway_timeout');
+                throw new HpsException('An error occurred and the gateway has timed out', 'gateway_timeout', esc_attr($e), 'gateway_timeout');
             }
             throw $e;
         }
@@ -138,8 +138,8 @@ class HpsAttachmentService extends HpsSoapGatewayService
 
         if ($gatewayRspCode == '3') {
             throw new HpsGatewayException(
-                HpsExceptionCodes::GATEWAY_ERROR,
-                'Image could not be retrieved for ' . $transactionId
+                esc_attr(HpsExceptionCodes::GATEWAY_ERROR),
+                'Image could not be retrieved for ' . esc_attr($transactionId)
             );
         }
 

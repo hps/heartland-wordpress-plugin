@@ -276,7 +276,7 @@ class HpsCreditService extends HpsSoapGatewayService
     public function listTransactions($startDate, $endDate, $filterBy = null)
     {
         $this->_filterBy = $filterBy;
-        date_default_timezone_set("UTC");
+        wp_timezone_string("UTC");
         $dateFormat = 'Y-m-d\TH:i:s.00\Z';
         $current = new DateTime();
         $currentTime = $current->format($dateFormat);
@@ -428,9 +428,9 @@ class HpsCreditService extends HpsSoapGatewayService
                 $this->reverse($transactionId, $this->_amount, $this->_currency);
             } catch (Exception $e) {
                 throw new HpsGatewayException(
-                    HpsExceptionCodes::GATEWAY_TIMEOUT_REVERSAL_ERROR,
+                    esc_attr(HpsExceptionCodes::GATEWAY_TIMEOUT_REVERSAL_ERROR),
                     'Error occurred while reversing a charge due to HPS gateway timeout',
-                    $e
+                    esc_attr($e)
                 );
             }
         }
@@ -458,17 +458,17 @@ class HpsCreditService extends HpsSoapGatewayService
                             HpsIssuerResponseValidation::checkResponse($transactionId, $responseCode, $responseText);
                         }
                         throw new HpsCreditException(
-                            $transactionId,
-                            HpsExceptionCodes::ISSUER_TIMEOUT_REVERSAL_ERROR,
+                            esc_attr($transactionId),
+                            esc_attr(HpsExceptionCodes::ISSUER_TIMEOUT_REVERSAL_ERROR),
                             'Error occurred while reversing a charge due to HPS issuer timeout',
-                            $e
+                            esc_attr($e)
                         );
                     } catch (HpsException $e) {
                         throw new HpsCreditException(
-                            $transactionId,
-                            HpsExceptionCodes::ISSUER_TIMEOUT_REVERSAL_ERROR,
+                            esc_attr($transactionId),
+                            esc_attr(HpsExceptionCodes::ISSUER_TIMEOUT_REVERSAL_ERROR),
                             'Error occurred while reversing a charge due to HPS issuer timeout',
-                            $e
+                            esc_attr($e)
                         );
                     }
                 }
@@ -503,10 +503,10 @@ class HpsCreditService extends HpsSoapGatewayService
                     try {
                         $this->reverse($cardData, $this->_amount, $this->_currency);
                     } catch (Exception $e) {
-                        throw new HpsGatewayException('0', HpsExceptionCodes::GATEWAY_TIMEOUT_REVERSAL_ERROR);
+                        throw new HpsGatewayException('0', esc_attr(HpsExceptionCodes::GATEWAY_TIMEOUT_REVERSAL_ERROR));
                     }
                 }
-                throw new HpsException('An error occurred and the gateway has timed out', 'gateway_timeout', $e, 'gateway_timeout');
+                throw new HpsException('An error occurred and the gateway has timed out', 'gateway_timeout', esc_attr($e), 'gateway_timeout');
             }
             throw $e;
         }
