@@ -410,7 +410,7 @@ class SecureSubmit {
                         <input type="submit" class="button-primary" value="Export Transactions">
                     </form>
                     <?php if($_SERVER['REQUEST_METHOD'] =='POST'){
-                    $transactions = $wpdb->get_results('select * from '.$table_name.' order by id desc limit 10000;' , 'ARRAY_A');
+                    $transactions = $wpdb->get_results( $wpdb->prepare("SELECT * FROM %s order by id desc limit 10000",$table_name ) , 'ARRAY_A' );
                     $count = 0;
                     ?>
                     <br>
@@ -568,8 +568,7 @@ class SecureSubmit {
                 'additional_info4','additional_info5','additional_info6','additional_info7',
                 'additional_info8','additional_info9','additional_info10');
 
-
-            $transactions = $wpdb->get_results('select * from '.$table_name.' order by id desc;' , 'ARRAY_A');
+            $transactions = $wpdb->get_results( $wpdb->prepare("SELECT * FROM %s order by id desc",$table_name ) , 'ARRAY_A' );
 
             $headers = array();
             foreach ( $fields as $key => $field ) {
@@ -660,6 +659,7 @@ class SecureSubmit {
             $modal = true;
         else
             $modal = false;
+        //$modal = true;
 
         if (isset($atts['amountdefault']) && $atts['amountdefault'] != '')
             $amountdefault = $atts['amountdefault'];
@@ -1661,7 +1661,9 @@ class SecureSubmit {
                 jQuery(domElement).attr('data-widget-id', widgetId);
             }
         </script>
-        <script src="https://js.globalpay.com/v1/globalpayments.js"></script>
+        <?php
+            wp_enqueue_script('global-payments','https://js.globalpay.com/v1/globalpayments.js');
+        ?>
         <script type="text/javascript">
         <?php
         $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
@@ -1904,24 +1906,27 @@ class SecureSubmit {
         <?php if (isset($atts['ignorelinebreaks']) && $atts['ignorelinebreaks'] === 'true') { ?>
             [/raw]
         <?php } ?>
-        <script src="https://js.globalpay.com/v1/globalpayments.js"></script>
+        <?php
+            wp_enqueue_script('global-payments','https://js.globalpay.com/v1/globalpayments.js');
+        ?>
         <?php
         return ob_get_clean();
     }
 
     function isValidRecaptchaToken($token){
 
-        $curl    = curl_init();
         $recaptchaInfo = array("secret" => $this->recaptchaSecretKey, "response" => $token);
-        curl_setopt_array($curl, array(
-            CURLOPT_URL            => self::RECAPTCHA_VERIFY_URL,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_POST           => true,
-            CURLOPT_POSTFIELDS     => $recaptchaInfo,
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
+        $args = array();
+        $args['method'] = 'POST';
+        $args['timeout'] = 100;
+        $args['sslverify'] = false;
+        $args['body'] = $recaptchaInfo;
+        $args['httpversion'] = '1.0';
+        $args['blocking'] = true;
+
+        $response = wp_remote_post(self::RECAPTCHA_VERIFY_URL, $args);
+        $response =  wp_remote_retrieve_body( $response );
+
         if(empty($response)) {
             return false;
         }

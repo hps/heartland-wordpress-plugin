@@ -55,21 +55,6 @@ abstract class HpsGatewayServiceAbstract
         $logger = HpsLogger::getInstance();
 
         try {
-            /*$request = curl_init();
-            curl_setopt($request, CURLOPT_URL, $url);
-            curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 100);
-            curl_setopt($request, CURLOPT_TIMEOUT, 100);
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_SSL_VERIFYHOST, false);
-            if ($data != null) {
-                $logger->log('Request data', $data);
-                curl_setopt($request, CURLOPT_CUSTOMREQUEST, $httpVerb);
-                curl_setopt($request, CURLOPT_POSTFIELDS, $data);
-            }
-            $logger->log('Request headers', $headers);
-            curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($request, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);*/
 
             $args = array();
             $args['headers'] = $headers;
@@ -80,21 +65,10 @@ abstract class HpsGatewayServiceAbstract
             $args['httpversion'] = '1.0';
             $args['blocking'] = true;
 
-
-            /*if ($this->_config->useProxy) {
-                curl_setopt($request, CURLOPT_PROXY, $this->_config->proxyOptions['proxy_host']);
-                curl_setopt($request, CURLOPT_PROXYPORT, $this->_config->proxyOptions['proxy_port']);
-            }*/
             error_log(print_r($args, true));
             $response = wp_remote_post($url, $args);
             $body =  wp_remote_retrieve_body( $response );
 
-            /*if (
-                $this->_config->curlOptions != null
-                && !empty($this->_config->curlOptions)
-            ) {
-                curl_setopt_array($request, $this->_config->curlOptions);
-            }*/
             if ( is_wp_error( $response ) ) {
                 $error_message = $response->get_error_message();
                 echo "Something went wrong: ". esc_attr($error_message);
@@ -104,9 +78,6 @@ abstract class HpsGatewayServiceAbstract
                 error_log('remote response end');
             }
 
-            /*$curlResponse = curl_exec($request);
-            $curlInfo = curl_getinfo($request);
-            $curlError = curl_errno($request);*/
             $curlResponse = $body;
             $curlInfo['http_code'] = wp_remote_retrieve_response_code($response);
             $curlError = wp_remote_retrieve_response_code($response);
