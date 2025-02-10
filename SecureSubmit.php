@@ -659,7 +659,6 @@ class SecureSubmit {
             $modal = true;
         else
             $modal = false;
-        //$modal = true;
 
         if (isset($atts['amountdefault']) && $atts['amountdefault'] != '')
             $amountdefault = $atts['amountdefault'];
