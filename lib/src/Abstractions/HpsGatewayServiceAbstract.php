@@ -31,7 +31,7 @@ abstract class HpsGatewayServiceAbstract
     {
         if ($this->_isConfigInvalid()) {
             throw new HpsAuthenticationException(
-                HpsExceptionCodes::INVALID_CONFIGURATION,
+                esc_attr(HpsExceptionCodes::INVALID_CONFIGURATION),
                 "The HPS SDK has not been properly configured. "
                 ."Please make sure to initialize the config "
                 ."in a service constructor."
@@ -47,53 +47,52 @@ abstract class HpsGatewayServiceAbstract
                 $message .= ", but a(n) {$type} key is currently configured.";
             }
             throw new HpsAuthenticationException(
-                HpsExceptionCodes::INVALID_CONFIGURATION,
-                $message
+                esc_attr(HpsExceptionCodes::INVALID_CONFIGURATION),
+                esc_attr($message)
             );
         }
 
         $logger = HpsLogger::getInstance();
 
         try {
-            $request = curl_init();
-            curl_setopt($request, CURLOPT_URL, $url);
-            curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 100);
-            curl_setopt($request, CURLOPT_TIMEOUT, 100);
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_SSL_VERIFYHOST, false);
-            if ($data != null) {
-                $logger->log('Request data', $data);
-                curl_setopt($request, CURLOPT_CUSTOMREQUEST, $httpVerb);
-                curl_setopt($request, CURLOPT_POSTFIELDS, $data);
-            }
-            $logger->log('Request headers', $headers);
-            curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($request, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
 
-            if ($this->_config->useProxy) {
-                curl_setopt($request, CURLOPT_PROXY, $this->_config->proxyOptions['proxy_host']);
-                curl_setopt($request, CURLOPT_PROXYPORT, $this->_config->proxyOptions['proxy_port']);
-            }
+            $args = array();
+            $args['headers'] = $headers;
+            $args['sslverify'] = false;
+            $args['method'] = $httpVerb;
+            $args['timeout'] = 100;
+            $args['body'] = (string)$data;
+            $args['httpversion'] = '1.0';
+            $args['blocking'] = true;
 
-            if (
-                $this->_config->curlOptions != null
-                && !empty($this->_config->curlOptions)
-            ) {
-                curl_setopt_array($request, $this->_config->curlOptions);
+            error_log(print_r($args, true));
+            $response = wp_remote_post($url, $args);
+            $body =  wp_remote_retrieve_body( $response );
+
+            if ( is_wp_error( $response ) ) {
+                $error_message = $response->get_error_message();
+                echo "Something went wrong: ". esc_attr($error_message);
+            } else {
+                error_log('remote response start');
+                error_log(print_r($response,true));
+                error_log('remote response end');
             }
 
-            $curlResponse = curl_exec($request);
-            $curlInfo = curl_getinfo($request);
-            $curlError = curl_errno($request);
+            $curlResponse = $body;
+            $curlInfo['http_code'] = wp_remote_retrieve_response_code($response);
+            $curlError = wp_remote_retrieve_response_code($response);
 
-            $logger->log('Response data', $curlResponse);
+            $logger->log('Response data:', $curlResponse);
             $logger->log('Curl info', $curlInfo);
             $logger->log('Curl error', $curlError);
 
             if ($curlError == 28) { //CURLE_OPERATION_TIMEOUTED
                 throw new HpsException("gateway_time-out");
             }
+            if ($data != null) {
+                $logger->log('Request data', $data);
+            }
+            $logger->log('Request headers', $headers);
 
             if ($curlError == 35) { //CURLE_SSL_CONNECT_ERROR
                 $err_msg = 'PHP-SDK cURL TLS 1.2 handshake failed. If you have any questions, please contact Specialty Products Team at 866.802.9753.';
@@ -105,11 +104,11 @@ abstract class HpsGatewayServiceAbstract
             return $this->processResponse($curlResponse, $curlInfo, $curlError);
         } catch (Exception $e) {
             throw new HpsGatewayException(
-                $e->getCode() != null ? $e->getCode() : HpsExceptionCodes::UNKNOWN_GATEWAY_ERROR,
-                $e->getMessage() != null ? $e->getMessage() : 'Unable to process transaction',
+                $e->getCode() != null ? esc_attr($e->getCode()) : esc_attr(HpsExceptionCodes::UNKNOWN_GATEWAY_ERROR),
+                $e->getMessage() != null ? esc_attr($e->getMessage()) : 'Unable to process transaction',
                 null,
                 null,
-                $e
+                esc_attr($e)
             );
         }
     }
