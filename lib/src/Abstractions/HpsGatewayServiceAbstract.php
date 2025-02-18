@@ -55,7 +55,6 @@ abstract class HpsGatewayServiceAbstract
         $logger = HpsLogger::getInstance();
 
         try {
-
             $args = array();
             $args['headers'] = $headers;
             $args['sslverify'] = false;
