@@ -572,17 +572,17 @@ class SecureSubmit {
 
             $headers = array();
             foreach ( $fields as $key => $field ) {
-                $headers[] = '"' . strtolower( $field ) . '"';
+                $headers[] = '"' . esc_html( strtolower( $field ) ). '"';
             }
-            echo implode( ',', esc_html($headers) ) . "\n";
+            echo implode( ',', $headers ) . "\n";
             foreach ( $transactions as $transaction ) {
                 $data = array();
                 foreach ( $fields as $field ) {
                     $value = isset( $transaction[$field] ) ? $transaction[$field] : '';
                     $value = is_array( $value ) ? serialize( $value ) : $value;
-                    $data[] = '"' . str_replace( '"', '""', $value ) . '"';
+                    $data[] = '"' . esc_html( str_replace( '"', '""', $value ) ) . '"';
                 }
-                echo implode( ',', esc_html($data) ) . "\n";
+                echo implode( ',', $data ) . "\n";
             }
 
             exit;
