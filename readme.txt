@@ -49,6 +49,9 @@ the button builder. To use the button builder, the classic editor is currently r
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.18 =
+* Vulnerability fixes
+
 = 1.5.17 =
 * Bugfix: Corrected gateway endpoints
 
