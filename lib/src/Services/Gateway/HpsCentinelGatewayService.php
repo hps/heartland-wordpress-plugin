@@ -42,7 +42,7 @@ class HpsCentinelGatewayService
                 break;
             case '500':
                 $faultString = '';
-                throw new HpsException($faultString);
+                throw new HpsException(esc_attr($faultString));
                 break;
             default:
                 throw new HpsException('Unexpected response');

@@ -17,7 +17,7 @@ class HpsInputValidation
     {
         if ($amount < 0 || $amount === null) {
             throw new HpsInvalidRequestException(
-                HpsExceptionCodes::INVALID_AMOUNT,
+                esc_attr(HpsExceptionCodes::INVALID_AMOUNT),
                 'Must be greater than or equal to 0.',
                 'amount'
             );
@@ -35,14 +35,14 @@ class HpsInputValidation
 
         if ($currency == null || $currency == '') {
             throw new HpsInvalidRequestException(
-                HpsExceptionCodes::MISSING_CURRENCY,
+                esc_attr(HpsExceptionCodes::MISSING_CURRENCY),
                 'Currency cannot be none',
                 'currency'
             );
         } else if (!in_array(strtolower($currency), $currencies)) {
             throw new HpsInvalidRequestException(
-                HpsExceptionCodes::INVALID_CURRENCY,
-                "'".strtolower($currency)."' is not a supported currency",
+                esc_attr(HpsExceptionCodes::INVALID_CURRENCY),
+                "'".esc_html(strtolower($currency))."' is not a supported currency",
                 'currency'
             );
         }
@@ -60,11 +60,11 @@ class HpsInputValidation
 
     public static function checkDateNotFuture($date)
     {
-        $current = date('Y-m-d\TH:i:s.00\Z', time());
+        $current = gmdate('Y-m-d\TH:i:s.00\Z', time());
 
         if ($date != null && $date > $current) {
             throw new HpsInvalidRequestException(
-                HpsExceptionCodes::INVALID_DATE,
+                esc_attr(HpsExceptionCodes::INVALID_DATE),
                 'Date cannot be in the future'
             );
         }
@@ -88,7 +88,7 @@ class HpsInputValidation
         if (!empty($phoneNumber) && strlen($phoneNumber) > self::$_inputFldMaxLength['PhoneNumber']) {
             $errorMessage = 'The value for phone number can be no more than ' . self::$_inputFldMaxLength['PhoneNumber'] . ' characters, Please try again after making corrections';
             throw new HpsInvalidRequestException(
-            HpsExceptionCodes::INVALID_PHONE_NUMBER, $errorMessage
+                esc_attr(HpsExceptionCodes::INVALID_PHONE_NUMBER), esc_attr($errorMessage)
             );
         }
         return $phoneNumber;
@@ -107,7 +107,7 @@ class HpsInputValidation
         if (!empty($zipCode) && strlen($zipCode) > self::$_inputFldMaxLength['ZipCode']) {
             $errorMessage = 'The value for zip code can be no more than ' . self::$_inputFldMaxLength['ZipCode'] . ' characters, Please try again after making corrections';
             throw new HpsInvalidRequestException(
-            HpsExceptionCodes::INVALID_ZIP_CODE, $errorMessage
+                esc_attr(HpsExceptionCodes::INVALID_ZIP_CODE), esc_attr($errorMessage)
             );
         }
         return $zipCode;
@@ -130,7 +130,7 @@ class HpsInputValidation
         if (!empty(self::$_inputFldMaxLength[$type]) && strlen($value) > self::$_inputFldMaxLength[$type]) {            
             $errorMessage = "The value for $type can be no more than " . self::$_inputFldMaxLength[$type] . ' characters, Please try again after making corrections';
             throw new HpsInvalidRequestException(
-                HpsExceptionCodes::INVALID_INPUT_LENGTH, $errorMessage
+                esc_attr(HpsExceptionCodes::INVALID_INPUT_LENGTH), esc_attr($errorMessage)
             );
         }
         return $value;
@@ -149,7 +149,7 @@ class HpsInputValidation
         //validate the email address format
         if(!empty($value) && filter_var($value, FILTER_VALIDATE_EMAIL) === false){            
             throw new HpsInvalidRequestException(
-                HpsExceptionCodes::INVALID_EMAIL_ADDRESS, 'Invalid email address'
+                esc_attr(HpsExceptionCodes::INVALID_EMAIL_ADDRESS), 'Invalid email address'
             );
         }
 
@@ -157,7 +157,7 @@ class HpsInputValidation
         if (!empty(self::$_inputFldMaxLength['Email']) && strlen($value) > self::$_inputFldMaxLength['Email']) {            
             $errorMessage = "The value for Email can be no more than " . self::$_inputFldMaxLength['Email'] . ' characters, Please try again after making corrections';
             throw new HpsInvalidRequestException(
-                HpsExceptionCodes::INVALID_INPUT_LENGTH, $errorMessage
+                esc_attr(HpsExceptionCodes::INVALID_INPUT_LENGTH), esc_attr($errorMessage)
             );
         }
         return $value;

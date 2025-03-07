@@ -38,7 +38,7 @@ class HpsCreditServiceListTransactionsBuilder extends HpsBuilderAbstract
     {
         parent::execute();
 
-        date_default_timezone_set("UTC");
+        wp_timezone_string("UTC");
         $dateFormat = 'Y-m-d\TH:i:s.00\Z';
         $current = new DateTime();
         $currentTime = $current->format($dateFormat);

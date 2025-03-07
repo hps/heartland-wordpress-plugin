@@ -4,7 +4,7 @@ Plugin Name: WP SecureSubmit
 Plugin URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 Description: Heartland Payment Systems SecureSubmit Plugin
 Author: SecureSubmit
-Version: 1.5.17
+Version: 1.5.18
 Author URI: https://developer.heartlandpaymentsystems.com/SecureSubmit
 */
 global $jal_db_version;
@@ -200,7 +200,7 @@ class SecureSubmit {
 
         <!-- Start Page Wrapper -->
         <div class="wrap ss-wrap">
-            <h1 class="ss-wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+            <h1 class="ss-wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? esc_html($title) : esc_html(get_admin_page_title())) ?></h1>
             <div id="message" class="updated hidden">
                 <p></p>
             </div>
@@ -224,7 +224,7 @@ class SecureSubmit {
                             $ischecked = "checked='checked'";
                         ?>
                         <div class="ss-checkbox">
-                            <input type="checkbox" id="enable_button_builder" <?php echo $ischecked; ?> />
+                            <input type="checkbox" id="enable_button_builder" <?php echo esc_html($ischecked); ?> />
                             <label for="enable_button_builder" class="ss-checkbox-label">Enable Button Builder</label>
                         </div>
                         <div class="ss-checkbox clearfix">
@@ -233,7 +233,7 @@ class SecureSubmit {
                         if (isset($this->options['enable_recaptcha']) && $this->options['enable_recaptcha'] == 'true')
                             $ischecked = "checked='checked'";
                         ?>
-                                <input type="checkbox" id="enable_recaptcha" <?php echo $ischecked; ?> />
+                                <input type="checkbox" id="enable_recaptcha" <?php echo esc_html($ischecked); ?> />
                                 <label for="enable_recaptcha" class="ss-checkbox-label">Enable Google Recaptcha</label>
                                 <br /><span class="ss-subtext">Non-modal only. What is <a target="_blank" href="https://www.google.com/recaptcha/intro/index.html">Google ReCaptcha</a>?</span>
                         </div>
@@ -252,7 +252,7 @@ class SecureSubmit {
                         if (isset($this->options['enable_fraud']) && $this->options['enable_fraud'] == 'true')
                             $ischecked = "checked='checked'";
                         ?>
-                            <input type="checkbox" id="enable_fraud" <?php echo $ischecked; ?> />
+                            <input type="checkbox" id="enable_fraud" <?php echo esc_html($ischecked); ?> />
                             <label for="enable_fraud" class="ss-checkbox-label">Enable Fraud Options</label>
                     </div>
                     <?php
@@ -261,21 +261,21 @@ class SecureSubmit {
                             $fraud_message = $this->options['fraud_message'];
                         ?>
                         <label for="fraud_message">Displayed Message:</label>
-                            <textarea id="fraud_message"><?php echo wp_sprintf('%s',$fraud_message); ?></textarea>
+                            <textarea id="fraud_message"><?php echo wp_sprintf('%s',esc_html($fraud_message)); ?></textarea>
                             <?php
                         $fraud_velocity_attempts = 0;
                         if (isset($this->options['fraud_velocity_attempts']) )
                             $fraud_velocity_attempts = (string)"value='" . ((int)$this->options['fraud_velocity_attempts']) . "'";
                         ?>
                                 <label for="fraud_velocity_attempts">How many failed attempts before blocking?</label>
-                                    <input type="text" id="fraud_velocity_attempts" <?php echo $fraud_velocity_attempts; ?> />
+                                    <input type="text" id="fraud_velocity_attempts" <?php echo esc_html($fraud_velocity_attempts); ?> />
                                     <?php
                         $fraud_velocity_timeout = 0;
                         if (isset($this->options['fraud_velocity_timeout']) )
                             $fraud_velocity_timeout = "value='" . ((int)$this->options['fraud_velocity_timeout']) . "'";
                         ?>
                                         <label for="fraud_velocity_timeout">How long (in minutes) should we keep a tally of recent failures?</label>
-                                            <input type="text" id="fraud_velocity_timeout" <?php echo $fraud_velocity_timeout; ?> />
+                                            <input type="text" id="fraud_velocity_timeout" <?php echo esc_html($fraud_velocity_timeout); ?> />
                 </div>
                 <!-- End Fraud Options Panel -->
             </div>
@@ -387,7 +387,7 @@ class SecureSubmit {
                 }
             </style>
                 <div class="wrap ss-wrap">
-                    <h1 class="ss-wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+                    <h1 class="ss-wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? esc_html($title) : esc_html(get_admin_page_title())) ?></h1>
                     <form name="report_data" method="post" action="admin.php?page=sub-reporting">
                         <div id="message" class="updated hidden">
                             <p></p>
@@ -410,7 +410,7 @@ class SecureSubmit {
                         <input type="submit" class="button-primary" value="Export Transactions">
                     </form>
                     <?php if($_SERVER['REQUEST_METHOD'] =='POST'){
-                    $transactions = $wpdb->get_results('select * from '.$table_name.' order by id desc limit 10000;' , 'ARRAY_A');
+                    $transactions = $wpdb->get_results( $wpdb->prepare("SELECT * FROM %s order by id desc limit 10000",$table_name ) , 'ARRAY_A' );
                     $count = 0;
                     ?>
                     <br>
@@ -459,82 +459,82 @@ class SecureSubmit {
                             echo '<tr class="odd">';
                         } ?>
                             <td>
-                                <?php echo $row['transaction_id']; ?>
+                                <?php echo esc_html($row['transaction_id']); ?>
                             </td>
                             <td>
-                                <?php echo $row['amount']; ?>
+                                <?php echo esc_html($row['amount']); ?>
                             </td>
                             <td>
-                                <?php echo $row['product_id']; ?>
+                                <?php echo esc_html($row['product_id']); ?>
                             </td>
                             <td>
-                                <?php echo $row['time']; ?>
+                                <?php echo esc_html($row['time']); ?>
                             </td>
                             <td>
-                                <?php echo $row['billing_name']; ?>
+                                <?php echo esc_html($row['billing_name']); ?>
                             </td>
                             <td>
-                                <?php echo $row['billing_address']; ?>
+                                <?php echo esc_html($row['billing_address']); ?>
                             </td>
                             <td>
-                                <?php echo $row['billing_city']; ?>
+                                <?php echo esc_html($row['billing_city']); ?>
                             </td>
                             <td>
-                                <?php echo $row['billing_state']; ?>
+                                <?php echo esc_html($row['billing_state']); ?>
                             </td>
                             <td>
-                                <?php echo $row['billing_zip']; ?>
+                                <?php echo esc_html($row['billing_zip']); ?>
                             </td>
                             <td>
-                                <?php echo $row['billing_email']; ?>
+                                <?php echo esc_html($row['billing_email']); ?>
                             </td>
                             <?php if($shipping){ ?>
                                 <td>
-                                    <?php echo $row['shipping_name']; ?>
+                                    <?php echo esc_html($row['shipping_name']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['shipping_address']; ?>
+                                    <?php echo esc_html($row['shipping_address']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['shipping_city']; ?>
+                                    <?php echo esc_html($row['shipping_city']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['shipping_state']; ?>
+                                    <?php echo esc_html($row['shipping_state']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['shipping_zip']; ?>
+                                    <?php echo esc_html($row['shipping_zip']); ?>
                                 </td>
                             <?php }
                             if($additional){ ?>
                                 <td>
-                                    <?php echo $row['additional_info1']; ?>
+                                    <?php echo esc_html($row['additional_info1']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['additional_info2']; ?>
+                                    <?php echo esc_html($row['additional_info2']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['additional_info3']; ?>
+                                    <?php echo esc_html($row['additional_info3']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['additional_info4']; ?>
+                                    <?php echo esc_html($row['additional_info4']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['additional_info5']; ?>
+                                    <?php echo esc_html($row['additional_info5']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['additional_info6']; ?>
+                                    <?php echo esc_html($row['additional_info6']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['additional_info7']; ?>
+                                    <?php echo esc_html($row['additional_info7']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['additional_info8']; ?>
+                                    <?php echo esc_html($row['additional_info8']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['additional_info9']; ?>
+                                    <?php echo esc_html($row['additional_info9']); ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['additional_info10']; ?>
+                                    <?php echo esc_html($row['additional_info10']); ?>
                                 </td>
                             <?php } ?>
                         </tr>
@@ -554,7 +554,7 @@ class SecureSubmit {
             $siteName = sanitize_key( get_bloginfo( 'name' ) );
             if ( ! empty( $siteName ) )
                 $siteName .= '.';
-            $fileName = $siteName . 'users.' . date( 'Y-m-d-H-i-s' ) . '.csv';
+            $fileName = $siteName . 'users.' . gmdate( 'Y-m-d-H-i-s' ) . '.csv';
 
 
             header( 'Content-Description: File Transfer' );
@@ -568,12 +568,11 @@ class SecureSubmit {
                 'additional_info4','additional_info5','additional_info6','additional_info7',
                 'additional_info8','additional_info9','additional_info10');
 
-
-            $transactions = $wpdb->get_results('select * from '.$table_name.' order by id desc;' , 'ARRAY_A');
+            $transactions = $wpdb->get_results( $wpdb->prepare("SELECT * FROM %s order by id desc",$table_name ) , 'ARRAY_A' );
 
             $headers = array();
             foreach ( $fields as $key => $field ) {
-                $headers[] = '"' . strtolower( $field ) . '"';
+                $headers[] = '"' . esc_html( strtolower( $field ) ). '"';
             }
             echo implode( ',', $headers ) . "\n";
             foreach ( $transactions as $transaction ) {
@@ -581,7 +580,7 @@ class SecureSubmit {
                 foreach ( $fields as $field ) {
                     $value = isset( $transaction[$field] ) ? $transaction[$field] : '';
                     $value = is_array( $value ) ? serialize( $value ) : $value;
-                    $data[] = '"' . str_replace( '"', '""', $value ) . '"';
+                    $data[] = '"' . esc_html( str_replace( '"', '""', $value ) ) . '"';
                 }
                 echo implode( ',', $data ) . "\n";
             }
@@ -593,7 +592,7 @@ class SecureSubmit {
     function faq_page(){
         ?>
         <div class="wrap ss-wrap">
-            <h1 class="ss-wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? $title : esc_html(get_admin_page_title())) ?></h1>
+            <h1 class="ss-wp-heading-inline"><span class="hidden-small">SecureSubmit Donate / Pay Now&nbsp;</span><?php echo (isset($title) ? esc_html($title) : esc_html(get_admin_page_title())) ?></h1>
             <div id="message" class="updated hidden">
                 <p></p>
             </div>
@@ -700,26 +699,26 @@ class SecureSubmit {
         $billingRequired = $requireBilling ? ' required' : '';
         $shippingRequired = $requireShipping ? ' required' : '';
         if ($modal) { ?>
-            <div id="<?php echo $prefix; ?>_donation">
+            <div id="<?php echo esc_html($prefix); ?>_donation">
             </div>
             <script language="javascript" type="text/javascript">
                 <?php if ($requireShipping) { ?>
-                    var <?php echo $prefix; ?>_requireShipping = true;
+                    var <?php echo esc_html($prefix); ?>_requireShipping = true;
                 <?php } else { ?>
-                    var <?php echo $prefix; ?>_requireShipping = false;
+                    var <?php echo esc_html($prefix); ?>_requireShipping = false;
                 <?php } ?>
 
                 <?php if ($requireBilling) { ?>
-                    var <?php echo $prefix; ?>_requireBilling = true;
+                    var <?php echo esc_html($prefix); ?>_requireBilling = true;
                 <?php } else { ?>
-                    var <?php echo $prefix; ?>_requireBilling = false;
+                    var <?php echo esc_html($prefix); ?>_requireBilling = false;
                 <?php } ?>
 
                 <?php
                 if(count($additionalFields)>0){
-                    echo "var " . $prefix . "_requireAdditionalInfo = true;";
+                    echo "var " . esc_html($prefix) . "_requireAdditionalInfo = true;";
                 } else {
-                    echo "var " . $prefix . "_requireAdditionalInfo = false;";
+                    echo "var " . esc_html($prefix) . "_requireAdditionalInfo = false;";
                 }
                 ?>
 
@@ -727,64 +726,64 @@ class SecureSubmit {
                     cache: true
                 });
                 if (jQuery('#sss').length == 0)
-                    jQuery('head').append(jQuery('<link rel="stylesheet" type="text/css" />').attr('href', '<?php echo plugins_url('assets/paybutton.css', __FILE__ ); ?>').attr('id', 'sss'));
+                    jQuery('head').append(jQuery('<link rel="stylesheet" type="text/css" />').attr('href', '<?php echo esc_html(plugins_url('assets/paybutton.css', __FILE__ )); ?>').attr('id', 'sss'));
 
-                var trigger_button = jQuery("<div class='pay-button button-main'><a href='#Purchase' id='<?php echo $prefix; ?>_pay_now'><?php echo $buttonText; ?></a><div class='pay-button-border'>&nbsp;</div></div>");
-                jQuery('#<?php echo $prefix; ?>_donation').append(trigger_button);
+                var trigger_button = jQuery("<div class='pay-button button-main'><a href='#Purchase' id='<?php echo esc_html($prefix); ?>_pay_now'><?php echo esc_html($buttonText); ?></a><div class='pay-button-border'>&nbsp;</div></div>");
+                jQuery('#<?php echo esc_html($prefix); ?>_donation').append(trigger_button);
 
-                jQuery('#<?php echo $prefix; ?>_pay_now').unbind().bind('click', function () {
-                    <?php echo $prefix; ?>_trigger_payment();
+                jQuery('#<?php echo esc_html($prefix); ?>_pay_now').unbind().bind('click', function () {
+                    <?php echo esc_html($prefix); ?>_trigger_payment();
                 });
 
                 // BUILD CONTROLS
-                var <?php echo $prefix; ?>_modal_html = "<a class='boxclose modal-close' id='boxclose'>&times;</a>";
+                var <?php echo esc_html($prefix); ?>_modal_html = "<a class='boxclose modal-close' id='boxclose'>&times;</a>";
 
                 // HEADER
-                <?php echo $prefix; ?>_modal_html += "<div id='modal-header'>";
+                <?php echo esc_html($prefix); ?>_modal_html += "<div id='modal-header'>";
 
-                <?php echo $prefix; ?>_modal_html += "<div style='float: left;'>";
+                <?php echo esc_html($prefix); ?>_modal_html += "<div style='float: left;'>";
                 <?php if (!isset($atts["productimage"])) { ?>
-                    <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url('assets/donation.png', __FILE__); ?>' class='checkout-product-image' />";
+                    <?php echo esc_html($prefix); ?>_modal_html += "<img src='<?php echo esc_html(plugins_url('assets/donation.png', __FILE__)); ?>' class='checkout-product-image' />";
                 <?php } else if ($atts["productimage"] == 'none') { ?>
-                    <?php echo $prefix; ?>_modal_html += "<img src='<?php echo plugins_url('assets/transparent.png', __FILE__); ?>' class='checkout-product-image' />";
+                    <?php echo esc_html($prefix); ?>_modal_html += "<img src='<?php echo esc_html(plugins_url('assets/transparent.png', __FILE__)); ?>' class='checkout-product-image' />";
                 <?php } else { ?>
-                    <?php echo $prefix; ?>_modal_html += "<img src='<?php echo isset($atts['productimage']) ? $atts["productimage"] : ''; ?>' class='checkout-product-image' />";
+                    <?php echo esc_html($prefix); ?>_modal_html += "<img src='<?php echo isset($atts['productimage']) ? esc_html($atts["productimage"]) : ''; ?>' class='checkout-product-image' />";
                 <?php } ?>
-                <?php echo $prefix; ?>_modal_html += "</div>";
-                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='action' id='action' value='ssd_submit_payment'/>";
-                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_sku' id='product_sku' value='<?php echo isset($atts['productid']) ? $atts['productid'] : get_the_title(); ?>'/>";
-                <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='product_id' id='product_id' value='<?php echo isset($atts['productid']) ? $atts['productid'] : get_the_ID(); ?>'/>";
-                <?php echo $prefix; ?>_modal_html += "<div class='checkout-product-name'><?php echo isset($atts['productname']) ? $atts['productname'] : ''; ?></div>";
+                <?php echo esc_html($prefix); ?>_modal_html += "</div>";
+                <?php echo esc_html($prefix); ?>_modal_html += "<input type='hidden' name='action' id='action' value='ssd_submit_payment'/>";
+                <?php echo esc_html($prefix); ?>_modal_html += "<input type='hidden' name='product_sku' id='product_sku' value='<?php echo isset($atts['productid']) ? esc_html($atts['productid']) : esc_html(get_the_title()); ?>'/>";
+                <?php echo esc_html($prefix); ?>_modal_html += "<input type='hidden' name='product_id' id='product_id' value='<?php echo isset($atts['productid']) ? esc_html($atts['productid']) : esc_html(get_the_ID()); ?>'/>";
+                <?php echo esc_html($prefix); ?>_modal_html += "<div class='checkout-product-name'><?php echo isset($atts['productname']) ? esc_html($atts['productname']) : ''; ?></div>";
 
-                if ('<?php echo isset($atts['amount']) ? $atts['amount'] : ''; ?>' != '') {
-                    <?php echo $prefix; ?>_modal_html += "<div class='checkout-price'>$<?php echo isset($atts['amount']) ? $atts['amount'] : ''; ?></div>";
-                    <?php echo $prefix; ?>_modal_html += "<input type='hidden' name='donation_amount' value='<?php echo isset($atts['amount']) ? $atts['amount'] : ''; ?>' />";
+                if ('<?php echo isset($atts['amount']) ? esc_html($atts['amount']) : ''; ?>' != '') {
+                    <?php echo esc_html($prefix); ?>_modal_html += "<div class='checkout-price'>$<?php echo isset($atts['amount']) ? esc_html($atts['amount']) : ''; ?></div>";
+                    <?php echo esc_html($prefix); ?>_modal_html += "<input type='hidden' name='donation_amount' value='<?php echo isset($atts['amount']) ? esc_html($atts['amount']) : ''; ?>' />";
                 } else {
-                    <?php echo $prefix; ?>_modal_html += "<div class='donation-price'>Dollar Amount<br />$&nbsp;<input type='text' name='donation_amount' id='donation_amount' class='checkout-input donation-field' placeholder='<?php echo $amountdefault; ?>'></div>";
+                    <?php echo esc_html($prefix); ?>_modal_html += "<div class='donation-price'>Dollar Amount<br />$&nbsp;<input type='text' name='donation_amount' id='donation_amount' class='checkout-input donation-field' placeholder='<?php echo esc_html($amountdefault); ?>'></div>";
                 }
 
-                <?php echo $prefix; ?>_modal_html += "</div>";
+                <?php echo esc_html($prefix); ?>_modal_html += "</div>";
 
-                <?php echo $prefix; ?>_modal_html += "<div id='modal-body'>";
+                <?php echo esc_html($prefix); ?>_modal_html += "<div id='modal-body'>";
 
                 // BILLING BODY
-                var <?php echo $prefix; ?>_billing_html = "<div id='<?php echo $prefix; ?>_billing_panel'>";
-                <?php echo $prefix; ?>_billing_html += "<div class='checkout-card-information'>Billing Information</div>";
-                <?php echo $prefix; ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_name' id='cardholder_name' class='checkout-input checkout-card <?php echo $billingRequired; ?> ' placeholder='Name on Credit Card'></div>";
-                <?php echo $prefix; ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_address' id='cardholder_address' class='checkout-input checkout-card <?php echo $billingRequired; ?>' placeholder='Credit Card Billing Address'></div>";
-                <?php echo $prefix; ?>_billing_html += "<div class='card-number'>";
-                <?php echo $prefix; ?>_billing_html += "<input type='text' name='cardholder_city' id='cardholder_city' class='checkout-input city-field<?php echo $billingRequired; ?>' placeholder='City'>";
+                var <?php echo esc_html($prefix); ?>_billing_html = "<div id='<?php echo esc_html($prefix); ?>_billing_panel'>";
+                <?php echo esc_html($prefix); ?>_billing_html += "<div class='checkout-card-information'>Billing Information</div>";
+                <?php echo esc_html($prefix); ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_name' id='cardholder_name' class='checkout-input checkout-card <?php echo esc_html($billingRequired); ?> ' placeholder='Name on Credit Card'></div>";
+                <?php echo esc_html($prefix); ?>_billing_html += "<div class='card-number'><input type='text' name='cardholder_address' id='cardholder_address' class='checkout-input checkout-card <?php echo esc_html($billingRequired); ?>' placeholder='Credit Card Billing Address'></div>";
+                <?php echo esc_html($prefix); ?>_billing_html += "<div class='card-number'>";
+                <?php echo esc_html($prefix); ?>_billing_html += "<input type='text' name='cardholder_city' id='cardholder_city' class='checkout-input city-field<?php echo esc_html($billingRequired); ?>' placeholder='City'>";
                 <?php if ($requireState) { ?>
-                    <?php echo $prefix; ?>_billing_html += "<select name='cardholder_state' id='cardholder_state' class='checkout-input state-field<?php echo $billingRequired; ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
+                    <?php echo esc_html($prefix); ?>_billing_html += "<select name='cardholder_state' id='cardholder_state' class='checkout-input state-field<?php echo esc_html($billingRequired); ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
                 <?php } ?>
-                <?php echo $prefix; ?>_billing_html += "<input type='text' name='cardholder_zip' id='cardholder_zip' class='checkout-input zip-field<?php echo $billingRequired; ?>' placeholder='Zip'>";
-                <?php echo $prefix; ?>_billing_html += "</div>";
+                <?php echo esc_html($prefix); ?>_billing_html += "<input type='text' name='cardholder_zip' id='cardholder_zip' class='checkout-input zip-field<?php echo esc_html($billingRequired); ?>' placeholder='Zip'>";
+                <?php echo esc_html($prefix); ?>_billing_html += "</div>";
 
                 // Additional Info BODY
-                var <?php echo $prefix; ?>_additional_html = "<div id='<?php echo $prefix; ?>_additional_panel'>";
-                <?php echo $prefix; ?>_additional_html += "<div class='back-button'><a href='#billing' id='<?php echo $prefix; ?>_additional_back'>back</a></div>";
-                <?php echo $prefix; ?>_additional_html += "<div class='checkout-card-information'><?php echo $additionalInformationText; ?></div>";
-                <?php echo $prefix; ?>_additional_html += "<div style='overflow-y: auto; height: 200px;'>";
+                var <?php echo esc_html($prefix); ?>_additional_html = "<div id='<?php echo esc_html($prefix); ?>_additional_panel'>";
+                <?php echo esc_html($prefix); ?>_additional_html += "<div class='back-button'><a href='#billing' id='<?php echo esc_html($prefix); ?>_additional_back'>back</a></div>";
+                <?php echo esc_html($prefix); ?>_additional_html += "<div class='checkout-card-information'><?php echo esc_html($additionalInformationText); ?></div>";
+                <?php echo esc_html($prefix); ?>_additional_html += "<div style='overflow-y: auto; height: 200px;'>";
                 <?php
                 if(count($additionalFields)>0){
                     foreach($additionalFields as $key=>$value){
@@ -805,111 +804,111 @@ class SecureSubmit {
                         }
 
                         if ($field_type == "textarea") {
-                            echo $prefix . '_additional_html += "<div class=\'card-number\'><textarea name=\''.$value.'\' id=\''.$value.'\' class=\'donation-textarea'.$required.'\' placeholder=\''.$atts[$value].'\'></textarea></div>";';
+                            echo esc_html($prefix) . '_additional_html += "<div class=\'card-number\'><textarea name=\''.esc_html($value).'\' id=\''.esc_html($value).'\' class=\'donation-textarea'.esc_html($required).'\' placeholder=\''.esc_html($atts[$value]).'\'></textarea></div>";';
                         }
                         else if ($field_type == "dropdown") {
-                            echo $prefix . '_additional_html += "<div class=\'card-number\'><select name=\''.$value.'\' id=\''.$value.'\' class=\'donation-dropdown'.$required.'\'><option>Select an option below</option>";';
+                            echo esc_html($prefix) . '_additional_html += "<div class=\'card-number\'><select name=\''.esc_html($value).'\' id=\''.esc_html($value).'\' class=\'donation-dropdown'.esc_html($required).'\'><option>Select an option below</option>";';
                             $options = explode("|", $atts[$value]);
                             foreach($options as $option) {
-                                echo $prefix . '_additional_html += "<option>' . $option . '</option>";';
+                                echo esc_html($prefix) . '_additional_html += "<option>' . esc_html($option) . '</option>";';
                             }
-                            echo $prefix . '_additional_html += "</select></div>";';
+                            echo esc_html($prefix) . '_additional_html += "</select></div>";';
                         } else if ($field_type == "radio") {
-                            echo $prefix . '_additional_html += "<div class=\'card-number\'>";';
+                            echo esc_html($prefix) . '_additional_html += "<div class=\'card-number\'>";';
                             $options = explode("|", $atts[$value]);
                             foreach($options as $option) {
-                                echo $prefix . '_additional_html += "<input type=\'radio\' name=\''.$value.'\' value=\'' . $option . '\' class=\'securesubmitradio\'>' . $option . '</input><br />";';
+                                echo esc_html($prefix) . '_additional_html += "<input type=\'radio\' name=\''.esc_html($value).'\' value=\'' . esc_html($option) . '\' class=\'securesubmitradio\'>' . esc_html($option) . '</input><br />";';
                             }
-                            echo $prefix . '_additional_html += "</div>";';
+                            echo esc_html($prefix) . '_additional_html += "</div>";';
                         } else if ($field_type == "checkbox") {
-                            echo $prefix . '_additional_html += "<input name=\'' . $value . '\' id=\'' . $value . '\' type=\'checkbox\'>&nbsp;<label style=\'display: inline\' for=\'' . $value . '\'>' . $atts[$value] . '</label>";';
+                            echo esc_html($prefix) . '_additional_html += "<input name=\'' . esc_html($value) . '\' id=\'' . esc_html($value) . '\' type=\'checkbox\'>&nbsp;<label style=\'display: inline\' for=\'' . esc_html($value) . '\'>' . esc_html($atts[$value]) . '</label>";';
                         } else if ($field_type == "label") {
                             $html_links = preg_replace('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', "<a href=\'$1\' target=\'blank\'>$1</a>", $atts[$value]);
-                            echo $prefix . '_additional_html += "<div class=\'card-number\'>' . $html_links . '</div>";';
+                            echo esc_html($prefix) . '_additional_html += "<div class=\'card-number\'>' . esc_html($html_links) . '</div>";';
                         }
                         else
                         {
-                            echo $prefix . '_additional_html += "<div class=\'card-number\'><input name=\''.$value.'\' type=\''.$field_type.'\' id=\''.$value.'\' class=\'checkout-input checkout-card'.$required.'\' placeholder=\''.$atts[$value].'\'></div>";';
+                            echo esc_html($prefix) . '_additional_html += "<div class=\'card-number\'><input name=\''.esc_html($value).'\' type=\''.esc_html($field_type).'\' id=\''.esc_html($value).'\' class=\'checkout-input checkout-card'.esc_html($required).'\' placeholder=\''.esc_html($atts[$value]).'\'></div>";';
                         }
                     }
                 }
                 ?>
-                <?php echo $prefix; ?>_additional_html += "</div>";
-                <?php echo $prefix; ?>_additional_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo $prefix; ?>_additional_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
-                <?php echo $prefix; ?>_additional_html += "<div class='powered_by'><img src='<?php echo plugins_url( 'assets/heart.png', __FILE__ ); ?>' /></div>";
-                <?php echo $prefix; ?>_additional_html += "</div>";
+                <?php echo esc_html($prefix); ?>_additional_html += "</div>";
+                <?php echo esc_html($prefix); ?>_additional_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo esc_html($prefix); ?>_additional_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
+                <?php echo esc_html($prefix); ?>_additional_html += "<div class='powered_by'><img src='<?php echo esc_html(plugins_url( 'assets/heart.png', __FILE__ )); ?>' /></div>";
+                <?php echo esc_html($prefix); ?>_additional_html += "</div>";
 
 
                 // TODO: Check if this is checked to skip the shipping screen...
-                if (<?php echo $prefix; ?>_requireShipping) {
-                    <?php echo $prefix; ?>_billing_html += "<div class='same_shipping'><input name='shipping_same' type='checkbox' id='shipping_same'>&nbsp;<label for='shipping_same'>Shipping Same As Billing</label></div>";
+                if (<?php echo esc_html($prefix); ?>_requireShipping) {
+                    <?php echo esc_html($prefix); ?>_billing_html += "<div class='same_shipping'><input name='shipping_same' type='checkbox' id='shipping_same'>&nbsp;<label for='shipping_same'>Shipping Same As Billing</label></div>";
                 }
 
-                <?php echo $prefix; ?>_billing_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo $prefix; ?>_billing_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
-                <?php echo $prefix; ?>_billing_html += "<div class='powered_by'><img src='<?php echo plugins_url( 'assets/heart.png', __FILE__ ); ?>' /></div>";
-                <?php echo $prefix; ?>_billing_html += "</div>";
+                <?php echo esc_html($prefix); ?>_billing_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo esc_html($prefix); ?>_billing_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
+                <?php echo esc_html($prefix); ?>_billing_html += "<div class='powered_by'><img src='<?php echo esc_html(plugins_url( 'assets/heart.png', __FILE__ )); ?>' /></div>";
+                <?php echo esc_html($prefix); ?>_billing_html += "</div>";
 
                 // SHIPPING BODY
-                var <?php echo $prefix; ?>_shipping_html = "<div id='<?php echo $prefix; ?>_shipping_panel'>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='back-button'><a href='#billing' id='<?php echo $prefix; ?>_shipping_back'>back</a></div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='checkout-card-information'>Shipping Information</div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='card-number'><input name='shipping_name' type='text' id='shipping_name' class='checkout-input checkout-card<?php echo $shippingRequired; ?>' placeholder='Shipping Name'></div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='card-number'><input name='shipping_address' type='text' id='shipping_address' class='checkout-input checkout-card<?php echo $shippingRequired; ?>' placeholder='Address'></div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='card-number'>";
-                <?php echo $prefix; ?>_shipping_html += "<input type='text' name='shipping_city' id='shipping_city' class='checkout-input city-field<?php echo $shippingRequired; ?>' placeholder='City'>";
+                var <?php echo esc_html($prefix); ?>_shipping_html = "<div id='<?php echo esc_html($prefix); ?>_shipping_panel'>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "<div class='back-button'><a href='#billing' id='<?php echo esc_html($prefix); ?>_shipping_back'>back</a></div>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "<div class='checkout-card-information'>Shipping Information</div>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "<div class='card-number'><input name='shipping_name' type='text' id='shipping_name' class='checkout-input checkout-card<?php echo esc_html($shippingRequired); ?>' placeholder='Shipping Name'></div>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "<div class='card-number'><input name='shipping_address' type='text' id='shipping_address' class='checkout-input checkout-card<?php echo esc_html($shippingRequired); ?>' placeholder='Address'></div>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "<div class='card-number'>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "<input type='text' name='shipping_city' id='shipping_city' class='checkout-input city-field<?php echo esc_html($shippingRequired); ?>' placeholder='City'>";
                 <?php if ($requireState) { ?>
-                    <?php echo $prefix; ?>_shipping_html += "<select id='shipping_state' name='shipping_state' class='checkout-input state-field<?php echo $shippingRequired; ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
+                    <?php echo esc_html($prefix); ?>_shipping_html += "<select id='shipping_state' name='shipping_state' class='checkout-input state-field<?php echo esc_html($shippingRequired); ?>'><option value='AL'>AL</option><option value='AK'>AK</option><option value='AZ'>AZ</option><option value='AR'>AR</option><option value='CA'>CA</option><option value='CO'>CO</option><option value='CT'>CT</option><option value='DC'>DC</option><option value='DE'>DE</option><option value='FL'>FL</option><option value='GA'>GA</option><option value='HI'>HI</option><option value='ID'>ID</option><option value='IL'>IL</option><option value='IN'>IN</option><option value='IA'>IA</option><option value='KS'>KS</option><option value='KY'>KY</option><option value='LA'>LA</option><option value='ME'>ME</option><option value='MD'>MD</option><option value='MA'>MA</option><option value='MI'>MI</option><option value='MN'>MN</option><option value='MS'>MS</option><option value='MO'>MO</option><option value='MT'>MT</option><option value='NE'>NE</option><option value='NV'>NV</option><option value='NH'>NH</option><option value='NJ'>NJ</option><option value='NM'>NM</option><option value='NY'>NY</option><option value='NC'>NC</option><option value='ND'>ND</option><option value='OH'>OH</option><option value='OK'>OK</option><option value='OR'>OR</option><option value='PA'>PA</option><option value='RI'>RI</option><option value='SC'>SC</option><option value='SD'>SD</option><option value='TN'>TN</option><option value='TX'>TX</option><option value='UT'>UT</option><option value='VT'>VT</option><option value='VA'>VA</option><option value='WA'>WA</option><option value='WV'>WV</option><option value='WI'>WI</option><option value='WY'>WY</option></select>";
                 <?php } ?>
-                <?php echo $prefix; ?>_shipping_html += "<input type='text' name='shipping_zip' id='shipping_zip' class='checkout-input zip-field<?php echo $shippingRequired; ?>' placeholder='Zip'>";
-                <?php echo $prefix; ?>_shipping_html += "</div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo $prefix; ?>_shipping_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
-                <?php echo $prefix; ?>_shipping_html += "<div class='powered_by'><img src='<?php echo plugins_url('assets/heart.png', __FILE__); ?>' /></div>";
-                <?php echo $prefix; ?>_shipping_html += "</div>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "<input type='text' name='shipping_zip' id='shipping_zip' class='checkout-input zip-field<?php echo esc_html($shippingRequired); ?>' placeholder='Zip'>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "</div>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo esc_html($prefix); ?>_shipping_next_button'>Next</a><div class='pay-button-border'>&nbsp;</div></div>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "<div class='powered_by'><img src='<?php echo esc_html(plugins_url('assets/heart.png', __FILE__)); ?>' /></div>";
+                <?php echo esc_html($prefix); ?>_shipping_html += "</div>";
 
                 // CARD BODY
-                var <?php echo $prefix; ?>_card_html = "<div id='<?php echo $prefix; ?>_card_panel'>";
-                <?php echo $prefix; ?>_card_html += "<div class='back-button'><a href='#shipping' id='<?php echo $prefix; ?>_card_back'>back</a></div>";
-                <?php echo $prefix; ?>_card_html += "<div class='checkout-card-information'>Card Information</div>";
-                <?php echo $prefix; ?>_card_html += "<div class='card-number'><input type='text' id='card_number' class='checkout-input checkout-card required' placeholder='Credit Card'></div>";
-                <?php echo $prefix; ?>_card_html += "<div class='card-exp'><input type='text' id='card_exp' class='checkout-exp required' placeholder='MM/YY'></div>";
-                <?php echo $prefix; ?>_card_html += "<div class='card-cvc'><input type='text' id='card_cvc' class='checkout-exp' placeholder='CVC'></div>";
-                <?php echo $prefix; ?>_card_html += "<div class='clearfixcheckout'>&nbsp;</div>";
-                <?php echo $prefix; ?>_card_html += "<div class='email-reciept'><input name='email_reciept' type='checkbox' id='email_reciept' checked='true'>&nbsp;<label for='email_reciept'>Email Receipt</label></div>";
-                <?php echo $prefix; ?>_card_html += "<div class='email-address'><input name='email_address' type='text' id='email_address' class='checkout-email' placeholder='Customer Email Address'></div>";
-                <?php echo $prefix; ?>_card_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo $prefix; ?>_pay_button'><?php echo $buttonText; ?></a><div class='pay-button-border'>&nbsp;</div></div>";
-                <?php echo $prefix; ?>_card_html += "<div class='powered_by'><img src='<?php echo plugins_url( 'assets/heart.png', __FILE__ ); ?>' /></div>";
-                <?php echo $prefix; ?>_card_html += "</div>";
+                var <?php echo esc_html($prefix); ?>_card_html = "<div id='<?php echo esc_html($prefix); ?>_card_panel'>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='back-button'><a href='#shipping' id='<?php echo esc_html($prefix); ?>_card_back'>back</a></div>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='checkout-card-information'>Card Information</div>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='card-number'><input type='text' id='card_number' class='checkout-input checkout-card required' placeholder='Credit Card'></div>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='card-exp'><input type='text' id='card_exp' class='checkout-exp required' placeholder='MM/YY'></div>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='card-cvc'><input type='text' id='card_cvc' class='checkout-exp' placeholder='CVC'></div>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='clearfixcheckout'>&nbsp;</div>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='email-reciept'><input name='email_reciept' type='checkbox' id='email_reciept' checked='true'>&nbsp;<label for='email_reciept'>Email Receipt</label></div>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='email-address'><input name='email_address' type='text' id='email_address' class='checkout-email' placeholder='Customer Email Address'></div>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo esc_html($prefix); ?>_pay_button'><?php echo esc_html($buttonText); ?></a><div class='pay-button-border'>&nbsp;</div></div>";
+                <?php echo esc_html($prefix); ?>_card_html += "<div class='powered_by'><img src='<?php echo esc_html(plugins_url( 'assets/heart.png', __FILE__ )); ?>' /></div>";
+                <?php echo esc_html($prefix); ?>_card_html += "</div>";
 
                 // PROCESSING BODY
-                var <?php echo $prefix; ?>_processing_html = "<div id='<?php echo $prefix; ?>_processing_panel'>";
-                <?php echo $prefix; ?>_processing_html += "<div class='transaction-processing'>processing</div>";
-                <?php echo $prefix; ?>_processing_html += "</div>";
+                var <?php echo esc_html($prefix); ?>_processing_html = "<div id='<?php echo esc_html($prefix); ?>_processing_panel'>";
+                <?php echo esc_html($prefix); ?>_processing_html += "<div class='transaction-processing'>processing</div>";
+                <?php echo esc_html($prefix); ?>_processing_html += "</div>";
 
                 // FAILURE BODY
-                var <?php echo $prefix; ?>_failure_html = "<div id='<?php echo $prefix; ?>_failure_panel'>";
-                <?php echo $prefix; ?>_failure_html += "<div class='checkout-card-information'>Transaction Information</div>";
-                <?php echo $prefix; ?>_failure_html += "<div class='transaction-error'>There was a problem while processing your card.</div>";
-                <?php echo $prefix; ?>_failure_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo $prefix; ?>_retry_button'>Retry</a><div class='pay-button-border'>&nbsp;</div></div>";
-                <?php echo $prefix; ?>_failure_html += "</div>";
+                var <?php echo esc_html($prefix); ?>_failure_html = "<div id='<?php echo esc_html($prefix); ?>_failure_panel'>";
+                <?php echo esc_html($prefix); ?>_failure_html += "<div class='checkout-card-information'>Transaction Information</div>";
+                <?php echo esc_html($prefix); ?>_failure_html += "<div class='transaction-error'>There was a problem while processing your card.</div>";
+                <?php echo esc_html($prefix); ?>_failure_html += "<div class='pay-button button-next'><a href='#Purchase' id='<?php echo esc_html($prefix); ?>_retry_button'>Retry</a><div class='pay-button-border'>&nbsp;</div></div>";
+                <?php echo esc_html($prefix); ?>_failure_html += "</div>";
 
                 // SUCCESS BODY
-                var <?php echo $prefix; ?>_success_html = "<div id='<?php echo $prefix; ?>_success_panel'>";
-                <?php echo $prefix; ?>_success_html += "<div class='card-number'>Your Payment Was Successful!</div>";
-                <?php echo $prefix; ?>_success_html += "</div>";
+                var <?php echo esc_html($prefix); ?>_success_html = "<div id='<?php echo esc_html($prefix); ?>_success_panel'>";
+                <?php echo esc_html($prefix); ?>_success_html += "<div class='card-number'>Your Payment Was Successful!</div>";
+                <?php echo esc_html($prefix); ?>_success_html += "</div>";
 
-                <?php echo $prefix; ?>_modal_html += <?php echo $prefix; ?>_billing_html;
-                <?php echo $prefix; ?>_modal_html += <?php echo $prefix; ?>_additional_html;
-                <?php echo $prefix; ?>_modal_html += <?php echo $prefix; ?>_shipping_html;
-                <?php echo $prefix; ?>_modal_html += <?php echo $prefix; ?>_card_html;
-                <?php echo $prefix; ?>_modal_html += <?php echo $prefix; ?>_processing_html;
-                <?php echo $prefix; ?>_modal_html += <?php echo $prefix; ?>_failure_html;
-                <?php echo $prefix; ?>_modal_html += <?php echo $prefix; ?>_success_html;
+                <?php echo esc_html($prefix); ?>_modal_html += <?php echo esc_html($prefix); ?>_billing_html;
+                <?php echo esc_html($prefix); ?>_modal_html += <?php echo esc_html($prefix); ?>_additional_html;
+                <?php echo esc_html($prefix); ?>_modal_html += <?php echo esc_html($prefix); ?>_shipping_html;
+                <?php echo esc_html($prefix); ?>_modal_html += <?php echo esc_html($prefix); ?>_card_html;
+                <?php echo esc_html($prefix); ?>_modal_html += <?php echo esc_html($prefix); ?>_processing_html;
+                <?php echo esc_html($prefix); ?>_modal_html += <?php echo esc_html($prefix); ?>_failure_html;
+                <?php echo esc_html($prefix); ?>_modal_html += <?php echo esc_html($prefix); ?>_success_html;
 
-                <?php echo $prefix; ?>_modal_html += "</div>"; // BODY
+                <?php echo esc_html($prefix); ?>_modal_html += "</div>"; // BODY
 
                 // ACTIONS
-                function <?php echo $prefix; ?>_trigger_payment() {
-                    var prefix = '<?php echo $prefix; ?>';
+                function <?php echo esc_html($prefix); ?>_trigger_payment() {
+                    var prefix = '<?php echo esc_html($prefix); ?>';
                     var $ = jQuery;
 
                     $('#modal-content').remove(); // a little clean-up
@@ -938,7 +937,7 @@ class SecureSubmit {
                         frame.find('html').html('<html><title></title><head></head></html>');
 
                         var stylesheet = $('<link rel="stylesheet" type="text/css" />');
-                        stylesheet.attr('href', '<?php echo plugins_url( 'assets/checkout.css', __FILE__ ); ?>').attr('id', 'sss');
+                        stylesheet.attr('href', '<?php echo esc_html(plugins_url( 'assets/checkout.css', __FILE__ )); ?>').attr('id', 'sss');
 
                         frame.contents().find('head').append(stylesheet);
 
@@ -948,7 +947,7 @@ class SecureSubmit {
                         });
 
                         frameBody.append(form);
-                        form.append(<?php echo $prefix; ?>_modal_html);
+                        form.append(<?php echo esc_html($prefix); ?>_modal_html);
 
                         function configureCleanUp() {
                             $("#modal-launcher, #modal-background").click(function cleanUp() {
@@ -976,7 +975,7 @@ class SecureSubmit {
                         });
 
                         function getPanel(panelName) {
-                            return frameBody.find('#<?php echo $prefix; ?>_' + panelName + '_panel');
+                            return frameBody.find('#<?php echo esc_html($prefix); ?>_' + panelName + '_panel');
                         }
 
                         // Get Panels
@@ -990,7 +989,7 @@ class SecureSubmit {
 
                         // Bind Panels
                         // Billing Panel
-                        var billingButton = billingPanel.find('#<?php echo $prefix; ?>_billing_next_button');
+                        var billingButton = billingPanel.find('#<?php echo esc_html($prefix); ?>_billing_next_button');
 
                         billingPanel.show();
 
@@ -1015,9 +1014,9 @@ class SecureSubmit {
 
                                 billingPanel.hide();
 
-                                if (<?php echo $prefix; ?>_requireAdditionalInfo) {
+                                if (<?php echo esc_html($prefix); ?>_requireAdditionalInfo) {
                                     additionalPanel.fadeIn();
-                                } else if (<?php echo $prefix; ?>_requireShipping) {
+                                } else if (<?php echo esc_html($prefix); ?>_requireShipping) {
                                     cardPanel.hide();
                                     if (frameBody.find("#shipping_same").attr("checked")) {
                                         cardPanel.fadeIn();
@@ -1045,8 +1044,8 @@ class SecureSubmit {
                         });
 
                         // Additional Panel
-                        var additionalNext = additionalPanel.find("#<?php echo $prefix; ?>_additional_next_button");
-                        var additionalBack = additionalPanel.find("#<?php echo $prefix; ?>_additional_back");
+                        var additionalNext = additionalPanel.find("#<?php echo esc_html($prefix); ?>_additional_next_button");
+                        var additionalBack = additionalPanel.find("#<?php echo esc_html($prefix); ?>_additional_back");
 
                         additionalPanel.hide();
 
@@ -1075,7 +1074,7 @@ class SecureSubmit {
                                 billingPanel.hide();
                                 additionalPanel.hide();
 
-                                if (<?php echo $prefix; ?>_requireShipping) {
+                                if (<?php echo esc_html($prefix); ?>_requireShipping) {
                                     shippingPanel.fadeIn();
                                 } else {
                                     cardPanel.fadeIn();
@@ -1094,8 +1093,8 @@ class SecureSubmit {
                         });
 
                         // Shipping Panel
-                        var shippingNext = shippingPanel.find("#<?php echo $prefix; ?>_shipping_next_button");
-                        var shippingBack = shippingPanel.find("#<?php echo $prefix; ?>_shipping_back");
+                        var shippingNext = shippingPanel.find("#<?php echo esc_html($prefix); ?>_shipping_next_button");
+                        var shippingBack = shippingPanel.find("#<?php echo esc_html($prefix); ?>_shipping_back");
 
                         shippingPanel.hide();
 
@@ -1123,7 +1122,7 @@ class SecureSubmit {
                             event.preventDefault();
                         });
 
-                        if (<?php echo $prefix; ?>_requireShipping) {
+                        if (<?php echo esc_html($prefix); ?>_requireShipping) {
                             shippingBack.on("click", function (event) {
                                 billingPanel.fadeIn();
                                 shippingPanel.hide();
@@ -1137,8 +1136,8 @@ class SecureSubmit {
                         processingPanel.hide();
 
                         // Card Panel
-                        var cardPay = cardPanel.find("#<?php echo $prefix; ?>_pay_button");
-                        var cardBack = cardPanel.find("#<?php echo $prefix; ?>_card_back");
+                        var cardPay = cardPanel.find("#<?php echo esc_html($prefix); ?>_pay_button");
+                        var cardBack = cardPanel.find("#<?php echo esc_html($prefix); ?>_card_back");
 
                         cardPanel.hide();
 
@@ -1150,7 +1149,7 @@ class SecureSubmit {
 
 
 
-                        function <?php echo $prefix; ?>_secureSubmitResponseHandler(response) {
+                        function <?php echo esc_html($prefix); ?>_secureSubmitResponseHandler(response) {
                             if (response.message) {
                                 processingPanel.hide();
                                 failurePanel.show();
@@ -1162,13 +1161,13 @@ class SecureSubmit {
                                 var token_html = "<input type='hidden' id='securesubmit_token' name='securesubmit_token' value='" + response.token_value + "' />";
                                 form.append(token_html);
 
-                                <?php echo $prefix; ?>_do_post();
+                                <?php echo esc_html($prefix); ?>_do_post();
                             }
                         }
 
-                        function <?php echo $prefix; ?>_do_post() {
+                        function <?php echo esc_html($prefix); ?>_do_post() {
                             var datastring = form.serialize();
-                            var url = "<?php echo admin_url('admin-ajax.php'); ?>";
+                            var url = "<?php echo esc_html(admin_url('admin-ajax.php')); ?>";
 
                             if ($.browser && $.browser.msie && $.browser.version <= 9) {
                                 $(this).find('[placeholder]').each(function () {
@@ -1194,7 +1193,7 @@ class SecureSubmit {
                         }
 
 
-                        function <?php echo $prefix; ?>_tokenize() {
+                        function <?php echo esc_html($prefix); ?>_tokenize() {
                             var expirationParts = cardPanel.find('#card_exp').val().split("/");
                             var month = expirationParts[0];
                             var year = expirationParts[1];
@@ -1222,9 +1221,9 @@ class SecureSubmit {
                             xhr.setRequestHeader("Content-type", "application/json");
                             xhr.onload = () => {
                                 if (xhr.readyState == 4 && xhr.status == 201) {
-                                    <?php echo $prefix; ?>_secureSubmitResponseHandler(JSON.parse(xhr.responseText));
+                                    <?php echo esc_html($prefix); ?>_secureSubmitResponseHandler(JSON.parse(xhr.responseText));
                                 } else {
-                                    <?php echo $prefix; ?>_secureSubmitResponseHandler(`Error: ${xhr.status}`);
+                                    <?php echo esc_html($prefix); ?>_secureSubmitResponseHandler(`Error: ${xhr.status}`);
                                 }
                             };
 
@@ -1269,7 +1268,7 @@ class SecureSubmit {
                                 processingPanel.show();
                                 $('#modal-launcher, #modal-background').unbind('click');
                                 frameBody.find('.modal-close').unbind('click');
-                                <?php echo $prefix; ?>_tokenize();
+                                <?php echo esc_html($prefix); ?>_tokenize();
                             }
 
 
@@ -1279,7 +1278,7 @@ class SecureSubmit {
                         cardBack.on("click", function (event) {
                             billingPanel.hide();
 
-                            if ((<?php echo $prefix; ?>_requireShipping) && (!frameBody.find("#shipping_same").attr("checked"))) {
+                            if ((<?php echo esc_html($prefix); ?>_requireShipping) && (!frameBody.find("#shipping_same").attr("checked"))) {
                                 shippingPanel.show();
                             } else {
                                 <?php if(count($additionalFields)>0){ ?>
@@ -1298,7 +1297,7 @@ class SecureSubmit {
                         successPanel.hide();
 
                         // Failure Panel
-                        var failureRetry = failurePanel.find("#<?php echo $prefix; ?>_retry_button");
+                        var failureRetry = failurePanel.find("#<?php echo esc_html($prefix); ?>_retry_button");
                         failurePanel.hide();
 
                         failureRetry.on("click", function (event) {
@@ -1323,12 +1322,12 @@ class SecureSubmit {
             }
 
             ?>
-            <div id="<?php echo $prefix; ?>_formContainer">
-                <form id="<?php echo $prefix; ?>_form">
+            <div id="<?php echo esc_html($prefix); ?>_formContainer">
+                <form id="<?php echo esc_html($prefix); ?>_form">
                     <input type="hidden" value="" name="securesubmit_token" id="securesubmit_token" />
-                    <input type="hidden" name="<?php echo $prefix; ?>_product_id" value="<?php echo $productid; ?>" />
+                    <input type="hidden" name="<?php echo esc_html($prefix); ?>_product_id" value="<?php echo esc_html($productid); ?>" />
                     <input type="hidden" name="action" value="ssd_submit_payment" />
-                    <input type="hidden" name="prefix" value="<?php echo $prefix; ?>">
+                    <input type="hidden" name="prefix" value="<?php echo esc_html($prefix); ?>">
 
                     <?php if ($requireBilling) { ?>
                         <h3>Billing Information</h3>
@@ -1336,13 +1335,13 @@ class SecureSubmit {
                             <tr>
                                 <td width="200">First Name:</td>
                                 <td>
-                                    <input class="form-text<?php echo $billingRequired; ?>" name="billing_firstname" type="text" />
+                                    <input class="form-text<?php echo esc_html($billingRequired); ?>" name="billing_firstname" type="text" />
                                 </td>
                             </tr>
                             <tr>
                                 <td>Last Name:</td>
                                 <td>
-                                    <input class="form-text<?php echo $billingRequired; ?>" name="billing_lastname" type="text" />
+                                    <input class="form-text<?php echo esc_html($billingRequired); ?>" name="billing_lastname" type="text" />
                                 </td>
                             </tr>
                             <tr>
@@ -1360,18 +1359,18 @@ class SecureSubmit {
                             <tr>
                                 <td>Address:</td>
                                 <td>
-                                    <input class="form-text<?php echo $billingRequired; ?>" name="billing_address" type="text" />
+                                    <input class="form-text<?php echo esc_html($billingRequired); ?>" name="billing_address" type="text" />
                                 </td>
                             </tr>
                             <tr>
                                 <td>City:</td>
-                                <td><input class="form-text<?php echo $billingRequired; ?>" name="billing_city" type="text" /></td>
+                                <td><input class="form-text<?php echo esc_html($billingRequired); ?>" name="billing_city" type="text" /></td>
                             </tr>
                             <?php if ($requireState) { ?>
                                 <tr>
                                     <td>State:</td>
                                     <td>
-                                        <select name="billing_state" class="<?php echo $billingRequired; ?>">
+                                        <select name="billing_state" class="<?php echo esc_html($billingRequired); ?>">
                                             <option value="AL">Alabama</option>
                                             <option value="AK">Alaska</option>
                                             <option value="AZ">Arizona</option>
@@ -1430,7 +1429,7 @@ class SecureSubmit {
                             <tr>
                                 <td>Zip/Postal Code:</td>
                                 <td>
-                                    <input class="form-text<?php echo $billingRequired; ?>" name="billing_zip" type="text" />
+                                    <input class="form-text<?php echo esc_html($billingRequired); ?>" name="billing_zip" type="text" />
                                 </td>
                             </tr>
                         </table>
@@ -1442,29 +1441,29 @@ class SecureSubmit {
                         <table width="100%" style="display:none;" id="shipping_table">
                             <tr>
                                 <td width="200 ">First Name:</td>
-                                <td><input class="form-text<?php echo $shippingRequired; ?>" name="shipping_firstname" type="text"  /></td>
+                                <td><input class="form-text<?php echo esc_html($shippingRequired); ?>" name="shipping_firstname" type="text"  /></td>
                             </tr>
                             <tr>
                                 <td>Last Name:</td>
                                 <td>
-                                    <input class="form-text<?php echo $shippingRequired; ?>" type="text" name="shipping_lastname"  />
+                                    <input class="form-text<?php echo esc_html($shippingRequired); ?>" type="text" name="shipping_lastname"  />
                                 </td>
                             </tr>
                             <tr>
                                 <td>Address:</td>
-                                <td><input class="form-text<?php echo $shippingRequired; ?>" type="text" name="shipping_address"  /></td>
+                                <td><input class="form-text<?php echo esc_html($shippingRequired); ?>" type="text" name="shipping_address"  /></td>
                             </tr>
                             <tr>
                                 <td>City:</td>
                                 <td>
-                                    <input class="form-text<?php echo $shippingRequired; ?>" type="text" name="shipping_city"  />
+                                    <input class="form-text<?php echo esc_html($shippingRequired); ?>" type="text" name="shipping_city"  />
                                 </td>
                             </tr>
                             <?php if ($requireState) { ?>
                                 <tr>
                                     <td>State:</td>
                                     <td>
-                                        <select name="shipping_state" class="<?php echo $shippingRequired; ?>" >
+                                        <select name="shipping_state" class="<?php echo esc_html($shippingRequired); ?>" >
                                             <option value="AL">Alabama</option>
                                             <option value="AK">Alaska</option>
                                             <option value="AZ">Arizona</option>
@@ -1523,7 +1522,7 @@ class SecureSubmit {
                             <tr>
                                 <td>Shipping Zip Code:</td>
                                 <td>
-                                    <input class="form-text<?php echo $shippingRequired; ?>" type="text" name="shipping_zip" />
+                                    <input class="form-text<?php echo esc_html($shippingRequired); ?>" type="text" name="shipping_zip" />
                                 </td>
                             </tr>
                         </table>
@@ -1582,7 +1581,7 @@ class SecureSubmit {
 
                         $additionalHTML .= "</table>";
 
-                        echo $additionalHTML;
+                        echo esc_html($additionalHTML);
                     }
                     ?>
 
@@ -1598,31 +1597,31 @@ class SecureSubmit {
                         <tr>
                             <td width="200">Card Number:</td>
                             <td>
-                                <div id="<?php echo $prefix; ?>_card_number"></div>
+                                <div id="<?php echo esc_html($prefix); ?>_card_number"></div>
                             </td>
                         </tr>
                         <tr>
                             <td>Expiration:</td>
                             <td colspan="2">
-                                <div id="<?php echo $prefix; ?>_exp_month"></div>
+                                <div id="<?php echo esc_html($prefix); ?>_exp_month"></div>
                             </td>
                         </tr>
                         <tr>
                             <td>Card CVC:</td>
                             <td>
-                                <input class="form-text" type="text" id="<?php echo $prefix; ?>_card_cvc" style="width: 45px;" />
-                                <div id="<?php echo $prefix; ?>_card_cvc"></div>
+                                <input class="form-text" type="text" id="<?php echo esc_html($prefix); ?>_card_cvc" style="width: 45px;" />
+                                <div id="<?php echo esc_html($prefix); ?>_card_cvc"></div>
                             </td>
                         </tr>
                         <tr>
                             <td>Amount:</td>
                             <td nowrap>$
-                                <input class="form-text" id="donation_amount_secure" style="display: inline;" type="text" value="<?php echo $amountdefault; ?>" name="donation_amount" <?php if (!empty($productid)):?>disabled="disabled"
+                                <input class="form-text" id="donation_amount_secure" style="display: inline;" type="text" value="<?php echo esc_html($amountdefault); ?>" name="donation_amount" <?php if (!empty($productid)):?>disabled="disabled"
                                 <?php endif;?>/></td>
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <div id="<?php echo $prefix; ?>-donate-response"></div>
+                                <div id="<?php echo esc_html($prefix); ?>-donate-response"></div>
                             </td>
                         </tr>
                         <?php if($this->isRecaptchaEnabled) { ?>
@@ -1640,14 +1639,14 @@ class SecureSubmit {
                                 <div id="credit-card-submit"></div>
 
                                 <?php if ($modal) { ?>
-                                    <button id="a<?php echo $prefix; ?>-modal-launcher" class="button-secondary">cancel</button>
+                                    <button id="a<?php echo esc_html($prefix); ?>-modal-launcher" class="button-secondary">cancel</button>
                                 <?php } ?>
                             </td>
                         </tr>
                     </table>
                 </form>
             </div>
-            <div id="<?php echo $prefix; ?>_success" style="display: none;">
+            <div id="<?php echo esc_html($prefix); ?>_success" style="display: none;">
                 <strong>Your Payment was Successful. Thank you!</strong>
             </div>
         <?php } ?>
@@ -1656,12 +1655,14 @@ class SecureSubmit {
             function ssdRenderCaptcha() {
                 var domElement = document.getElementById('ssd-recaptcha');
                 var widgetId = grecaptcha.render(domElement, {
-                    'sitekey': '<?php echo $this->recaptchaSiteKey ?>'
+                    'sitekey': '<?php echo esc_html($this->recaptchaSiteKey) ?>'
                 });
                 jQuery(domElement).attr('data-widget-id', widgetId);
             }
         </script>
-        <script src="https://js.globalpay.com/v1/globalpayments.js"></script>
+        <?php
+            wp_enqueue_script('global-payments','https://js.globalpay.com/v1/globalpayments.js');
+        ?>
         <script type="text/javascript">
         <?php
         $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
@@ -1672,7 +1673,7 @@ class SecureSubmit {
                 publicApiKey: pk
             });
 
-            var prefix = '<?php echo $prefix; ?>';
+            var prefix = '<?php echo esc_html($prefix); ?>';
 
             // Create Form
             const cardForm = GlobalPayments.ui.form({
@@ -1742,7 +1743,7 @@ class SecureSubmit {
                     configureCleanUp();
                     clearPaymentFields();
                 } else {
-                    var prefix = '<?php echo $prefix; ?>';
+                    var prefix = '<?php echo esc_html($prefix); ?>';
                     document.getElementById("securesubmit_token").value = response.paymentReference;
                     do_post();
                 }
@@ -1752,7 +1753,7 @@ class SecureSubmit {
                 let form = document.getElementById(prefix+"_form");
 
                 var datastring = jQuery("#"+prefix+"_form").serialize();
-                var url = "<?php echo admin_url('admin-ajax.php'); ?>";
+                var url = "<?php echo esc_html(admin_url('admin-ajax.php')); ?>";
 
                 jQuery.post(url, datastring, function (response) {
                     if (response.indexOf("successful") >= 0) {
@@ -1778,24 +1779,24 @@ class SecureSubmit {
                         }
                     );
 
-                    $("#a<?php echo $prefix; ?>-modal-launcher, #a<?php echo $prefix; ?>-modal-background, #a<?php echo $prefix; ?>-modal-close").click(function () {
-                        $("#a<?php echo $prefix; ?>-modal-content,#a<?php echo $prefix; ?>-modal-background").toggleClass("active");
+                    $("#a<?php echo esc_html($prefix); ?>-modal-launcher, #a<?php echo esc_html($prefix); ?>-modal-background, #a<?php echo esc_html($prefix); ?>-modal-close").click(function () {
+                        $("#a<?php echo esc_html($prefix); ?>-modal-content,#a<?php echo esc_html($prefix); ?>-modal-background").toggleClass("active");
                     });
 
                     <?php
                     $pkey = isset($atts['public_key']) ? $atts['public_key'] : $this->options['public_key'];
                     ?>
                     var pk = '<?php echo esc_attr($pkey); ?>';
-                    var url = "<?php echo admin_url('admin-ajax.php'); ?>";
+                    var url = "<?php echo esc_html(admin_url('admin-ajax.php')); ?>";
 
-                    $('#<?php echo $prefix; ?>-securesubmit-button').bind('click', a<?php echo $prefix; ?>_handleSubmit);
+                    $('#<?php echo esc_html($prefix); ?>-securesubmit-button').bind('click', a<?php echo esc_html($prefix); ?>_handleSubmit);
 
-                    function a<?php echo $prefix; ?>_handleSubmit() {
+                    function a<?php echo esc_html($prefix); ?>_handleSubmit() {
 
                         var sameAsBilling = jQuery('[name="same_as_billing"]') && jQuery('[name="same_as_billing"]').is(':checked');
 
                         var continueProcessing = true;
-                        jQuery("#<?php echo $prefix; ?>_form").find('.required').each(function (i, obj) {
+                        jQuery("#<?php echo esc_html($prefix); ?>_form").find('.required').each(function (i, obj) {
                             if (continueProcessing) {
                                 // skip validation if "same as billing" checked and field is shipping info
                                 if (sameAsBilling && this.name.indexOf('shipping_') !== -1) {
@@ -1813,25 +1814,25 @@ class SecureSubmit {
                         });
                         if (continueProcessing) {
 
-                            var cardNumber = $('#<?php echo $prefix; ?>_card_number').val().replace(/\D/g, ''); // strip out non-numeric
+                            var cardNumber = $('#<?php echo esc_html($prefix); ?>_card_number').val().replace(/\D/g, ''); // strip out non-numeric
 
                             hps.tokenize({
                                 data: {
                                     public_key: pk,
                                     number: cardNumber,
-                                    cvc: $('#<?php echo $prefix; ?>_card_cvc').val(),
-                                    exp_month: $('#<?php echo $prefix; ?>_exp_month').val(),
-                                    exp_year: $('#<?php echo $prefix; ?>_exp_year').val()
+                                    cvc: $('#<?php echo esc_html($prefix); ?>_card_cvc').val(),
+                                    exp_month: $('#<?php echo esc_html($prefix); ?>_exp_month').val(),
+                                    exp_year: $('#<?php echo esc_html($prefix); ?>_exp_year').val()
                                 },
                                 success: function (response) {
-                                    a<?php echo $prefix; ?>_secureSubmitResponseHandler(response);
+                                    a<?php echo esc_html($prefix); ?>_secureSubmitResponseHandler(response);
                                 },
                                 error: function (response) {
-                                    a<?php echo $prefix; ?>_secureSubmitResponseHandler(response);
+                                    a<?php echo esc_html($prefix); ?>_secureSubmitResponseHandler(response);
                                 }
                             });
 
-                            $('#<?php echo $prefix; ?>-securesubmit-button').hide();
+                            $('#<?php echo esc_html($prefix); ?>-securesubmit-button').hide();
                         }
 
 
@@ -1839,18 +1840,18 @@ class SecureSubmit {
                         return false;
                     };
 
-                    function a<?php echo $prefix; ?>_secureSubmitResponseHandler(response) {
+                    function a<?php echo esc_html($prefix); ?>_secureSubmitResponseHandler(response) {
                         if (response.message) {
                             alert(response.message);
-                            $('#<?php echo $prefix; ?>-securesubmit-button').show();
+                            $('#<?php echo esc_html($prefix); ?>-securesubmit-button').show();
                         } else {
-                            $('#<?php echo $prefix; ?>_securesubmit_token').val(response.token_value);
-                            a<?php echo $prefix; ?>_chargeToken();
+                            $('#<?php echo esc_html($prefix); ?>_securesubmit_token').val(response.token_value);
+                            a<?php echo esc_html($prefix); ?>_chargeToken();
                         }
                     }
 
-                    function a<?php echo $prefix; ?>_chargeToken() {
-                        var form = $('#<?php echo $prefix; ?>_form');
+                    function a<?php echo esc_html($prefix); ?>_chargeToken() {
+                        var form = $('#<?php echo esc_html($prefix); ?>_form');
                         var sameAsBilling = jQuery('[name="same_as_billing"]') && jQuery('[name="same_as_billing"]').is(':checked');
                         var continueProcessing = true;
 
@@ -1861,7 +1862,7 @@ class SecureSubmit {
                                 }
                                 if (jQuery(this).val() == '' || jQuery(this).val() == 'Select an option below') {
                                     alert('Please complete all required fields before proceeding.');
-                                    $('#<?php echo $prefix; ?>-securesubmit-button').show();
+                                    $('#<?php echo esc_html($prefix); ?>-securesubmit-button').show();
                                     continueProcessing = false;
                                     return;
                                 }
@@ -1870,7 +1871,7 @@ class SecureSubmit {
 
                         if (continueProcessing) {
                             var datastring = form.serialize();
-                            var url = "<?php echo admin_url('admin-ajax.php'); ?>";
+                            var url = "<?php echo esc_html(admin_url('admin-ajax.php')); ?>";
 
                             //wat?!
                             if ($.browser && $.browser.msie && $.browser.version <= 9) {
@@ -1883,17 +1884,17 @@ class SecureSubmit {
 
                             $.post(url, datastring, function (response) {
                                 if (response.indexOf("successful") >= 0) {
-                                    $('#<?php echo $prefix; ?>_card_number').val('');
-                                    $('#<?php echo $prefix; ?>_card_cvc').val('');
-                                    $('#<?php echo $prefix; ?>_formContainer').hide();
-                                    $('#<?php echo $prefix; ?>_success').show();
+                                    $('#<?php echo esc_html($prefix); ?>_card_number').val('');
+                                    $('#<?php echo esc_html($prefix); ?>_card_cvc').val('');
+                                    $('#<?php echo esc_html($prefix); ?>_formContainer').hide();
+                                    $('#<?php echo esc_html($prefix); ?>_success').show();
 
                                 } else {
                                     alert(response);
                                     if (grecaptcha) {
                                         grecaptcha.reset($(".g-recaptcha").attr('data-widgit-id'));
                                     }
-                                    $('#<?php echo $prefix; ?>-securesubmit-button').show();
+                                    $('#<?php echo esc_html($prefix); ?>-securesubmit-button').show();
                                 }
                             });
                         }
@@ -1904,24 +1905,27 @@ class SecureSubmit {
         <?php if (isset($atts['ignorelinebreaks']) && $atts['ignorelinebreaks'] === 'true') { ?>
             [/raw]
         <?php } ?>
-        <script src="https://js.globalpay.com/v1/globalpayments.js"></script>
+        <?php
+            wp_enqueue_script('global-payments','https://js.globalpay.com/v1/globalpayments.js');
+        ?>
         <?php
         return ob_get_clean();
     }
 
     function isValidRecaptchaToken($token){
 
-        $curl    = curl_init();
         $recaptchaInfo = array("secret" => $this->recaptchaSecretKey, "response" => $token);
-        curl_setopt_array($curl, array(
-            CURLOPT_URL            => self::RECAPTCHA_VERIFY_URL,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_POST           => true,
-            CURLOPT_POSTFIELDS     => $recaptchaInfo,
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
+        $args = array();
+        $args['method'] = 'POST';
+        $args['timeout'] = 100;
+        $args['sslverify'] = false;
+        $args['body'] = $recaptchaInfo;
+        $args['httpversion'] = '1.0';
+        $args['blocking'] = true;
+
+        $response = wp_remote_post(self::RECAPTCHA_VERIFY_URL, $args);
+        $response =  wp_remote_retrieve_body( $response );
+
         if(empty($response)) {
             return false;
         }
@@ -1993,7 +1997,7 @@ class SecureSubmit {
         $amountCap = apply_filters('hps_amount_cap', 25000);
 
         if($amount > $amountCap){
-            die(sprintf('Amount cannot be greater than $%01.2f. Please contact customer support for assistance.', $amountCap));
+            die(sprintf('Amount cannot be greater than $%01.2f. Please contact customer support for assistance.', esc_html($amountCap)));
         }
 
         //if productid is not already set in $attrs assign it from POST
@@ -2245,10 +2249,10 @@ class SecureSubmit {
                 }
             }
 
-            die($e->getMessage());
+            die(esc_html($e->getMessage()));
         }
 
-        die('Your Payment was successful! Thank you.' . $body);
+        die('Your Payment was successful! Thank you.' . esc_html($body));
     }
 
     function jal_install(){

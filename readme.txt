@@ -1,11 +1,11 @@
 === WP SecureSubmit ===
-Contributors: markhagan, tonysmedal, mayur-vachchewar
-Tags: donation, donations, payment, buy now, gateway, heartland
+Contributors: markhagan
+Tags: donation, payment, buy now, securesubmit, heartland
 Requires at least: 3.0.1
 Tested up to: 6.7.1
 Stable tag: trunk
-License: Custom
-License URI: https://github.com/SecureSubmit/magento-extension/blob/master/LICENSE
+License: GPLv2
+License URI: https://github.com/hps/heartland-wordpress-plugin/blob/master/LICENSE.md
 
 SecureSubmit allows merchants using Heartland Payment Systems to take PCI-Friendly donations on their WordPress site.
 
@@ -49,6 +49,9 @@ the button builder. To use the button builder, the classic editor is currently r
 4. This screenshot shows a non-modal view.
 
 == Changelog ==
+= 1.5.18 =
+* Vulnerability fixes
+
 = 1.5.17 =
 * Bugfix: Corrected gateway endpoints
 

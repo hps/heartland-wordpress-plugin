@@ -50,7 +50,7 @@ class HpsFluentCheckService extends HpsSoapGatewayService
         if ($check->secCode == HpsSECCode::CCD &&
             ($check->checkHolder == null || $check->checkHolder->checkName == null)) {
             throw new HpsInvalidRequestException(
-                HpsExceptionCodes::MISSING_CHECK_NAME,
+                esc_attr(HpsExceptionCodes::MISSING_CHECK_NAME),
                 'For SEC code CCD, the check name is required',
                 'check_name'
             );
@@ -101,10 +101,10 @@ class HpsFluentCheckService extends HpsSoapGatewayService
 
         if ($response->responseCode != 0) {
             throw new HpsCheckException(
-                $rsp->Header->GatewayTxnId,
-                $response->details,
-                $response->responseCode,
-                $response->responseText
+                esc_html($rsp->Header->GatewayTxnId),
+                esc_html($response->details),
+                esc_html($response->responseCode),
+                esc_html($response->responseText)
             );
         }
 

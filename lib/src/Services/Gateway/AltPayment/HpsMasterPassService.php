@@ -423,7 +423,7 @@ class HpsMasterPassService
         if (!in_array(strtolower($currency), array_keys(self::$currencyCodes))) {
             throw new HpsArgumentException(
                 'Currency is not supported',
-                HpsExceptionCodes::INVALID_CURRENCY
+                esc_attr(HpsExceptionCodes::INVALID_CURRENCY)
             );
         }
         return self::$currencyCodes[strtolower($currency)];
@@ -548,7 +548,7 @@ class HpsMasterPassService
             return;
         }
 
-        throw new HpsException((string)$response->ErrorDesc);
+        throw new HpsException(esc_attr((string)$response->ErrorDesc));
     }
 
     /**
@@ -568,7 +568,7 @@ class HpsMasterPassService
             return;
         }
 
-        throw new HpsException((string)$response->ErrorDesc);
+        throw new HpsException(esc_attr((string)$response->ErrorDesc));
     }
 
     /**
